@@ -1,0 +1,30 @@
+timestamp,event_type,app_name,window_title,url,detail
+1760414754.3349469,click,Code.exe,main.py - FocusGuard - Visual Studio Code,,left_click_at_1060_887
+1760414754.7266285,click,Code.exe,main.py - FocusGuard - Visual Studio Code,,left_click_at_1060_887
+1760414763.9063718,click,Code.exe,main.py - FocusGuard - Visual Studio Code,,left_click_at_1341_1040
+1760414763.920467,app_switch,explorer.exe,,,switched_from_Code.exe_to_explorer.exe
+1760414764.921601,app_switch,PBIDesktop.exe,Day1_Powerbi,,switched_from_explorer.exe_to_PBIDesktop.exe
+1760414766.6685655,click,PBIDesktop.exe,Day1_Powerbi,,left_click_at_1393_1039
+1760414766.9231706,app_switch,ApplicationFrameHost.exe,WhatsApp,,switched_from_PBIDesktop.exe_to_ApplicationFrameHost.exe
+1760414768.27705,click,ApplicationFrameHost.exe,WhatsApp,,left_click_at_1268_1058
+1760414768.9242933,app_switch,Code.exe,main.py - FocusGuard - Visual Studio Code,,switched_from_ApplicationFrameHost.exe_to_Code.exe
+1760414772.5101311,click,Code.exe,main.py - FocusGuard - Visual Studio Code,,left_click_at_1202_1057
+1760414772.9276118,app_switch,chrome.exe,what is dax in power bi - Google Search - Google Chrome,,switched_from_Code.exe_to_chrome.exe
+1760414774.6800508,click,chrome.exe,what is dax in power bi - Google Search - Google Chrome,,left_click_at_776_10
+1760414774.9288352,app_switch,chrome.exe,Modular software architecture design - Claude - Google Chrome,,switched_from_chrome.exe_to_chrome.exe
+1760414775.3106463,click,chrome.exe,Modular software architecture design - Claude - Google Chrome,,left_click_at_776_10
+1760414777.8116484,click,chrome.exe,Modular software architecture design - Claude - Google Chrome,,left_click_at_1272_1049
+1760414777.930173,app_switch,explorer.exe,,,switched_from_chrome.exe_to_explorer.exe
+1760414778.9308305,app_switch,Code.exe,main.py - FocusGuard - Visual Studio Code,,switched_from_explorer.exe_to_Code.exe
+1760414783.052584,click,Code.exe,main.py - FocusGuard - Visual Studio Code,,left_click_at_1178_1051
+1760414783.9331365,app_switch,chrome.exe,Modular software architecture design - Claude - Google Chrome,,switched_from_Code.exe_to_chrome.exe
+1760414790.661774,click,chrome.exe,Modular software architecture design - Claude - Google Chrome,,left_click_at_1275_1053
+1760414790.9378705,app_switch,Code.exe,main.py - FocusGuard - Visual Studio Code,,switched_from_chrome.exe_to_Code.exe
+1760414793.2548442,click,Code.exe,main.py - FocusGuard - Visual Studio Code,,left_click_at_1193_1048
+1760414793.9397225,app_switch,chrome.exe,Modular software architecture design - Claude - Google Chrome,,switched_from_Code.exe_to_chrome.exe
+1760414795.82477,click,chrome.exe,Modular software architecture design - Claude - Google Chrome,,left_click_at_187_0
+1760414795.944072,app_switch,chrome.exe,skillrack.com/faces/candidate/codeprogramgroup.xhtml - Google Chrome,,switched_from_chrome.exe_to_chrome.exe
+1760414796.270725,click,chrome.exe,skillrack.com/faces/candidate/codeprogramgroup.xhtml - Google Chrome,,left_click_at_187_0
+1760414797.2559464,click,chrome.exe,skillrack.com/faces/candidate/codeprogramgroup.xhtml - Google Chrome,,left_click_at_352_0
+1760414797.9449422,app_switch,chrome.exe,LeetCode - The World's Leading Online Programming Learning Platform - Google Chrome,,switched_from_chrome.exe_to_chrome.exe
+1760414798.9782352,app_switch,chrome.exe,Problems - LeetCode - Google Chrome,,switched_from_chrome.exe_to_chrome.exe
