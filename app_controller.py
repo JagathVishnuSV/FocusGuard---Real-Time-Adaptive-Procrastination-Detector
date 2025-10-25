@@ -10,13 +10,14 @@ import pandas as pd
 import numpy as np
 from pathlib import Path
 from datetime import datetime
-from typing import List, Dict, Optional
+from typing import Any, List, Dict, Optional
 from collections import deque
 
 from config import *
 from activity_stream import RealTimeActivityMonitor, ActivityEvent
 from feature_extractor import FeatureExtractor
 from ml_model import ModelEnsemble
+from ml.artifacts import ModelArtifact, read_metadata, write_metadata
 
 # Setup logging
 logging.basicConfig(
@@ -40,7 +41,7 @@ class FocusGuardController:
         self.feature_extractor = FeatureExtractor(self.config)
         self.model_ensemble = ModelEnsemble(self.config)
         
-        self.events_buffer: deque = deque(maxlen=10000)
+        self.events_buffer = deque(maxlen=10000)
         self.calibration_complete = False
         self.session_start_time = None
         self.session_stats = {
@@ -51,11 +52,30 @@ class FocusGuardController:
             "anomalies_detected": 0,
             "user_feedback_collected": 0,
         }
+        self.model_artifacts = self._load_artifact_registry()
         
     def _import_config(self):
         """Import configuration"""
         import config
         return config
+
+    def _load_artifact_registry(self) -> List[ModelArtifact]:
+        """Load existing model artefact metadata from disk."""
+        try:
+            return read_metadata(MODEL_REGISTRY_FILE)
+        except Exception as exc:
+            logger.warning(f"Failed to read model registry: {exc}")
+            return []
+
+    def _register_artifact(self, artifact: ModelArtifact) -> None:
+        """Add or update an artefact entry and persist the registry."""
+        # Replace existing entry with the same name to avoid stale metadata.
+        self.model_artifacts = [a for a in self.model_artifacts if a.name != artifact.name]
+        self.model_artifacts.append(artifact)
+        try:
+            write_metadata(self.model_artifacts, MODEL_REGISTRY_FILE)
+        except Exception as exc:
+            logger.warning(f"Failed to persist model registry: {exc}")
     
     def phase1_calibration(self):
         """Phase 1: Cold start calibration"""
@@ -108,7 +128,9 @@ class FocusGuardController:
         # Train anomaly detector
         if feature_vectors:
             X = np.array(feature_vectors)
-            stats = self.model_ensemble.train_baseline(X)
+            report = self.model_ensemble.anomaly_pipeline.fit(X, MODEL_FILE)
+            stats = report.stats
+            self._register_artifact(report.artifact)
             self.model_ensemble.save(MODELS_DIR)
             logger.info(f"Calibration completed: {stats}")
             
@@ -321,7 +343,15 @@ class FocusGuardController:
             if feature_vectors:
                 X = np.array(feature_vectors)
                 y = np.array(labels)
-                stats = self.model_ensemble.train_classifier(X, y)
+                report = self.model_ensemble.classification_pipeline.fit(
+                    X,
+                    y,
+                    RANDOM_FOREST_MODEL_FILE,
+                    SCALER_FILE,
+                )
+                self.model_ensemble.use_classifier = True
+                stats = report.stats
+                self._register_artifact(report.artifact)
                 self.model_ensemble.save(MODELS_DIR)
                 logger.info(f"Classifier retraining completed: {stats}")
                 print(f"\n✨ Classifier retrained with {len(df_labeled)} samples")
@@ -365,6 +395,173 @@ class FocusGuardController:
         print(f"Anomalies Detected: {self.session_stats['anomalies_detected']}")
         print(f"User Feedback Collected: {self.session_stats['user_feedback_collected']}")
         print(f"{'='*80}\n")
+
+    def start_detection_session(self):
+        """Start a real-time detection session for web interface"""
+        logger.info("Starting web-based detection session...")
+        
+        # Initialize session
+        self.session_start_time = time.time()
+        self.session_stats = {
+            "total_time": 0,
+            "focused_time": 0,
+            "distracted_time": 0,
+            "total_events": 0,
+            "anomalies_detected": 0,
+            "user_feedback_collected": 0
+        }
+        self.events_buffer.clear()
+
+        # Reset event buffer in the activity monitor so each session starts clean
+        if hasattr(self.activity_monitor, "clear_events"):
+            self.activity_monitor.clear_events()
+
+        # Track last update time so we can compute deltas during live updates
+        self.last_check_time = self.session_start_time
+        
+        # Start activity monitoring
+        self.activity_monitor.start_monitoring()
+        logger.info("Real-time activity monitoring started")
+        
+        return {
+            "status": "started",
+            "start_time": self.session_start_time,
+            "monitoring": True
+        }
+    
+    def stop_detection_session(self):
+        """Stop real-time detection session and return session data"""
+        logger.info("Stopping web-based detection session...")
+        
+        if not self.session_start_time:
+            return {"error": "No active session"}
+        
+        try:
+            # Stop activity monitoring
+            self.activity_monitor.stop_monitoring()
+            
+            # Calculate final session stats
+            total_session_time = time.time() - self.session_start_time
+            self.session_stats['total_time'] = total_session_time
+            self.session_stats['total_events'] = max(
+                self.session_stats['total_events'],
+                len(self.events_buffer)
+            )
+            
+            # Save session data
+            self._save_session_analytics()
+            
+            # Prepare session summary
+            session_data = {
+                "duration": total_session_time,
+                "focused_time": self.session_stats['focused_time'],
+                "distracted_time": self.session_stats['distracted_time'],
+                "total_events": self.session_stats['total_events'],
+                "anomalies_detected": self.session_stats['anomalies_detected'],
+                "user_feedback_collected": self.session_stats['user_feedback_collected'],
+                "timestamp": datetime.now().isoformat()
+            }
+            
+            # Reset session
+            self.session_start_time = None
+            
+            logger.info(f"Session completed: {total_session_time/60:.1f} minutes, {len(self.events_buffer)} events")
+            return session_data
+            
+        except Exception as e:
+            logger.error(f"Error stopping session: {e}")
+            return {"error": str(e)}
+    
+    def get_current_session_stats(self):
+        """Get current session statistics and perform real-time analysis."""
+        if not self.session_start_time:
+            return {
+                "active": False,
+                "total_events": 0,
+                "anomalies_detected": 0,
+                "focused_time": 0,
+                "distracted_time": 0,
+            }
+
+        current_time = time.time()
+        elapsed_time = current_time - self.session_start_time
+        
+        # Pull new events since last time we computed stats
+        last_check = getattr(self, "last_check_time", self.session_start_time)
+        recent_events = self.activity_monitor.get_events(since_timestamp=last_check)
+        if recent_events:
+            self.events_buffer.extend(recent_events)
+            self.session_stats['total_events'] += len(recent_events)
+
+        # Process the buffer to detect anomalies and update focus stats
+        if len(self.events_buffer) > 5:
+            try:
+                # Extract features from the current buffer
+                features = self.feature_extractor.extract_features(
+                    list(self.events_buffer),
+                    window_size_seconds=DETECTION_WINDOW_SIZE
+                ).reshape(1, -1)
+
+                # Get prediction
+                results = self.model_ensemble.predict(features)
+                
+                # Support both classifier + anomaly detector outputs
+                if "is_procrastinating" in results:
+                    is_anomaly = bool(results.get("is_procrastinating", [False])[0])
+                    confidence = float(results.get("combined_score", [0])[0])
+                else:
+                    is_anomaly = results.get("anomaly_prediction", [1])[0] == -1
+                    confidence = float(results.get("anomaly_score", [0])[0])
+
+                # Update stats based on real-time prediction
+                last_time = getattr(self, 'last_check_time', self.session_start_time)
+                time_delta = max(current_time - last_time, 0.0)
+                if is_anomaly and confidence > ANOMALY_CONFIDENCE_THRESHOLD:
+                    self.session_stats['distracted_time'] += time_delta
+                    self.session_stats['anomalies_detected'] += 1
+                else:
+                    self.session_stats['focused_time'] += time_delta
+            except Exception as e:
+                logger.warning(f"Real-time prediction failed: {e}")
+        else:
+            # Not enough data yet – assume focused for the elapsed interval
+            last_time = getattr(self, 'last_check_time', self.session_start_time)
+            time_delta = max(current_time - last_time, 0.0)
+            if time_delta > 0:
+                self.session_stats['focused_time'] += time_delta
+
+        self.last_check_time = current_time
+
+        return {
+            "active": True,
+            "elapsed_time": elapsed_time,
+            "total_events": self.session_stats['total_events'],
+            "anomalies_detected": self.session_stats['anomalies_detected'],
+            "focused_time": self.session_stats['focused_time'],
+            "distracted_time": self.session_stats['distracted_time']
+        }
+
+    def get_model_registry(self) -> List[Dict[str, Any]]:
+        """Expose registered model artefacts for dashboards or APIs."""
+        return [artifact.to_dict() for artifact in self.model_artifacts]
+
+
+    def get_session_summary(self):
+        """Get current session statistics"""
+        if not self.session_start_time:
+            return {"active": False}
+        
+        current_time = time.time()
+        elapsed_time = current_time - self.session_start_time
+        
+        return {
+            "active": True,
+            "elapsed_time": elapsed_time,
+            "total_events": self.session_stats['total_events'],
+            "anomalies_detected": self.session_stats['anomalies_detected'],
+            "focused_time": self.session_stats['focused_time'],
+            "distracted_time": self.session_stats['distracted_time']
+        }
 
 
 def main():

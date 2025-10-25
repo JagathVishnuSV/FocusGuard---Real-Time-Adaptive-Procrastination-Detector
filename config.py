@@ -26,6 +26,7 @@ SCALER_FILE = MODELS_DIR / "scaler.joblib"
 LOG_FILE = LOGS_DIR / "focusguard.log"
 ANALYTICS_DB = DATA_DIR / "analytics.json"
 SESSION_LOG = DATA_DIR / "session_log.jsonl"
+MODEL_REGISTRY_FILE = MODELS_DIR / "artifacts.json"
 
 # ===== PHASE 1: CALIBRATION SETTINGS =====
 CALIBRATION_DURATION_SECONDS = 300  # 5 minutes (90 for quick testing)

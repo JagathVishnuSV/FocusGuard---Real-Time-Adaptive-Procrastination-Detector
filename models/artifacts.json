@@ -1,0 +1,90 @@
+[
+  {
+    "name": "anomaly_detector",
+    "version": "1.0.0",
+    "path": "C:\\Users\\jagat\\Downloads\\FocusGuard\\models\\anomaly_detector.joblib",
+    "features": [
+      "keystrokes_per_sec",
+      "clicks_per_sec",
+      "app_switches",
+      "app_entropy",
+      "idle_time_ratio",
+      "productive_app_ratio",
+      "distraction_app_ratio",
+      "keystroke_burst_score",
+      "click_burst_score",
+      "app_switch_frequency",
+      "keystroke_variance",
+      "click_variance",
+      "keystroke_click_ratio",
+      "idle_transitions",
+      "app_focus_duration",
+      "context_switch_cost"
+    ],
+    "trained_at": "2025-10-25T12:51:03.911165Z",
+    "parameters": {
+      "n_estimators": 100,
+      "contamination": 0.1,
+      "random_state": 42,
+      "n_jobs": -1
+    },
+    "metrics": {
+      "n_samples": 4000.0,
+      "n_features": 16.0,
+      "n_anomalies": 400.0,
+      "n_normal": 3600.0,
+      "anomaly_ratio": 0.1
+    },
+    "metadata": {}
+  },
+  {
+    "name": "procrastination_classifier",
+    "version": "1.0.0",
+    "path": "C:\\Users\\jagat\\Downloads\\FocusGuard\\models\\classifier.joblib",
+    "features": [
+      "keystrokes_per_sec",
+      "clicks_per_sec",
+      "app_switches",
+      "app_entropy",
+      "idle_time_ratio",
+      "productive_app_ratio",
+      "distraction_app_ratio",
+      "keystroke_burst_score",
+      "click_burst_score",
+      "app_switch_frequency",
+      "keystroke_variance",
+      "click_variance",
+      "keystroke_click_ratio",
+      "idle_transitions",
+      "app_focus_duration",
+      "context_switch_cost"
+    ],
+    "trained_at": "2025-10-25T12:51:09.467023Z",
+    "parameters": {
+      "n_estimators": 300,
+      "max_depth": 15,
+      "min_samples_split": 5,
+      "min_samples_leaf": 2,
+      "random_state": 42,
+      "n_jobs": -1,
+      "class_weight": "balanced"
+    },
+    "metrics": {
+      "n_samples": 4000.0,
+      "n_features": 16.0,
+      "n_distractions": 1578.0,
+      "n_normal": 2422.0,
+      "cv_mean_f1": 0.960612630498828,
+      "cv_std_f1": 0.0035909940374702983,
+      "auc_score": 0.9998526916865782,
+      "feature::productive_app_ratio": 0.2826054726260102,
+      "feature::distraction_app_ratio": 0.20425929748883517,
+      "feature::context_switch_cost": 0.13633555555490512,
+      "feature::keystroke_burst_score": 0.10523413338204844,
+      "feature::keystroke_click_ratio": 0.06804902062785809
+    },
+    "metadata": {
+      "scaler_path": "C:\\Users\\jagat\\Downloads\\FocusGuard\\models\\scaler.joblib"
+    }
+  }
+]
