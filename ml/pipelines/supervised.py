@@ -27,11 +27,18 @@ class ClassificationTrainingPipeline:
         self.classifier = classifier
         self.config = config
 
-    def fit(self, features: np.ndarray, labels: np.ndarray, model_path: Path, scaler_path: Path) -> ClassificationTrainingReport:
+    def fit(
+        self,
+        features: np.ndarray,
+        labels: np.ndarray,
+        model_path: Path,
+        scaler_path: Path,
+        calibrator_path: Path,
+    ) -> ClassificationTrainingReport:
         """Train the classifier and persist the artefacts."""
         stats = self.classifier.train(features, labels)
         model_path.parent.mkdir(parents=True, exist_ok=True)
-        self.classifier.save(model_path, scaler_path)
+        self.classifier.save(model_path, scaler_path, calibrator_path)
 
         artifact = ModelArtifact(
             name="procrastination_classifier",
@@ -40,6 +47,9 @@ class ClassificationTrainingPipeline:
             features=list(getattr(self.config, "FEATURE_NAMES", [])),
             parameters=dict(self.config.RANDOM_FOREST_PARAMS),
             metrics=stats,
-            metadata={"scaler_path": str(scaler_path)},
+            metadata={
+                "scaler_path": str(scaler_path),
+                "calibrator_path": str(calibrator_path),
+            },
         )
         return ClassificationTrainingReport(stats=stats, artifact=artifact)

@@ -329,6 +329,21 @@ def get_session_status():
                 'elapsed_time': real_stats.get('elapsed_time', 0)
             }
 
+            prediction_meta = real_stats.get('prediction') or {}
+            if prediction_meta:
+                current_session['stats'].update({
+                    'combined_score': float(prediction_meta.get('combined_score', 0.0) or 0.0),
+                    'anomaly_score': float(prediction_meta.get('anomaly_score', 0.0) or 0.0),
+                    'classifier_probability': (
+                        float(prediction_meta['classifier_probability'])
+                        if prediction_meta.get('classifier_probability') is not None
+                        else None
+                    ),
+                    'confidence': float(prediction_meta.get('confidence', 0.0) or 0.0),
+                    'heuristic_triggered': bool(prediction_meta.get('heuristic_triggered', False)),
+                    'prediction_timestamp': prediction_meta.get('timestamp'),
+                })
+
             if current_session['active'] and focus_controller.session_start_time:
                 current_session['start_time'] = datetime.fromtimestamp(
                     focus_controller.session_start_time

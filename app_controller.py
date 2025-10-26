@@ -53,6 +53,8 @@ class FocusGuardController:
             "user_feedback_collected": 0,
         }
         self.model_artifacts = self._load_artifact_registry()
+        self.last_prediction: Optional[Dict[str, Any]] = None
+        self._initialise_models_from_disk()
         
     def _import_config(self):
         """Import configuration"""
@@ -76,6 +78,25 @@ class FocusGuardController:
             write_metadata(self.model_artifacts, MODEL_REGISTRY_FILE)
         except Exception as exc:
             logger.warning(f"Failed to persist model registry: {exc}")
+
+    def _initialise_models_from_disk(self) -> None:
+        """Load previously trained models so real-time predictions work immediately."""
+        try:
+            if not MODELS_DIR.exists():
+                logger.info("Models directory %s does not exist yet; waiting for calibration", MODELS_DIR)
+                return
+
+            self.model_ensemble.load(MODELS_DIR)
+
+            if getattr(self.model_ensemble.anomaly_detector, "is_fitted", False):
+                self.calibration_complete = True
+
+            if getattr(self.model_ensemble.classifier, "is_fitted", False):
+                self.model_ensemble.use_classifier = True
+
+            logger.info("Loaded ML artefacts from %s (classifier=%s)", MODELS_DIR, self.model_ensemble.use_classifier)
+        except Exception as exc:
+            logger.warning("Failed to load existing models from %s: %s", MODELS_DIR, exc)
     
     def phase1_calibration(self):
         """Phase 1: Cold start calibration"""
@@ -348,6 +369,7 @@ class FocusGuardController:
                     y,
                     RANDOM_FOREST_MODEL_FILE,
                     SCALER_FILE,
+                    CLASSIFIER_CALIBRATOR_FILE,
                 )
                 self.model_ensemble.use_classifier = True
                 stats = report.stats
@@ -497,10 +519,18 @@ class FocusGuardController:
         if len(self.events_buffer) > 5:
             try:
                 # Extract features from the current buffer
-                features = self.feature_extractor.extract_features(
+                feature_vector = self.feature_extractor.extract_features(
                     list(self.events_buffer),
                     window_size_seconds=DETECTION_WINDOW_SIZE
-                ).reshape(1, -1)
+                )
+
+                if feature_vector.ndim > 1:
+                    feature_array = feature_vector.reshape(-1)
+                else:
+                    feature_array = feature_vector
+
+                features = feature_array.reshape(1, -1)
+                feature_map = dict(zip(self.feature_extractor.get_feature_names(), feature_array))
 
                 # Get prediction
                 results = self.model_ensemble.predict(features)
@@ -513,6 +543,34 @@ class FocusGuardController:
                     is_anomaly = results.get("anomaly_prediction", [1])[0] == -1
                     confidence = float(results.get("anomaly_score", [0])[0])
 
+                classifier_probability = float(results.get("classifier_probability", [confidence])[0]) if "classifier_probability" in results else None
+                anomaly_score = float(results.get("anomaly_score", [confidence])[0]) if "anomaly_score" in results else confidence
+                combined_score = float(results.get("combined_score", [classifier_probability or anomaly_score])[0]) if "combined_score" in results else (classifier_probability or anomaly_score)
+
+                heuristic_triggered = False
+
+                if (confidence <= ANOMALY_CONFIDENCE_THRESHOLD and feature_map):
+                    distraction_ratio = feature_map.get("distraction_app_ratio", 0.0)
+                    productive_ratio = feature_map.get("productive_app_ratio", 0.0)
+                    idle_ratio = feature_map.get("idle_time_ratio", 0.0)
+                    keystrokes_per_sec = feature_map.get("keystrokes_per_sec", 0.0)
+
+                    if distraction_ratio >= 0.6 and productive_ratio <= 0.3:
+                        if idle_ratio >= 0.25 or keystrokes_per_sec <= 0.15:
+                            heuristic_triggered = True
+                            is_anomaly = True
+                            confidence = max(confidence, 0.68)
+                            combined_score = max(combined_score or 0.0, confidence)
+
+                logger.debug(
+                    "Real-time prediction: anomaly=%s confidence=%.3f anomaly_score=%.3f classifier_prob=%s heuristic=%s",
+                    is_anomaly,
+                    confidence,
+                    anomaly_score,
+                    f"{classifier_probability:.3f}" if classifier_probability is not None else "n/a",
+                    heuristic_triggered,
+                )
+
                 # Update stats based on real-time prediction
                 last_time = getattr(self, 'last_check_time', self.session_start_time)
                 time_delta = max(current_time - last_time, 0.0)
@@ -521,6 +579,15 @@ class FocusGuardController:
                     self.session_stats['anomalies_detected'] += 1
                 else:
                     self.session_stats['focused_time'] += time_delta
+
+                self.last_prediction = {
+                    "timestamp": current_time,
+                    "confidence": confidence,
+                    "combined_score": combined_score,
+                    "anomaly_score": anomaly_score,
+                    "classifier_probability": classifier_probability,
+                    "heuristic_triggered": heuristic_triggered,
+                }
             except Exception as e:
                 logger.warning(f"Real-time prediction failed: {e}")
         else:
@@ -529,6 +596,7 @@ class FocusGuardController:
             time_delta = max(current_time - last_time, 0.0)
             if time_delta > 0:
                 self.session_stats['focused_time'] += time_delta
+            self.last_prediction = None
 
         self.last_check_time = current_time
 
@@ -538,7 +606,8 @@ class FocusGuardController:
             "total_events": self.session_stats['total_events'],
             "anomalies_detected": self.session_stats['anomalies_detected'],
             "focused_time": self.session_stats['focused_time'],
-            "distracted_time": self.session_stats['distracted_time']
+            "distracted_time": self.session_stats['distracted_time'],
+            "prediction": self.last_prediction,
         }
 
     def get_model_registry(self) -> List[Dict[str, Any]]:

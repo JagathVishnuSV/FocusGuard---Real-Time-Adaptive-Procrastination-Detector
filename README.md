@@ -1,278 +1,161 @@
-# 🎯 FocusGuard - Real-Time Adaptive Procrastination Detector
+# FocusGuard – Real-Time Adaptive Procrastination Detector
 
-> **Production-Ready Machine Learning Application for Detecting Procrastination Patterns**
+FocusGuard is a Windows-first productivity copilot that watches desktop activity and surfaces real-time focus insights. A dual-model machine learning stack detects when behaviour veers from your productive baseline, while a modern React dashboard visualises metrics, insights, and distraction triggers.
 
-![Python](https://img.shields.io/badge/Python-3.9+-blue.svg)
-![scikit-learn](https://img.shields.io/badge/scikit--learn-1.3.2-blue.svg)
-![License](https://img.shields.io/badge/License-MIT-green.svg)
+---
 
-FocusGuard is a sophisticated, local-first machine learning application that detects when your behavior deviates from established work patterns, flagging potential moments of distraction or procrastination in real-time.
+## 1. What FocusGuard Does
+- **Capture** low-level desktop activity (keystrokes, clicks, active window metadata, URLs).
+- **Transform** signals into 16 behavioural features every 30 seconds.
+- **Classify** each window as focused or distracted using a hybrid ML ensemble.
+- **Surface** real-time alerts, today’s stats, week trends, feature importance, and AI insights through a Flask API + Vite/React UI.
+- **Adapt** continuously as you provide feedback or upload fresh labelled datasets.
 
-## ✨ Key Features
+---
 
-### 🔍 **Context-Aware Monitoring**
-- **URL-Aware Tracking**: Distinguishes between productive websites (GitHub, Stack Overflow) and entertainment (YouTube, Reddit)
-- **Browser Intelligence**: Tracks 50+ websites with smart categorization
-- **Smart Categorization**: Learns what's productive vs distracting for YOUR workflow
-
-### 🤖 **Advanced Machine Learning**
-- **Dual Model Architecture**: 
-  - Unsupervised Isolation Forest for zero-shot baseline detection
-  - Supervised Random Forest Classifier (300 trees) trained on your feedback
-  - Model ensemble for high-accuracy predictions (90-95% CV accuracy)
-- **16 Feature Metrics**: 
-  - Typing patterns, app switching, burst scores
-  - Idle time ratios, productivity metrics
-  - Context switch cost analysis
-- **Cross-Validation**: 5-fold stratified CV for robust performance
-- **Auto-Training**: Continuously improves from your usage patterns
-
-### 📊 **Comprehensive Analytics**
-- **Procrastination Triggers**: WHEN and WHY you lose focus
-- **Focus Patterns**: Discover your peak productivity hours
-- **Productivity Trends**: Track improvement over time
-- **Personalized Recommendations**: Actionable advice based on YOUR data
-- **Session Analytics**: Detailed breakdown of focused vs distracted time
-
-### 🚨 **Real-Time Intervention**
-- **Live Detection**: Updates every 5-30 seconds
-- **Smart Alerts**: Warns when procrastination is detected with confidence scores
-- **Session Reports**: Comprehensive breakdowns of your work sessions
-- **Privacy-First**: All data stays local on your machine
-
-### 📈 **Interactive Dashboard**
-- Real-time metrics visualization
-- Weekly/hourly focus trends
-- Top distraction analysis
-- Personalized insights and recommendations
-- Data export functionality
-
-## 🏗️ Architecture
-
-### Project Structure
+## 2. System Overview
 ```
-focusguard/
-├── config.py                      # Central configuration
-├── activity_stream.py             # Realistic activity simulator
-├── feature_extractor.py           # ML feature engineering
-├── ml_models.py                   # Anomaly detection & classification
-├── app_controller.py              # Main application logic
-├── web_server.py                  # Flask REST API & dashboard
-├── dashboard.html                 # Web frontend
-├── main.py                        # CLI entry point
-├── requirements.txt               # Dependencies
-├── README.md                      # This file
-│
-├── data/                          # Data directory
-│   ├── raw_uncalibrated.csv       # Raw calibration data
-│   ├── labeled_feedback.csv       # User feedback labels
-│   ├── analytics.json             # Analytics snapshots
-│   └── session_log.jsonl          # Session logs
-│
-├── models/                        # Trained models
-│   ├── unsupervised_detector.joblib
-│   ├── random_forest_detector.joblib
-│   └── feature_scaler.joblib
-│
-└── logs/
-    └── focusguard.log             # Application logs
+Windows Hooks  →  Activity Stream  →  Feature Extractor  →  ML Ensemble
+                        (16 engineered features)    │
+                                          │
+                      Flask API  ←  FocusGuard Controller  →  React Dashboard
 ```
 
-### Workflow
+### Key Components
+| Path | Purpose |
+|------|---------|
+| `activity_stream.py` | Captures real Windows activity (keystrokes, clicks, app switches, idle time). |
+| `feature_extractor.py` | Converts raw events into the 16-feature vector consumed by the models. |
+| `ml/` | Modern ML package with anomaly detector, classifier, model ensemble, and training pipelines. |
+| `app_controller.py` | Orchestrates calibration, live detection, feedback capture, heuristics, and analytics logging. |
+| `web_server.py` | Flask REST API with session management, stats, insights, and model registry endpoints. |
+| `frontend/` | Vite + React dashboard (SWR data hooks, Tailwind styling, Lucide icons). |
+| `data/` | Calibration data, labelled feedback, weekly analytics log, and demo dataset (`focusguard_windows_sessions.csv`). |
+| `models/` | Persisted artefacts: `anomaly_detector.joblib`, `classifier.joblib`, `scaler.joblib`, and registry metadata. |
 
-#### Phase 1: Cold Start Calibration (Unsupervised)
-1. **Observe**: Silently monitor user activity for 5-30 minutes
-2. **Extract**: Calculate 16 feature metrics from activity windows
-3. **Store**: Save raw data to `data/raw_uncalibrated.csv`
-4. **Train**: Create Isolation Forest baseline model
-5. **Save**: Persist model to `models/unsupervised_detector.joblib`
+---
 
-#### Phase 2: Live Detection (Real-Time)
-1. **Load**: Restore pre-trained model from disk
-2. **Monitor**: Continuous activity stream analysis
-3. **Extract**: Real-time feature extraction from 30-second window
-4. **Predict**: Model predicts anomaly/normal classification
-5. **Alert**: If anomaly detected, prompt for user feedback
-6. **Learn**: Save labeled feedback to `data/labeled_feedback.csv`
-7. **Retrain**: When 100+ samples collected, train supervised classifier
+## 3. Machine Learning Stack
 
-## 🚀 Quick Start
+| Layer | Technology | Purpose |
+|-------|------------|---------|
+| **Baseline detector** | Isolation Forest (`sklearn`) | Zero-shot anomaly detection directly after calibration. |
+| **Supervised classifier** | Random Forest (`sklearn`) with StandardScaler | Learns your personalised “focused vs distracted” boundary from labelled data. |
+| **Ensemble combiner** | `ml/ensembles/focus_guard.py` | Normalises anomaly scores and blends them (30% anomaly, 70% classifier) into a single procrastination probability. |
 
-### Installation
+### Model Artefacts
+| File | Description |
+|------|-------------|
+| `models/anomaly_detector.joblib` | Isolation Forest trained on the 4 000 sample demo dataset (10% contamination). |
+| `models/classifier.joblib` | Random Forest (300 estimators, balanced class weights) trained on the same dataset’s labels. |
+| `models/scaler.joblib` | `StandardScaler` fitted on feature columns used by the classifier. |
+| `models/artifacts.json` | Metadata (metrics, parameters, timestamps) for UI diagnostics or downstream tooling. |
 
+### Feature Set (16)
+`keystrokes_per_sec`, `clicks_per_sec`, `app_switches`, `app_entropy`, `idle_time_ratio`, `productive_app_ratio`, `distraction_app_ratio`, `keystroke_burst_score`, `click_burst_score`, `app_switch_frequency`, `keystroke_variance`, `click_variance`, `keystroke_click_ratio`, `idle_transitions`, `app_focus_duration`, `context_switch_cost`.
+
+### Heuristic Assist
+If the classifier is unsure (confidence below the `ANOMALY_CONFIDENCE_THRESHOLD`) but the active window looks very distraction-heavy (e.g., YouTube with low keystrokes), the controller elevates the prediction through a guardrail heuristic so obviously distracting sessions do not stay marked as “focused”.
+
+---
+
+## 4. Data & Training Workflow
+
+1. **Calibration / Baseline**
+  ```bash
+  python main.py calibrate
+  ```
+  - Collects raw events into `data/raw_uncalibrated.csv`.
+  - Trains the Isolation Forest via `FocusGuardEnsemble.train_baseline()` and saves to `models/anomaly_detector.joblib`.
+
+2. **Supervised Training (optional but recommended)**
+  - Provide labelled rows (0 = focused, 1 = distracted) in `data/labeled_feedback.csv` or another CSV with the same feature column names.
+  - Use the training utility:
+    ```bash
+    python scripts/train_models.py --dataset data/focusguard_windows_sessions.csv --label-column label
+    ```
+  - The script fits both detector and classifier, registers metadata, and writes artefacts back into `models/`.
+
+3. **Real-Time Feedback Loop**
+  - During live monitoring the app can request user feedback (`y/n` prompts) which append to `data/labeled_feedback.csv`.
+  - When the minimum labelled sample threshold (`MIN_SAMPLES_FOR_TRAINING`, default 100) is met, the controller retrains the classifier automatically.
+
+4. **Model Registry**
+  - `app_controller.FocusGuardController` loads available artefacts on start so web sessions immediately consume the latest models.
+  - Registry entries are exposed via `/api/models/registry` for dashboards or integrations.
+
+---
+
+## 5. Running FocusGuard
+
+### 5.1 Backend (Flask API + Real-Time Engine)
 ```bash
-# Clone repository
-git clone https://github.com/yourusername/focusguard.git
-cd focusguard
-
-# Create virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# Install dependencies
+python -m venv .venv
+.\.venv\Scripts\activate   # PowerShell (adjust for bash or cmd)
 pip install -r requirements.txt
+python web_server.py  # Starts API at http://127.0.0.1:8000
 ```
+The server initialises the controller, loads saved artefacts, and streams live stats at `/api/session/status` (updated every ~2.5 seconds).
 
-### Usage
-
-#### Command Line Interface
-
+### 5.2 Frontend Dashboard
 ```bash
-# Start full workflow (calibrate if needed, then detect)
-python main.py start
-
-# Run calibration only
-python main.py calibrate
-
-# Run detection only (requires prior calibration)
-python main.py detect
+cd frontend
+npm install
+npm run dev  # Vite dev server at http://localhost:3000
 ```
+SWR hooks poll backend endpoints to populate:
+- Today focus metrics (fallbacks to live session stats if daily aggregates are empty).
+- Focus chart (weekly/hourly trends).
+- Activity feed, AI insights, feature importance, distraction triggers.
+- Real-time session summary with combined scores when available.
 
-#### Web Dashboard
-
+### 5.3 CLI Workflow (Optional)
 ```bash
-# Start Flask server (runs on http://localhost:8000)
-python web_server.py
-
-# Open browser to http://localhost:8000
+python main.py start      # Calibrate (if needed) then run detection
+python main.py detect     # Run live detection for a fixed window
 ```
 
-## 📊 Features in Detail
+---
 
-### 1. Activity Stream Simulator
+## 6. API Surface (Selected)
+| Endpoint | Description |
+|----------|-------------|
+| `GET /api/session/status` | Live session stats, latest prediction scores, heuristic flag. |
+| `POST /api/session/start` / `stop` | Start/stop monitoring sessions controlled by the dashboard. |
+| `GET /api/stats/today` | Aggregated focus stats for the current day. |
+| `GET /api/stats/weekly` | Seven-day focus score trend. |
+| `GET /api/stats/hourly` | Hourly focus pattern. |
+| `GET /api/insights` | AI-generated recommendations (success/warning/danger/info). |
+| `GET /api/features/importance` | Top model feature contributions (requires classifier artefact). |
+| `GET /api/distractions/top` | Ranked distraction sources sourced from labelled feedback. |
+| `GET /api/export` | Snapshot export for external analysis. |
+| `GET /health` | Simple service heartbeat. |
 
-Generates realistic user activity patterns:
-```python
-from activity_stream import ActivityStreamSimulator
-from config import *
+All endpoints are CORS-enabled for `localhost:3000` (frontend) and `localhost:3001` if you run multiple dev servers.
 
-simulator = ActivityStreamSimulator(config)
-for batch in simulator.stream(duration_seconds=300):
-    # Process events
-    pass
-```
+---
 
-**Event Types:**
-- Keystroke: User typing
-- Click: Mouse clicks
-- App Switch: Application changes
-- Idle: Inactivity periods
+## 7. Troubleshooting & Tips
+- **Dashboard shows zeros:** start a monitoring session; top metrics fall back to live session stats until `/api/stats/today` is populated from session logs.
+- **Classifier values missing:** ensure `models/classifier.joblib` and `models/scaler.joblib` exist; rerun `scripts/train_models.py` if needed.
+- **Insights buttons don’t respond:** they now reveal contextual messages and only switch tabs when data exists (e.g., feature importance requires trained classifier).
+- **Watching YouTube still shows “Focused”:** backend heuristics are now in place; restart the server to load the latest controller if you still see focused status.
 
-### 2. Feature Extraction
+---
 
-16 dimensional feature vectors capture work behavior:
+## 8. Roadmap Ideas
+- Adaptive thresholding based on rolling focus scores.
+- Multi-user profiles with separate artefact registries.
+- Optional cloud sync for analytics (current build is local-only by design).
+- Fine-grained website and application tagging from the UI.
 
-| Feature | Description |
-|---------|-------------|
-| `keystrokes_per_sec` | Typing intensity |
-| `clicks_per_sec` | Clicking frequency |
-| `app_switches` | App context switches |
-| `app_entropy` | App usage randomness |
-| `idle_time_ratio` | Time spent idle |
-| `productive_app_ratio` | % time in work apps |
-| `distraction_app_ratio` | % time in distraction apps |
-| `keystroke_burst_score` | Typing burstiness |
-| `click_burst_score` | Clicking burstiness |
-| `app_switch_frequency` | Context switching rate |
-| `keystroke_variance` | Typing consistency |
-| `click_variance` | Clicking consistency |
-| `keystroke_click_ratio` | Typing/clicking balance |
-| `idle_transitions` | Number of idle periods |
-| `app_focus_duration` | Time per app |
-| `context_switch_cost` | Cognitive cost of switching |
+---
 
-### 3. Machine Learning Models
+## 9. License
+MIT licensed. See `LICENSE` for details.
 
-#### Isolation Forest (Unsupervised)
-- **Purpose**: Detect anomalies without labeled data
-- **Advantage**: Works on day 1, no training data needed
-- **Parameters**: 100 trees, 10% contamination
-- **Output**: Anomaly scores
+---
 
-#### Random Forest Classifier (Supervised)
-- **Purpose**: Classify distraction vs normal with high accuracy
-- **Advantage**: Learns from your specific patterns
-- **Parameters**: 300 trees, 5-15 depth, balanced class weights
-- **Cross-Validation**: 5-fold stratified CV, ~90-95% F1 score
-- **Training Trigger**: After 100+ labeled samples collected
+## 10. Credits
+Built with Python 3.9+, scikit-learn, Flask, Pandas, Vite, React, Tailwind, Framer Motion, `pywin32`, and `pynput`.
 
-#### Model Ensemble
-- Combines both models for robust predictions
-- Unsupervised model provides baseline confidence
-- Supervised model refines predictions when available
-- Weighted ensemble: 30% unsupervised, 70% supervised
-
-### 4. Configuration Management
-
-Customize behavior via `config.py`:
-
-```python
-# Calibration
-CALIBRATION_DURATION_SECONDS = 300  # 5 minutes
-
-# Detection
-DETECTION_INTERVAL_SECONDS = 5      # Check every 5 seconds
-DETECTION_WINDOW_SIZE = 30          # Analyze last 30 seconds
-
-# Model parameters
-ISOLATION_FOREST_PARAMS = {
-    "n_estimators": 100,
-    "contamination": 0.1,
-}
-
-RANDOM_FOREST_PARAMS = {
-    "n_estimators": 300,
-    "max_depth": 15,
-}
-
-# Retraining
-MIN_SAMPLES_FOR_TRAINING = 100
-RETRAINING_INTERVAL_MINUTES = 30
-```
-
-## 📈 Analytics & Reporting
-
-### Session Analytics
-Each session generates JSON with:
-```json
-{
-  "timestamp": "2024-01-15T14:30:00",
-  "duration": 3600,
-  "focused_time": 2700,
-  "distracted_time": 900,
-  "total_events": 5432,
-  "anomalies_detected": 8,
-  "feedback_collected": 5
-}
-```
-
-### REST API Endpoints
-
-```
-GET  /api/stats/today          - Today's statistics
-GET  /api/stats/weekly         - Weekly trend
-GET  /api/stats/hourly         - Hourly pattern
-GET  /api/distractions/top     - Top distraction apps
-GET  /api/features/importance  - Feature importance
-GET  /api/insights             - Personalized insights
-GET  /api/export               - Export all data
-POST /api/session/start        - Start new session
-POST /api/session/stop         - End session
-GET  /health                   - Health check
-```
-
-### Data Export
-
-Export analytics as JSON:
-```bash
-curl http://localhost:8000/api/export > focusguard-data.json
-```
-
-## 🎯 Configuration Examples
-
-### Aggressive Detection (More Alerts)
-```python
-ANOMALY_CONFIDENCE_THRESHOLD = 0.4  # Lower threshold
-DETECTION_INTERVAL_SECONDS = 3      # More frequent
-ISOLATION_FOREST_PARAMS["contamination"] = 0.2  # More anomalies
-```

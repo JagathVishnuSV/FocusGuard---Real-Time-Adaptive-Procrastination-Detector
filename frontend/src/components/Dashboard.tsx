@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
 import {
   Target,
@@ -18,7 +18,7 @@ import { ActivityFeed } from './ActivityFeed'
 import { InsightsPanel } from './InsightsPanel'
 import { cn, formatDuration } from '@/lib/utils'
 import { useApi, useSessionStatus } from '@/hooks/useApi'
-import type { TodayStats } from '@/lib/types'
+import type { TodayStats, SessionStatus } from '@/lib/types'
 
 const Dashboard: React.FC = () => {
   const [actionError, setActionError] = useState<string | null>(null)
@@ -40,21 +40,63 @@ const Dashboard: React.FC = () => {
   } = useApi<TodayStats>('/api/stats/today')
 
   const isSessionActive = Boolean(sessionStatus?.active)
-  const resolvedTodayStats: TodayStats = todayStats ?? {
-    focus_score: 0,
-    focused_time: 0,
-    distracted_time: 0,
-    anomalies: 0,
-    sessions: 0,
-  }
 
-  const sessionStats = sessionStatus?.stats ?? {
-    total_events: 0,
-    anomalies: 0,
-    focused_time: 0,
-    distracted_time: 0,
-    elapsed_time: 0,
-  }
+  const sessionStats = useMemo<SessionStatus['stats']>(() => (
+    sessionStatus?.stats ?? {
+      total_events: 0,
+      anomalies: 0,
+      focused_time: 0,
+      distracted_time: 0,
+      elapsed_time: 0,
+    }
+  ), [sessionStatus])
+
+  const resolvedTodayStats: TodayStats = useMemo(() => {
+    const baseStats: TodayStats = todayStats ?? {
+      focus_score: 0,
+      focused_time: 0,
+      distracted_time: 0,
+      anomalies: 0,
+      sessions: 0,
+    }
+
+    const hasRecordedStats = Boolean(
+      todayStats && (
+        (todayStats.sessions ?? 0) > 0 ||
+        todayStats.focused_time > 0 ||
+        todayStats.distracted_time > 0 ||
+        todayStats.anomalies > 0 ||
+        todayStats.focus_score > 0
+      )
+    )
+
+    if (hasRecordedStats) {
+      return {
+        ...baseStats,
+        focus_score: Number(baseStats.focus_score.toFixed(1)),
+      }
+    }
+
+    const focusedSeconds = sessionStats.focused_time ?? 0
+    const distractedSeconds = sessionStats.distracted_time ?? 0
+    const totalSeconds = focusedSeconds + distractedSeconds
+    const hasLiveStats = totalSeconds > 0 || sessionStats.total_events > 0 || isSessionActive
+
+    if (hasLiveStats) {
+      const focusScore = totalSeconds > 0 ? (focusedSeconds / totalSeconds) * 100 : 0
+
+      // Derive a live snapshot so the dashboard reflects the current session instead of zeros.
+      return {
+        focus_score: Number(focusScore.toFixed(1)),
+        focused_time: focusedSeconds / 60,
+        distracted_time: distractedSeconds / 60,
+        anomalies: sessionStats.anomalies ?? 0,
+        sessions: Math.max(baseStats.sessions ?? 0, isSessionActive ? 1 : 0),
+      }
+    }
+
+    return baseStats
+  }, [todayStats, sessionStats, isSessionActive])
 
   const isStarting = pendingAction === 'start' && isMutating
   const isStopping = pendingAction === 'stop' && isMutating
@@ -90,6 +132,14 @@ const Dashboard: React.FC = () => {
     : (!sessionStatus && sessionError) || (!todayStats && todayError)
       ? (sessionError ?? todayError ?? null)
       : null
+
+  const focusScoreProgress = Math.min(Math.max(resolvedTodayStats.focus_score, 0), 100)
+  const predictionMeta = sessionStatus?.prediction ?? null
+  const combinedScore = predictionMeta?.combined_score ?? sessionStats?.combined_score ?? null
+  const anomalyScore = predictionMeta?.anomaly_score ?? sessionStats?.anomaly_score ?? null
+  const classifierProb = predictionMeta?.classifier_probability ?? sessionStats?.classifier_probability ?? null
+  const confidence = predictionMeta?.confidence ?? sessionStats?.confidence ?? null
+  const heuristicTriggered = predictionMeta?.heuristic_triggered ?? sessionStats?.heuristic_triggered ?? false
 
   if ((isSessionLoading && !sessionStatus) || (isTodayLoading && !todayStats)) {
     return (
@@ -163,6 +213,11 @@ const Dashboard: React.FC = () => {
                     {new Date(sessionStatus.start_time).toLocaleTimeString()}
                   </div>
                 )}
+                {combinedScore !== null && (
+                  <div className="px-3 py-1 rounded-full text-xs font-medium bg-purple-500/10 border border-purple-500/20 text-purple-200">
+                    Latest score {(combinedScore * 100).toFixed(1)}%
+                  </div>
+                )}
               </div>
 
               <Button
@@ -230,7 +285,7 @@ const Dashboard: React.FC = () => {
         <StatusDisplay
           isLoading={isTodayLoading}
           error={todayError}
-          data={todayStats}
+          data={todayStats ?? resolvedTodayStats}
           emptyMessage="No activity recorded today. Start a session to generate insights."
         >
           <motion.div
@@ -245,7 +300,7 @@ const Dashboard: React.FC = () => {
               icon={Target}
               color="primary"
               description="Today's productivity level"
-              progress={resolvedTodayStats.focus_score}
+              progress={focusScoreProgress}
             />
 
             <MetricsCard
@@ -319,7 +374,7 @@ const Dashboard: React.FC = () => {
             <CardContent className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div>
                 <p className="text-xs uppercase text-muted-foreground">Elapsed Time</p>
-                <p className="text-lg font-semibold">{formatDuration(sessionStats.elapsed_time)}</p>
+                <p className="text-lg font-semibold">{formatDuration(sessionStats.elapsed_time ?? 0)}</p>
               </div>
               <div>
                 <p className="text-xs uppercase text-muted-foreground">Events</p>
@@ -327,13 +382,49 @@ const Dashboard: React.FC = () => {
               </div>
               <div>
                 <p className="text-xs uppercase text-muted-foreground">Focused</p>
-                <p className="text-lg font-semibold">{formatDuration(sessionStats.focused_time)}</p>
+                <p className="text-lg font-semibold">{formatDuration(sessionStats.focused_time ?? 0)}</p>
               </div>
               <div>
                 <p className="text-xs uppercase text-muted-foreground">Distracted</p>
-                <p className="text-lg font-semibold">{formatDuration(sessionStats.distracted_time)}</p>
+                <p className="text-lg font-semibold">{formatDuration(sessionStats.distracted_time ?? 0)}</p>
               </div>
             </CardContent>
+            {(combinedScore !== null || anomalyScore !== null || classifierProb !== null || confidence !== null || heuristicTriggered) && (
+              <CardContent className="border-t border-white/5 pt-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {combinedScore !== null && (
+                    <div>
+                      <p className="text-xs uppercase text-muted-foreground">Combined Score</p>
+                      <p className="text-lg font-semibold">{(combinedScore * 100).toFixed(1)}%</p>
+                    </div>
+                  )}
+                  {anomalyScore !== null && (
+                    <div>
+                      <p className="text-xs uppercase text-muted-foreground">Anomaly Score</p>
+                      <p className="text-lg font-semibold">{anomalyScore.toFixed(3)}</p>
+                    </div>
+                  )}
+                  {classifierProb !== null && (
+                    <div>
+                      <p className="text-xs uppercase text-muted-foreground">Classifier Probability</p>
+                      <p className="text-lg font-semibold">{(classifierProb * 100).toFixed(1)}%</p>
+                    </div>
+                  )}
+                  {confidence !== null && (
+                    <div>
+                      <p className="text-xs uppercase text-muted-foreground">Decision Confidence</p>
+                      <p className="text-lg font-semibold">{(confidence * 100).toFixed(1)}%</p>
+                    </div>
+                  )}
+                  {heuristicTriggered && (
+                    <div className="md:col-span-3">
+                      <p className="text-xs uppercase text-muted-foreground">Heuristic Override</p>
+                      <p className="text-sm text-amber-300">Rule-based override boosted the latest prediction.</p>
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            )}
           </Card>
         </motion.div>
       </main>

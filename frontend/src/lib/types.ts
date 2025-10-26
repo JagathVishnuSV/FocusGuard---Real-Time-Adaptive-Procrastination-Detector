@@ -38,8 +38,24 @@ export interface SessionStatus {
     focused_time: number;
     distracted_time: number;
     elapsed_time?: number;
+    combined_score?: number;
+    anomaly_score?: number;
+    classifier_probability?: number | null;
+    confidence?: number;
+    heuristic_triggered?: boolean;
+    prediction_timestamp?: string | null;
   };
   alerts: any[];
+  prediction?: PredictionSummary | null;
+}
+
+export interface PredictionSummary {
+  combined_score?: number;
+  anomaly_score?: number;
+  classifier_probability?: number | null;
+  confidence?: number;
+  heuristic_triggered?: boolean;
+  timestamp?: string | null;
 }
 
 export interface HealthStatus {

@@ -27,9 +27,9 @@ class AnomalyTrainingPipeline:
         self.detector = detector
         self.config = config
 
-    def fit(self, features: np.ndarray, destination: Path) -> AnomalyTrainingReport:
+    def fit(self, features: np.ndarray, destination: Path, *, params_override: Dict[str, float] | None = None) -> AnomalyTrainingReport:
         """Train the detector and save the resulting artefact."""
-        stats = self.detector.train(features)
+        stats = self.detector.train(features, params_override=params_override)
         destination.parent.mkdir(parents=True, exist_ok=True)
         self.detector.save(destination)
 

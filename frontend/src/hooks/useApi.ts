@@ -26,9 +26,9 @@ export function useSessionStatus() {
   const startSession = async () => {
     setIsMutating(true);
     try {
-      await api.post('/api/session/start');
-      mutate(); // Re-fetch session status
-      // Trigger a re-fetch of all other data
+      const response = await api.post('/api/session/start');
+      const payload = response.data as { session?: SessionStatus } | undefined;
+      mutate(payload?.session, { revalidate: false });
       globalMutate((key: unknown) => typeof key === 'string' && key.startsWith('/api/'), undefined, { revalidate: true });
     } catch (e) {
       console.error("Failed to start session", e);
@@ -41,8 +41,9 @@ export function useSessionStatus() {
   const stopSession = async () => {
     setIsMutating(true);
     try {
-      await api.post('/api/session/stop');
-      mutate(); // Re-fetch session status
+      const response = await api.post('/api/session/stop');
+      const payload = response.data as { session?: SessionStatus } | undefined;
+      mutate(payload?.session, { revalidate: false });
       globalMutate((key: unknown) => typeof key === 'string' && key.startsWith('/api/'), undefined, { revalidate: true });
     } catch (e) {
       console.error("Failed to stop session", e);

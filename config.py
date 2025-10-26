@@ -23,6 +23,8 @@ LABELED_DATA_FILE = DATA_DIR / "labeled_feedback.csv"
 MODEL_FILE = MODELS_DIR / "anomaly_detector.joblib"
 RANDOM_FOREST_MODEL_FILE = MODELS_DIR / "classifier.joblib"
 SCALER_FILE = MODELS_DIR / "scaler.joblib"
+CLASSIFIER_CALIBRATOR_FILE = MODELS_DIR / "classifier_calibrator.joblib"
+ENSEMBLE_COMBINER_FILE = MODELS_DIR / "combiner.joblib"
 LOG_FILE = LOGS_DIR / "focusguard.log"
 ANALYTICS_DB = DATA_DIR / "analytics.json"
 SESSION_LOG = DATA_DIR / "session_log.jsonl"
@@ -39,8 +41,8 @@ ANOMALY_CONFIDENCE_THRESHOLD = 0.6  # Confidence threshold for alerts (0-1)
 
 # ===== MODEL PARAMETERS =====
 ISOLATION_FOREST_PARAMS = {
-    "n_estimators": 100,
-    "contamination": 0.1,  # Expect ~10% anomalies
+    "n_estimators": 300,
+    "contamination": 0.05,  # Expect ~5% anomalies by default
     "random_state": 42,
     "n_jobs": -1,
 }

@@ -6,7 +6,8 @@ import type {
   Insight,
   SessionStatus,
   HealthStatus,
-  ActivityEvent
+  ActivityEvent,
+  PredictionSummary,
 } from './types'
 
 const API_BASE_URL = 'http://127.0.0.1:8000'
@@ -122,4 +123,5 @@ export type {
   SessionStatus,
   HealthStatus,
   ActivityEvent,
+  PredictionSummary,
 } from './types'

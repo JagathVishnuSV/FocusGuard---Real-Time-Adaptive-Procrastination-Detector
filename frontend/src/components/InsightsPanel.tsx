@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useMemo, useState, useCallback, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { 
   Lightbulb, 
@@ -50,9 +50,18 @@ const FEATURE_DESCRIPTION_MAP: Record<string, string> = {
 
 export const InsightsPanel: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'insights' | 'analysis' | 'triggers'>('insights')
+  const [actionFeedback, setActionFeedback] = useState<string | null>(null)
   const { data: insights, isLoading: loadingInsights, error: insightsError } = useApi<Insight[]>('/api/insights')
   const { data: featureImportanceRaw, isLoading: loadingFeatures, error: featureError } = useApi<Record<string, number>>('/api/features/importance')
   const { data: distractionsRaw, isLoading: loadingDistractions, error: distractionError } = useApi<Record<string, number>>('/api/distractions/top')
+
+  const actionTabMap = useMemo<Record<string, 'insights' | 'analysis' | 'triggers'>>(() => ({
+    'View weekly comparison': 'analysis',
+    'Get recommendations': 'analysis',
+    'Schedule focus block': 'triggers',
+    'Enable blocker': 'triggers',
+    'View weekly stats': 'analysis',
+  }), [])
 
   const featureImportance: FeatureImportanceRow[] = useMemo(() => {
     if (!featureImportanceRaw) return []
@@ -72,6 +81,40 @@ export const InsightsPanel: React.FC = () => {
       .sort((a, b) => b[1] - a[1])
       .map(([app, count]) => ({ app, hits: count }))
   }, [distractionsRaw])
+
+  const handleInsightAction = useCallback((action: string) => {
+    const targetTab = actionTabMap[action]
+
+    if (!targetTab) {
+      setActionFeedback('This recommendation is coming soon.')
+      return
+    }
+
+    if (targetTab === 'analysis' && featureImportance.length === 0) {
+      setActionFeedback('Train the classifier to unlock feature analysis.')
+      return
+    }
+
+    if (targetTab === 'triggers' && distractionTriggers.length === 0) {
+      setActionFeedback('No distraction telemetry yet. Keep the session running.')
+      return
+    }
+
+    if (targetTab !== activeTab) {
+      setActiveTab(targetTab)
+    }
+
+    setActionFeedback(null)
+  }, [actionTabMap, activeTab, featureImportance, distractionTriggers])
+
+  useEffect(() => {
+    if (!actionFeedback) {
+      return
+    }
+
+    const timeout = setTimeout(() => setActionFeedback(null), 4000)
+    return () => clearTimeout(timeout)
+  }, [actionFeedback])
 
   const isLoading = loadingInsights || loadingFeatures || loadingDistractions
   const hasError = Boolean(insightsError || featureError || distractionError)
@@ -132,7 +175,12 @@ export const InsightsPanel: React.FC = () => {
                       {insight.text}
                     </p>
                     
-                    <Button variant="ghost" size="sm" className="p-0 h-auto text-primary">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="p-0 h-auto text-primary"
+                      onClick={() => handleInsightAction(insight.action)}
+                    >
                       {insight.action}
                       <ChevronRight className="w-3 h-3 ml-1" />
                     </Button>
@@ -143,6 +191,11 @@ export const InsightsPanel: React.FC = () => {
           </motion.div>
         )
       })}
+      {actionFeedback && (
+        <p className="text-xs text-muted-foreground mt-2">
+          {actionFeedback}
+        </p>
+      )}
     </div>
   )
 

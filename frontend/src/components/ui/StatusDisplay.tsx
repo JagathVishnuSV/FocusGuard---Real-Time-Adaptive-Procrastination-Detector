@@ -4,7 +4,7 @@ import { AlertCircle, Loader2 } from 'lucide-react';
 interface StatusDisplayProps {
   isLoading?: boolean;
   error?: unknown;
-  data?: any[] | Record<string, unknown> | null;
+  data?: unknown;
   emptyMessage?: string;
   errorMessage?: string;
   className?: string;
@@ -41,7 +41,12 @@ export function StatusDisplay({
     );
   }
 
-  const isEmpty = Array.isArray(data) ? data.length === 0 : !data;
+  const isArray = Array.isArray(data);
+  const isObject = typeof data === 'object' && data !== null;
+  const isEmpty =
+    data == null ||
+    (isArray && data.length === 0) ||
+    (isObject && Object.keys(data as Record<string, unknown>).length === 0);
 
   if (isEmpty) {
     return (
