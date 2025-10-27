@@ -90,21 +90,21 @@ export const InsightsPanel: React.FC = () => {
       return
     }
 
+    let feedbackMessage: string | null = null
+
     if (targetTab === 'analysis' && featureImportance.length === 0) {
-      setActionFeedback('Train the classifier to unlock feature analysis.')
-      return
+      feedbackMessage = 'Train the classifier to unlock feature analysis.'
     }
 
     if (targetTab === 'triggers' && distractionTriggers.length === 0) {
-      setActionFeedback('No distraction telemetry yet. Keep the session running.')
-      return
+      feedbackMessage = 'No distraction telemetry yet. Keep the session running.'
     }
 
     if (targetTab !== activeTab) {
       setActiveTab(targetTab)
     }
 
-    setActionFeedback(null)
+    setActionFeedback(feedbackMessage)
   }, [actionTabMap, activeTab, featureImportance, distractionTriggers])
 
   useEffect(() => {

@@ -13,6 +13,7 @@ import math
 
 from activity_stream import ActivityEvent, EventType
 from config import FEATURE_NAMES, WEBSITE_CATEGORIES
+from personalization import get_override_category
 
 logger = logging.getLogger(__name__)
 
@@ -46,6 +47,10 @@ class FeatureExtractor:
             return "neutral"
         
         app_lower = app_name.lower()
+
+        override_category = get_override_category(app_lower, url)
+        if override_category in {"productive", "distraction"}:
+            return override_category
         
         # Check direct app categorization
         if any(prod_app.lower() in app_lower for prod_app in self.productive_apps):

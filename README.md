@@ -78,6 +78,7 @@ If the classifier is unsure (confidence below the `ANOMALY_CONFIDENCE_THRESHOLD`
 
 3. **Real-Time Feedback Loop**
   - During live monitoring the app can request user feedback (`y/n` prompts) which append to `data/labeled_feedback.csv`.
+  - High-confidence predictions emit passive labels into `data/personalization/passive_labels.jsonl`; once `MIN_PERSONAL_FEEDBACK_FOR_RETRAIN` (default 12) combined passive + manual samples exist with both labels, retraining can kick off even without CSV feedback.
   - When the minimum labelled sample threshold (`MIN_SAMPLES_FOR_TRAINING`, default 100) is met, the controller retrains the classifier automatically.
 
 4. **Model Registry**
@@ -138,6 +139,8 @@ All endpoints are CORS-enabled for `localhost:3000` (frontend) and `localhost:30
 ## 7. Troubleshooting & Tips
 - **Dashboard shows zeros:** start a monitoring session; top metrics fall back to live session stats until `/api/stats/today` is populated from session logs.
 - **Classifier values missing:** ensure `models/classifier.joblib` and `models/scaler.joblib` exist; rerun `scripts/train_models.py` if needed.
+- **Dashboard activity badges look off:** the activity feed now mirrors the ensemble’s label (`Focus`/`Distraction`), not raw click/keystroke events.
+- **Didn’t retrain after a long session:** confirm you crossed both thresholds—either 100 manual labels or at least 12 passive labels with focus and distraction coverage.
 - **Insights buttons don’t respond:** they now reveal contextual messages and only switch tabs when data exists (e.g., feature importance requires trained classifier).
 - **Watching YouTube still shows “Focused”:** backend heuristics are now in place; restart the server to load the latest controller if you still see focused status.
 

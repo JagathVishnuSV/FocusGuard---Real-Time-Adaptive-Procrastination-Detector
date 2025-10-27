@@ -1,4 +1,4 @@
-"""
+﻿"""
 FocusGuard - Main Application Controller
 Orchestrates calibration and detection phases
 """
@@ -10,14 +10,15 @@ import pandas as pd
 import numpy as np
 from pathlib import Path
 from datetime import datetime
-from typing import Any, List, Dict, Optional
-from collections import deque
+from typing import Any, List, Dict, Optional, Tuple
+from collections import deque, Counter
 
 from config import *
 from activity_stream import RealTimeActivityMonitor, ActivityEvent
 from feature_extractor import FeatureExtractor
 from ml_model import ModelEnsemble
 from ml.artifacts import ModelArtifact, read_metadata, write_metadata
+from personalization import record_feature_snapshot, record_passive_label
 
 # Setup logging
 logging.basicConfig(
@@ -44,6 +45,7 @@ class FocusGuardController:
         self.events_buffer = deque(maxlen=10000)
         self.calibration_complete = False
         self.session_start_time = None
+        self.current_session_id: Optional[str] = None
         self.session_stats = {
             "total_time": 0,
             "focused_time": 0,
@@ -55,6 +57,8 @@ class FocusGuardController:
         self.model_artifacts = self._load_artifact_registry()
         self.last_prediction: Optional[Dict[str, Any]] = None
         self._initialise_models_from_disk()
+        self._last_passive_label_time: float = 0.0
+        self._prediction_warning_logged: bool = False
         
     def _import_config(self):
         """Import configuration"""
@@ -78,6 +82,37 @@ class FocusGuardController:
             write_metadata(self.model_artifacts, MODEL_REGISTRY_FILE)
         except Exception as exc:
             logger.warning(f"Failed to persist model registry: {exc}")
+
+    def _load_passive_label_samples(self) -> List[Tuple[List[float], int]]:
+        """Load passive labels and return feature vectors ready for training."""
+        samples: List[Tuple[List[float], int]] = []
+
+        if not USER_PASSIVE_LABELS_FILE.exists():
+            return samples
+
+        try:
+            with USER_PASSIVE_LABELS_FILE.open("r", encoding="utf-8") as passive_file:
+                for line in passive_file:
+                    payload = line.strip()
+                    if not payload:
+                        continue
+
+                    record = json.loads(payload)
+                    features = record.get("features", {})
+                    if not isinstance(features, dict):
+                        continue
+
+                    vector = [float(features.get(name, 0.0)) for name in FEATURE_NAMES]
+                    label = record.get("label")
+                    if label == "distracted":
+                        samples.append((vector, 1))
+                    elif label == "focused":
+                        samples.append((vector, 0))
+
+        except Exception as exc:
+            logger.warning(f"Failed to load passive labels for retraining: {exc}")
+
+        return samples
 
     def _initialise_models_from_disk(self) -> None:
         """Load previously trained models so real-time predictions work immediately."""
@@ -111,7 +146,7 @@ class FocusGuardController:
         feature_vectors = []
         start_time = time.time()
         
-        print(f"\n🔍 Calibrating FocusGuard... (collecting for {CALIBRATION_DURATION_SECONDS}s)")
+        print(f"\n≡ƒöì Calibrating FocusGuard... (collecting for {CALIBRATION_DURATION_SECONDS}s)")
         
         # Start monitoring
         self.activity_monitor.start_monitoring()
@@ -139,7 +174,7 @@ class FocusGuardController:
             # Always stop monitoring
             self.activity_monitor.stop_monitoring()
         
-        print("\n  ✅ Calibration data collected")
+        print("\n  Γ£à Calibration data collected")
         
         # Save raw data
         raw_df = pd.DataFrame([e.to_dict() for e in raw_events])
@@ -155,15 +190,15 @@ class FocusGuardController:
             self.model_ensemble.save(MODELS_DIR)
             logger.info(f"Calibration completed: {stats}")
             
-            print("  📊 Baseline model trained")
-            print(f"    • Features extracted: {len(feature_vectors)}")
-            print(f"    • Anomalies detected: {stats['n_anomalies']}")
-            print(f"    • Anomaly ratio: {stats['anomaly_ratio']:.2%}")
+            print("  ≡ƒôè Baseline model trained")
+            print(f"    ΓÇó Features extracted: {len(feature_vectors)}")
+            print(f"    ΓÇó Anomalies detected: {stats['n_anomalies']}")
+            print(f"    ΓÇó Anomaly ratio: {stats['anomaly_ratio']:.2%}")
             
             self.calibration_complete = True
         else:
             logger.warning("No feature vectors extracted during calibration")
-            print("  ⚠️  Warning: No features extracted")
+            print("  ΓÜá∩╕Å  Warning: No features extracted")
     
     def phase2_detection(self, duration: Optional[float] = None):
         """Phase 2: Live detection and feedback"""
@@ -180,8 +215,11 @@ class FocusGuardController:
         
         self.session_start_time = time.time()
         session_id = datetime.now().isoformat()
+        self._last_passive_label_time = self.session_start_time - PASSIVE_LABEL_MIN_INTERVAL_SECONDS
+        self._prediction_warning_logged = False
+        self.current_session_id = session_id
         
-        print(f"\n🚀 Live Detection Started")
+        print(f"\n≡ƒÜÇ Live Detection Started")
         print(f"   Session ID: {session_id}")
         print(f"   Detection interval: {DETECTION_INTERVAL_SECONDS}s")
         print(f"   Window size: {DETECTION_WINDOW_SIZE}s\n")
@@ -247,7 +285,7 @@ class FocusGuardController:
         
         except KeyboardInterrupt:
             logger.info("Detection interrupted by user")
-            print("\n\n⏹️  Detection stopped by user")
+            print("\n\nΓÅ╣∩╕Å  Detection stopped by user")
         
         finally:
             # Stop monitoring and finalize
@@ -273,7 +311,7 @@ class FocusGuardController:
                 self._save_feedback(is_distraction, confidence, session_id)
                 self.session_stats["user_feedback_collected"] += 1
                 
-                print(f"   ✅ Feedback saved")
+                print(f"   Γ£à Feedback saved")
             except (EOFError, KeyboardInterrupt):
                 logger.info("Feedback collection skipped")
     
@@ -301,7 +339,7 @@ class FocusGuardController:
         """Print periodic session report"""
         elapsed = time.time() - self.session_start_time
         
-        print(f"\n📊 SESSION REPORT")
+        print(f"\n≡ƒôè SESSION REPORT")
         print(f"   Elapsed: {elapsed/60:.1f} minutes")
         print(f"   Total Events: {self.session_stats['total_events']}")
         print(f"   Anomalies: {self.session_stats['anomalies_detected']}")
@@ -317,67 +355,97 @@ class FocusGuardController:
         elapsed = time.time() - self.session_start_time
         self.session_stats["total_time"] = elapsed
         
-        # Check if we have enough labeled data to retrain
+        should_retrain = False
+
         if LABELED_DATA_FILE.exists():
             df = pd.read_csv(LABELED_DATA_FILE)
             if len(df) >= MIN_SAMPLES_FOR_TRAINING:
-                logger.info("Enough labeled data for retraining")
-                self._retrain_classifier()
+                logger.info("Enough labeled feedback samples for retraining")
+                should_retrain = True
+
+        if not should_retrain and USER_PASSIVE_LABELS_FILE.exists():
+            try:
+                with USER_PASSIVE_LABELS_FILE.open("r", encoding="utf-8") as passive_file:
+                    passive_samples = sum(1 for line in passive_file if line.strip())
+                if passive_samples >= MIN_PERSONAL_FEEDBACK_FOR_RETRAIN:
+                    logger.info("Enough passive labels (%d) for retraining", passive_samples)
+                    should_retrain = True
+            except Exception as exc:
+                logger.warning(f"Failed to inspect passive labels for retraining: {exc}")
+
+        if should_retrain:
+            self._retrain_classifier()
         
         self._save_session_analytics()
         self._print_final_report()
     
     def _retrain_classifier(self):
         """Retrain classifier with labeled feedback"""
-        logger.info("Retraining classifier with user feedback...")
-        
+        logger.info("Retraining classifier with personalized feedback...")
+
         try:
-            df_labeled = pd.read_csv(LABELED_DATA_FILE)
-            df_raw = pd.read_csv(RAW_DATA_FILE)
-            
-            if len(df_labeled) < MIN_SAMPLES_FOR_TRAINING:
+            feature_vectors: List[List[float]] = []
+            label_targets: List[int] = []
+
+            df_labeled = pd.DataFrame()
+            if LABELED_DATA_FILE.exists():
+                df_labeled = pd.read_csv(LABELED_DATA_FILE)
+
+            if not df_labeled.empty and RAW_DATA_FILE.exists():
+                df_raw = pd.read_csv(RAW_DATA_FILE)
+                raw_events = [
+                    ActivityEvent(
+                        timestamp=row['timestamp'],
+                        event_type=row['event_type'],
+                        app_name=row['app_name'],
+                        url=row['url'],
+                        detail=row['detail']
+                    )
+                    for _, row in df_raw.iterrows()
+                ]
+
+                for _, row in df_labeled.iterrows():
+                    features = self.feature_extractor.extract_features(
+                        raw_events,
+                        window_size_seconds=DETECTION_WINDOW_SIZE
+                    )
+                    feature_vectors.append(features.tolist())
+                    label_targets.append(int(row['label']))
+
+            passive_samples = self._load_passive_label_samples()
+            for vector, target in passive_samples:
+                feature_vectors.append(vector)
+                label_targets.append(target)
+
+            total_samples = len(feature_vectors)
+            if total_samples < MIN_PERSONAL_FEEDBACK_FOR_RETRAIN:
+                logger.info(
+                    "Skipping retraining; need at least %d personalized samples (have %d)",
+                    MIN_PERSONAL_FEEDBACK_FOR_RETRAIN,
+                    total_samples,
+                )
                 return
-            
-            # Extract features for labeled data
-            raw_events = [
-                ActivityEvent(
-                    timestamp=row['timestamp'],
-                    event_type=row['event_type'],
-                    app_name=row['app_name'],
-                    url=row['url'],
-                    detail=row['detail']
-                )
-                for _, row in df_raw.iterrows()
-            ]
-            
-            feature_vectors = []
-            labels = []
-            
-            for _, row in df_labeled.iterrows():
-                features = self.feature_extractor.extract_features(
-                    raw_events,
-                    window_size_seconds=DETECTION_WINDOW_SIZE
-                )
-                feature_vectors.append(features)
-                labels.append(row['label'])
-            
-            if feature_vectors:
-                X = np.array(feature_vectors)
-                y = np.array(labels)
-                report = self.model_ensemble.classification_pipeline.fit(
-                    X,
-                    y,
-                    RANDOM_FOREST_MODEL_FILE,
-                    SCALER_FILE,
-                    CLASSIFIER_CALIBRATOR_FILE,
-                )
-                self.model_ensemble.use_classifier = True
-                stats = report.stats
-                self._register_artifact(report.artifact)
-                self.model_ensemble.save(MODELS_DIR)
-                logger.info(f"Classifier retraining completed: {stats}")
-                print(f"\n✨ Classifier retrained with {len(df_labeled)} samples")
-        
+
+            if len(set(label_targets)) < 2:
+                logger.info("Skipping retraining; require both focus and distraction labels")
+                return
+
+            X = np.array(feature_vectors)
+            y = np.array(label_targets)
+            report = self.model_ensemble.classification_pipeline.fit(
+                X,
+                y,
+                RANDOM_FOREST_MODEL_FILE,
+                SCALER_FILE,
+                CLASSIFIER_CALIBRATOR_FILE,
+            )
+            self.model_ensemble.use_classifier = True
+            stats = report.stats
+            self._register_artifact(report.artifact)
+            self.model_ensemble.save(MODELS_DIR)
+            logger.info(f"Classifier retraining completed: {stats}")
+            print(f"\nΓ£¿ Classifier retrained with {total_samples} samples")
+
         except Exception as e:
             logger.error(f"Retraining failed: {e}")
     
@@ -424,6 +492,7 @@ class FocusGuardController:
         
         # Initialize session
         self.session_start_time = time.time()
+        session_id = datetime.now().isoformat()
         self.session_stats = {
             "total_time": 0,
             "focused_time": 0,
@@ -433,6 +502,12 @@ class FocusGuardController:
             "user_feedback_collected": 0
         }
         self.events_buffer.clear()
+        self.current_session_id = session_id
+        self.last_prediction = None
+        self._last_passive_label_time = (
+            self.session_start_time - PASSIVE_LABEL_MIN_INTERVAL_SECONDS
+        )
+        self._prediction_warning_logged = False
 
         # Reset event buffer in the activity monitor so each session starts clean
         if hasattr(self.activity_monitor, "clear_events"):
@@ -448,7 +523,8 @@ class FocusGuardController:
         return {
             "status": "started",
             "start_time": self.session_start_time,
-            "monitoring": True
+            "monitoring": True,
+            "session_id": session_id,
         }
     
     def stop_detection_session(self):
@@ -486,6 +562,10 @@ class FocusGuardController:
             
             # Reset session
             self.session_start_time = None
+            self.current_session_id = None
+            self.last_prediction = None
+            self._prediction_warning_logged = False
+            self._last_passive_label_time = 0.0
             
             logger.info(f"Session completed: {total_session_time/60:.1f} minutes, {len(self.events_buffer)} events")
             return session_data
@@ -515,8 +595,10 @@ class FocusGuardController:
             self.events_buffer.extend(recent_events)
             self.session_stats['total_events'] += len(recent_events)
 
+        model_ready = getattr(self.model_ensemble.anomaly_detector, "is_fitted", False)
+
         # Process the buffer to detect anomalies and update focus stats
-        if len(self.events_buffer) > 5:
+        if len(self.events_buffer) > 5 and model_ready:
             try:
                 # Extract features from the current buffer
                 feature_vector = self.feature_extractor.extract_features(
@@ -530,7 +612,10 @@ class FocusGuardController:
                     feature_array = feature_vector
 
                 features = feature_array.reshape(1, -1)
-                feature_map = dict(zip(self.feature_extractor.get_feature_names(), feature_array))
+                feature_map = {
+                    name: float(value)
+                    for name, value in zip(self.feature_extractor.get_feature_names(), feature_array)
+                }
 
                 # Get prediction
                 results = self.model_ensemble.predict(features)
@@ -587,11 +672,89 @@ class FocusGuardController:
                     "anomaly_score": anomaly_score,
                     "classifier_probability": classifier_probability,
                     "heuristic_triggered": heuristic_triggered,
+                    "is_anomaly": is_anomaly,
                 }
-            except Exception as e:
-                logger.warning(f"Real-time prediction failed: {e}")
+
+                try:
+                    record_feature_snapshot(
+                        self.current_session_id,
+                        feature_map,
+                        source_timestamp=current_time,
+                    )
+                except Exception as exc:
+                    logger.debug("Failed to persist feature snapshot: %s", exc)
+
+                dominant_app = None
+                if self.events_buffer:
+                    app_counts = Counter(
+                        event.app_name
+                        for event in self.events_buffer
+                        if getattr(event, "app_name", None)
+                    )
+                    if app_counts:
+                        dominant_app = app_counts.most_common(1)[0][0]
+
+                passive_label_emitted = False
+                time_since_passive = current_time - getattr(self, "_last_passive_label_time", 0.0)
+                if time_since_passive >= PASSIVE_LABEL_MIN_INTERVAL_SECONDS:
+                    anomaly_confidence = min(max(confidence, 0.0), 1.0)
+                    passive_label = None
+                    passive_confidence = None
+                    passive_reason = None
+
+                    if is_anomaly and anomaly_confidence >= 0.75:
+                        passive_label = "distracted"
+                        passive_confidence = anomaly_confidence
+                        passive_reason = "high_confidence_anomaly"
+                    else:
+                        focus_confidence = max(0.0, 1.0 - anomaly_confidence)
+                        if (
+                            not is_anomaly
+                            and focus_confidence >= 0.7
+                            and feature_map.get("productive_app_ratio", 0.0) >= 0.6
+                        ):
+                            passive_label = "focused"
+                            passive_confidence = focus_confidence
+                            passive_reason = "consistent_focus_signal"
+
+                    if passive_label:
+                        try:
+                            record_passive_label(
+                                self.current_session_id,
+                                passive_label,
+                                confidence=passive_confidence,
+                                reason=passive_reason,
+                                features=feature_map,
+                                app_name=dominant_app,
+                            )
+                            self._last_passive_label_time = current_time
+                            passive_label_emitted = True
+                            logger.debug(
+                                "Passive label recorded: %s (confidence=%.2f, reason=%s)",
+                                passive_label,
+                                passive_confidence,
+                                passive_reason,
+                            )
+                        except Exception as exc:
+                            logger.debug("Failed to persist passive label: %s", exc)
+
+                self.last_prediction["passive_label_recorded"] = passive_label_emitted
+                self._prediction_warning_logged = False
+
+            except RuntimeError as exc:
+                if not self._prediction_warning_logged:
+                    logger.warning("Real-time prediction unavailable: %s", exc)
+                    self._prediction_warning_logged = True
+                self.last_prediction = None
+            except Exception as exc:
+                logger.warning(f"Real-time prediction failed: {exc}")
+                self.last_prediction = None
         else:
-            # Not enough data yet – assume focused for the elapsed interval
+            if len(self.events_buffer) > 5 and not model_ready and not self._prediction_warning_logged:
+                logger.warning("Skipping live predictions; anomaly detector not fitted yet")
+                self._prediction_warning_logged = True
+
+            # Not enough data yet ΓÇô assume focused for the elapsed interval
             last_time = getattr(self, 'last_check_time', self.session_start_time)
             time_delta = max(current_time - last_time, 0.0)
             if time_delta > 0:
@@ -638,7 +801,7 @@ def main():
     import sys
     
     logger.info(f"Starting {APP_NAME} v{APP_VERSION}")
-    print(f"\n🎯 {APP_NAME} - {APP_DESCRIPTION}")
+    print(f"\n≡ƒÄ» {APP_NAME} - {APP_DESCRIPTION}")
     print(f"   Version: {APP_VERSION}\n")
     
     controller = FocusGuardController()
@@ -651,7 +814,7 @@ def main():
             if not MODEL_FILE.exists():
                 controller.phase1_calibration()
             else:
-                print("✅ Model found. Starting detection...\n")
+                print("Γ£à Model found. Starting detection...\n")
             
             # Run detection for 10 minutes (600 seconds) or until interrupted
             controller.phase2_detection(duration=600)

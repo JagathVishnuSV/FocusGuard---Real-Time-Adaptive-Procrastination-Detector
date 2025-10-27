@@ -32,6 +32,7 @@ export interface SessionStatus {
   active: boolean;
   is_running?: boolean; // Backend might send this
   start_time: string | null;
+  session_id?: string | null;
   stats: {
     total_events: number;
     anomalies: number;
@@ -56,6 +57,8 @@ export interface PredictionSummary {
   confidence?: number;
   heuristic_triggered?: boolean;
   timestamp?: string | null;
+  session_id?: string | null;
+  features?: Record<string, number>;
 }
 
 export interface HealthStatus {
@@ -71,4 +74,18 @@ export interface ActivityEvent {
   app: string;
   title?: string;
   detail?: string;
+  prediction?: PredictionSummary;
+  session_id?: string | null;
+  features?: Record<string, number>;
+}
+
+export interface PersonalFeedbackRequest {
+  user_label: 'focused' | 'distracted';
+  predicted_label?: 'focused' | 'distracted';
+  timestamp?: string | number;
+  session_id?: string | null;
+  prediction?: PredictionSummary | null;
+  features?: Record<string, number>;
+  app_name?: string | null;
+  notes?: string;
 }

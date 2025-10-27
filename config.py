@@ -12,9 +12,10 @@ PROJECT_ROOT = Path(__file__).parent.absolute()
 DATA_DIR = PROJECT_ROOT / "data"
 MODELS_DIR = PROJECT_ROOT / "models"
 LOGS_DIR = PROJECT_ROOT / "logs"
+USER_DATA_DIR = DATA_DIR / "personalization"
 
 # Create directories if they don't exist
-for directory in [DATA_DIR, MODELS_DIR, LOGS_DIR]:
+for directory in [DATA_DIR, MODELS_DIR, LOGS_DIR, USER_DATA_DIR]:
     directory.mkdir(exist_ok=True)
 
 # ===== FILE PATHS =====
@@ -29,6 +30,10 @@ LOG_FILE = LOGS_DIR / "focusguard.log"
 ANALYTICS_DB = DATA_DIR / "analytics.json"
 SESSION_LOG = DATA_DIR / "session_log.jsonl"
 MODEL_REGISTRY_FILE = MODELS_DIR / "artifacts.json"
+USER_FEEDBACK_FILE = USER_DATA_DIR / "feedback.jsonl"
+USER_FEATURE_SNAPSHOTS = USER_DATA_DIR / "feature_snapshots.jsonl"
+USER_OVERRIDES_FILE = USER_DATA_DIR / "overrides.json"
+USER_PASSIVE_LABELS_FILE = USER_DATA_DIR / "passive_labels.jsonl"
 
 # ===== PHASE 1: CALIBRATION SETTINGS =====
 CALIBRATION_DURATION_SECONDS = 300  # 5 minutes (90 for quick testing)
@@ -38,6 +43,7 @@ CALIBRATION_WINDOW_SIZE = 10  # seconds for feature extraction during calibratio
 DETECTION_INTERVAL_SECONDS = 5  # Check every 5 seconds
 DETECTION_WINDOW_SIZE = 30  # Use last 30 seconds of activity for feature extraction
 ANOMALY_CONFIDENCE_THRESHOLD = 0.6  # Confidence threshold for alerts (0-1)
+PASSIVE_LABEL_MIN_INTERVAL_SECONDS = 20  # Minimum spacing between auto labels to avoid flooding
 
 # ===== MODEL PARAMETERS =====
 ISOLATION_FOREST_PARAMS = {
@@ -109,6 +115,7 @@ FEEDBACK_AUTO_SKIP = False  # Skip feedback prompt if True
 REPORT_INTERVAL_SECONDS = 300  # Generate report every 5 minutes
 MIN_SAMPLES_FOR_TRAINING = 100  # Minimum labeled samples before retraining
 RETRAINING_INTERVAL_MINUTES = 30  # Retrain model every 30 minutes
+MIN_PERSONAL_FEEDBACK_FOR_RETRAIN = 12
 
 # ===== WEBSITE CATEGORIZATION =====
 WEBSITE_CATEGORIES: Dict[str, str] = {

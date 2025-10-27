@@ -124,4 +124,14 @@ class ProcrastinationClassifier:
         if calibrator_path is not None and calibrator_path.exists():
             self.calibrator = joblib.load(str(calibrator_path))
         self.is_fitted = True
+        if hasattr(self.model, "feature_importances_"):
+            try:
+                self.feature_importance = pd.Series(
+                    self.model.feature_importances_,
+                    index=self.config.FEATURE_NAMES,
+                ).sort_values(ascending=False)
+            except Exception:  # pragma: no cover - defensive guard
+                self.feature_importance = None
+        else:
+            self.feature_importance = None
         logger.info("Classifier loaded from %s", model_path)

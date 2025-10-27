@@ -9,10 +9,14 @@ import json
 import logging
 from pathlib import Path
 from datetime import datetime, timedelta
+from collections import Counter
+from typing import Any
+import time
 import pandas as pd
 import numpy as np
 
 from config import *
+from personalization import FeedbackRecord, record_feedback, ensure_storage, upsert_override
 
 logger = logging.getLogger(__name__)
 
@@ -22,10 +26,14 @@ app.config['JSON_SORT_KEYS'] = False
 # Enable CORS for all routes - allow both 3000 and 3001 ports
 CORS(app, origins=["http://localhost:3000", "http://localhost:3001"])
 
+# Ensure per-user storage exists so feedback can be persisted.
+ensure_storage()
+
 # Store session data in memory
 current_session = {
     "active": False,
     "start_time": None,
+    "session_id": None,
     "stats": {
         "total_events": 0,
         "anomalies": 0,
@@ -158,15 +166,81 @@ class AnalyticsEngine:
     
     def get_top_distractions(self) -> dict:
         """Get top distraction triggers"""
-        if not LABELED_DATA_FILE.exists():
+        counts: Counter[str] = Counter()
+
+        def is_distraction_label(label: Any) -> bool:
+            if label is None:
+                return False
+            text = str(label).strip().lower()
+            return text in {"distracted", "procrastinating", "negative", "1", "true", "yes"}
+
+        if LABELED_DATA_FILE.exists():
+            try:
+                df = pd.read_csv(LABELED_DATA_FILE)
+                if {'label', 'app'}.issubset(df.columns):
+                    filtered = df[df['label'] == 1]['app'].dropna()
+                    for raw_app in filtered:
+                        app_name = str(raw_app).strip()
+                        if app_name:
+                            counts[app_name] += 1
+            except Exception as exc:  # pragma: no cover - defensive guard
+                logger.debug("Failed to aggregate legacy distraction data: %s", exc)
+
+        if USER_FEEDBACK_FILE.exists():
+            try:
+                with USER_FEEDBACK_FILE.open('r', encoding='utf-8') as handle:
+                    for raw in handle:
+                        raw = raw.strip()
+                        if not raw:
+                            continue
+                        try:
+                            entry = json.loads(raw)
+                        except json.JSONDecodeError:
+                            continue
+
+                        label = entry.get('user_label') or entry.get('label')
+                        if not is_distraction_label(label):
+                            continue
+
+                        app_name = entry.get('app_name') or entry.get('app')
+                        if not app_name:
+                            continue
+
+                        normalized = str(app_name).strip()
+                        if normalized:
+                            counts[normalized] += 1
+            except OSError as exc:  # pragma: no cover - defensive guard
+                logger.debug("Failed to read personalization feedback: %s", exc)
+
+        if USER_PASSIVE_LABELS_FILE.exists():
+            try:
+                with USER_PASSIVE_LABELS_FILE.open('r', encoding='utf-8') as handle:
+                    for raw in handle:
+                        raw = raw.strip()
+                        if not raw:
+                            continue
+                        try:
+                            entry = json.loads(raw)
+                        except json.JSONDecodeError:
+                            continue
+
+                        if not is_distraction_label(entry.get('label')):
+                            continue
+
+                        app_name = entry.get('app_name') or entry.get('context', {}).get('app_name') if isinstance(entry.get('context'), dict) else None
+                        if not app_name:
+                            continue
+
+                        normalized = str(app_name).strip()
+                        if normalized:
+                            counts[normalized] += 1
+            except OSError as exc:  # pragma: no cover - defensive guard
+                logger.debug("Failed to read passive personalization labels: %s", exc)
+
+        if not counts:
             return {}
-        
-        try:
-            df = pd.read_csv(LABELED_DATA_FILE)
-            distractions = df[df['label'] == 1]['app'].value_counts().head(5)
-            return distractions.to_dict()
-        except:
-            return {}
+
+        return {app: hits for app, hits in counts.most_common(5)}
     
     def get_feature_importance(self) -> dict:
         """Get feature importance from classifier"""
@@ -176,17 +250,18 @@ class AnalyticsEngine:
             classifier = ProcrastinationClassifier(config)
             model_path = Path(RANDOM_FOREST_MODEL_FILE)
             scaler_path = Path(SCALER_FILE)
+            calibrator_path = Path(config.CLASSIFIER_CALIBRATOR_FILE)
 
             if REAL_TIME_AVAILABLE and focus_controller:
                 for artifact in focus_controller.get_model_registry():
                     if artifact.get("name") == "procrastination_classifier":
                         model_path = Path(artifact.get("path", model_path))
-                        scaler_path = Path(
-                            artifact.get("metadata", {}).get("scaler_path", scaler_path)
-                        )
+                        metadata = artifact.get("metadata", {})
+                        scaler_path = Path(metadata.get("scaler_path", scaler_path))
+                        calibrator_path = Path(metadata.get("calibrator_path", calibrator_path))
                         break
 
-            classifier.load(model_path, scaler_path)
+            classifier.load(model_path, scaler_path, calibrator_path if calibrator_path.exists() else None)
             return classifier.get_feature_importance(top_n=8)
         except Exception as e:
             logger.warning(f"Could not load feature importance: {e}")
@@ -321,6 +396,7 @@ def get_session_status():
             # Get live stats from controller and mirror them into the lightweight session cache
             real_stats = focus_controller.get_current_session_stats()
             current_session['active'] = real_stats.get('active', False)
+            current_session['session_id'] = real_stats.get('session_id', focus_controller.current_session_id)
             current_session['stats'] = {
                 'total_events': real_stats.get('total_events', 0),
                 'anomalies': real_stats.get('anomalies_detected', 0),
@@ -365,9 +441,10 @@ def start_session():
         try:
             # Start real-time monitoring
             logger.info("Starting real-time detection session...")
-            focus_controller.start_detection_session()
+            controller_response = focus_controller.start_detection_session()
             current_session['active'] = True
             current_session['start_time'] = datetime.now().isoformat()
+            current_session['session_id'] = controller_response.get("session_id")
             current_session['stats'] = {
                 "total_events": 0,
                 "anomalies": 0,
@@ -380,6 +457,7 @@ def start_session():
                 "status": "started", 
                 "session": current_session, 
                 "real_time": True,
+                "session_id": controller_response.get("session_id"),
                 "message": "Real-time monitoring started"
             })
         except Exception as e:
@@ -392,6 +470,7 @@ def start_session():
         # Fallback to mock session
         current_session['active'] = True
         current_session['start_time'] = datetime.now().isoformat()
+        current_session['session_id'] = "mock-session"
         current_session['stats'] = {
             "total_events": 0,
             "anomalies": 0,
@@ -426,12 +505,14 @@ def stop_session():
                     "distracted_time": int(session_data.get('distracted_time', 0)),
                     "elapsed_time": session_data.get('duration', current_session['stats'].get('elapsed_time', 0))
                 })
+                current_session['session_id'] = session_data.get('session_id')
             
             current_session['active'] = False
             return jsonify({
                 "status": "stopped", 
                 "session": current_session, 
                 "real_time": True,
+                "session_id": session_data.get('session_id'),
                 "message": "Real-time monitoring stopped and session saved"
             })
         except Exception as e:
@@ -477,6 +558,25 @@ def get_recent_activity():
                     "title": event.window_title or "",
                     "detail": event.detail or ""
                 })
+
+            if focus_controller.last_prediction:
+                prediction = focus_controller.last_prediction
+                activity_data.append({
+                    "timestamp": datetime.fromtimestamp(prediction.get("timestamp", datetime.now().timestamp())).isoformat(),
+                    "type": "prediction",
+                    "app": "FocusGuard Ensemble",
+                    "title": "Latest ensemble decision",
+                    "detail": json.dumps({
+                        "combined_score": prediction.get("combined_score"),
+                        "anomaly_score": prediction.get("anomaly_score"),
+                        "classifier_probability": prediction.get("classifier_probability"),
+                        "confidence": prediction.get("confidence"),
+                        "heuristic_triggered": prediction.get("heuristic_triggered"),
+                    }),
+                    "prediction": prediction,
+                    "session_id": prediction.get("session_id", focus_controller.current_session_id),
+                    "features": prediction.get("features"),
+                })
             
             return jsonify(activity_data)
         except Exception as e:
@@ -493,6 +593,76 @@ def get_recent_activity():
                 "detail": "Real-time monitoring unavailable"
             }
         ])
+
+
+@app.route('/api/personalization/feedback', methods=['POST'])
+def submit_personal_feedback():
+    """Capture user-provided labels for ensemble predictions."""
+    payload = request.get_json(silent=True) or {}
+
+    user_label = str(payload.get("user_label", "")).strip().lower()
+    if user_label not in {"focused", "distracted"}:
+        return jsonify({"error": "user_label must be 'focused' or 'distracted'"}), 400
+
+    prediction_meta = payload.get("prediction") or {}
+    predicted_label = str(payload.get("predicted_label", "")).strip().lower()
+    if not predicted_label:
+        score = prediction_meta.get("combined_score")
+        if score is None:
+            score = prediction_meta.get("confidence")
+        predicted_label = "distracted" if score and float(score) >= ANOMALY_CONFIDENCE_THRESHOLD else "focused"
+
+    timestamp_value = payload.get("timestamp")
+    if isinstance(timestamp_value, str):
+        try:
+            timestamp_epoch = datetime.fromisoformat(timestamp_value).timestamp()
+        except ValueError:
+            timestamp_epoch = time.time()
+    elif isinstance(timestamp_value, (int, float)):
+        timestamp_epoch = float(timestamp_value)
+    else:
+        timestamp_epoch = time.time()
+
+    session_id = payload.get("session_id")
+    if not session_id and REAL_TIME_AVAILABLE and focus_controller:
+        session_id = focus_controller.current_session_id
+
+    features_payload = payload.get("features")
+    if not features_payload and REAL_TIME_AVAILABLE and focus_controller and focus_controller.last_prediction:
+        features_payload = focus_controller.last_prediction.get("features")
+
+    app_name = payload.get("app_name")
+
+    record = FeedbackRecord(
+        timestamp=timestamp_epoch,
+        session_id=session_id,
+        user_label=user_label,
+        predicted_label=predicted_label,
+        confidence=float(prediction_meta.get("confidence")) if prediction_meta.get("confidence") is not None else None,
+        combined_score=float(prediction_meta.get("combined_score")) if prediction_meta.get("combined_score") is not None else None,
+        classifier_probability=float(prediction_meta.get("classifier_probability")) if prediction_meta.get("classifier_probability") is not None else None,
+        anomaly_score=float(prediction_meta.get("anomaly_score")) if prediction_meta.get("anomaly_score") is not None else None,
+        heuristic_triggered=bool(prediction_meta.get("heuristic_triggered")) if prediction_meta.get("heuristic_triggered") is not None else None,
+        features=features_payload,
+        app_name=str(app_name).strip() if app_name else None,
+        notes=payload.get("notes"),
+    )
+
+    record_feedback(record)
+
+    if REAL_TIME_AVAILABLE and focus_controller and focus_controller.session_start_time:
+        focus_controller.session_stats["user_feedback_collected"] = focus_controller.session_stats.get("user_feedback_collected", 0) + 1
+
+    predicted_label_norm = predicted_label
+    user_label_norm = user_label
+    if app_name and user_label_norm != predicted_label_norm:
+        try:
+            override_category = "productive" if user_label_norm == "focused" else "distraction"
+            upsert_override(app_name=app_name, category=override_category)
+        except ValueError as exc:
+            logger.warning("Failed to apply personalization override: %s", exc)
+
+    return jsonify({"status": "recorded"})
 
 
 @app.route('/api/export', methods=['GET'])
