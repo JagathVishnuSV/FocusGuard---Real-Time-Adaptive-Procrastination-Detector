@@ -6,10 +6,10 @@ Extracts 16 machine learning features from real-time activity events
 import numpy as np
 import pandas as pd
 import logging
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any, Optional, Tuple
 from collections import Counter, defaultdict
-from datetime import datetime
 import math
+from urllib.parse import urlparse
 
 from activity_stream import ActivityEvent, EventType
 from config import FEATURE_NAMES, WEBSITE_CATEGORIES
@@ -24,6 +24,11 @@ class FeatureExtractor:
     def __init__(self, config):
         self.config = config
         self.website_categories = WEBSITE_CATEGORIES
+        self._last_context_summary: Dict[str, Any] = {
+            "dominant_context": "unknown",
+            "context_confidence": 0.0,
+            "context_counts": {},
+        }
         
         # Define productive and distraction apps from config
         self.productive_apps = set(config.SIMULATION_PARAMS.get("productive_apps", [
@@ -40,8 +45,71 @@ class FeatureExtractor:
             "chrome.exe", "firefox.exe", "msedge.exe", "iexplore.exe", 
             "opera.exe", "brave.exe", "safari.exe"
         }
+
+        # Lightweight work-context heuristics used for both ML signals and UI metadata.
+        self.context_keywords: Dict[str, List[str]] = {
+            "development": [
+                "code", "ide", "compiler", "terminal", "repository", "pull request", "stack overflow",
+                "documentation", "npm", "pip", "build", "deploy", "intellij", "webstorm", "goland",
+                "android studio", "xcode", "visual studio", "pytest", "gradle", "webpack"
+            ],
+            "research": [
+                "how to", "tutorial", "docs", "reference", "guide", "mdn", "wiki", "analysis",
+                "whitepaper", "faq", "knowledge base", "research", "case study"
+            ],
+            "communication": [
+                "slack", "teams", "outlook", "zoom", "meet", "email", "chat", "calendar", "inbox",
+                "webex", "hangouts", "notifier", "messenger"
+            ],
+            "project": [
+                "notion", "trello", "asana", "jira", "planner", "roadmap", "retro", "metrics",
+                "monday", "clickup", "airtable", "status page"
+            ],
+            "entertainment": [
+                "youtube", "netflix", "reddit", "twitch", "spotify", "game", "gaming", "discord",
+                "social", "instagram", "twitter", "facebook", "tiktok", "hulu", "prime video", "playlist"
+            ],
+            "design": [
+                "figma", "adobe", "photoshop", "illustrator", "xd", "sketch", "invision", "canva",
+                "premiere", "after effects", "blender"
+            ],
+            "finance": [
+                "invoice", "billing", "quickbooks", "xero", "tally", "ledger", "budget", "expense",
+                "stripe", "paypal", "bank", "payout", "payroll"
+            ],
+            "writing": [
+                "draft", "copy", "editor", "writer", "blog", "article", "notebook", "word", "markdown",
+                "notepad", "obsidian"
+            ],
+            "ops": [
+                "grafana", "prometheus", "datadog", "kibana", "pagerduty", "new relic", "status", "monitor",
+                "ops", "incident", "alert", "log"
+            ],
+        }
+
+        self.context_negative_keywords: Dict[str, List[str]] = {
+            "entertainment": ["documentation", "developer", "api", "stack overflow", "jira"],
+            "development": ["playlist", "trailer", "lyrics", "season"],
+            "communication": ["gaming", "spotify"],
+        }
+
+        self.context_process_hints: Dict[str, List[str]] = {
+            "development": ["\\idea", "\\studio", "python.exe", "node.exe", "java.exe", "deno", "code.exe"],
+            "design": ["photoshop.exe", "xd.exe", "figma.exe", "illustrator.exe", "premiere.exe", "blender.exe"],
+            "finance": ["excel.exe", "quickbooks.exe", "tally.exe", "powerbi.exe", "sapgui.exe"],
+            "communication": ["teams.exe", "slack.exe", "zoom.exe", "outlook.exe", "skype.exe"],
+            "entertainment": ["steam.exe", "vlc.exe", "spotify.exe", "epicgameslauncher.exe"],
+            "ops": ["grafana", "prometheus", "datadog", "kibana", "splunk"],
+        }
     
-    def _categorize_app(self, app_name: str, window_title: str = "", url: str = "") -> str:
+    def _categorize_app(
+        self,
+        app_name: str,
+        window_title: str = "",
+        url: str = "",
+        process_path: Optional[str] = None,
+        window_class: Optional[str] = None,
+    ) -> str:
         """Categorize an app as productive, distraction, or neutral"""
         if not app_name:
             return "neutral"
@@ -52,7 +120,25 @@ class FeatureExtractor:
         if override_category in {"productive", "distraction"}:
             return override_category
         
-        # Check direct app categorization
+        # Heuristic context enriched categorization
+        context_label, context_confidence = self.infer_context(
+            app_name,
+            window_title,
+            url,
+            process_path=process_path,
+            window_class=window_class,
+        )
+
+        if context_label == "entertainment" and context_confidence >= 0.4:
+            return "distraction"
+
+        if context_label in {"development", "research", "project", "design", "writing", "finance", "ops"} and context_confidence >= 0.4:
+            return "productive"
+
+        if context_label == "communication" and context_confidence >= 0.6:
+            return "productive"
+
+        # Check direct app categorization as fallback
         if any(prod_app.lower() in app_lower for prod_app in self.productive_apps):
             return "productive"
         
@@ -89,6 +175,101 @@ class FeatureExtractor:
         
         return "neutral"
     
+    def infer_context(
+        self,
+        app_name: Optional[str],
+        window_title: str = "",
+        url: str = "",
+        *,
+        process_path: Optional[str] = None,
+        window_class: Optional[str] = None,
+    ) -> Tuple[str, float]:
+        """Infer lightweight work context label and confidence."""
+        if not app_name and not window_title and not url:
+            return "unknown", 0.0
+
+        confidence = 0.0
+        label = "unknown"
+
+        app_lower = (app_name or "").lower()
+        path_lower = (process_path or "").lower()
+        class_lower = (window_class or "").lower()
+
+        host = ""
+        if url:
+            try:
+                parsed = urlparse(url if "://" in url else f"https://{url}")
+                host = parsed.netloc.lower()
+            except ValueError:
+                host = ""
+
+        target_parts = [app_name or "", window_title or "", url or "", host, path_lower, class_lower]
+        target_text = " ".join(filter(None, target_parts)).lower()
+
+        def assign(candidate: str, boost: float) -> None:
+            nonlocal label, confidence
+            if boost > confidence:
+                label = candidate
+                confidence = min(boost, 1.0)
+
+        # Direct app hints using executable names
+        if app_lower.endswith(("vscode.exe", "code.exe", "pycharm64.exe", "devenv.exe", "clion64.exe", "webstorm64.exe")):
+            assign("development", 0.85)
+        elif any(token in app_lower for token in ["slack", "teams", "zoom", "outlook", "thunderbird", "skype"]):
+            assign("communication", 0.85)
+        elif any(token in app_lower for token in ["notion", "trello", "asana", "monday", "jira", "obsidian", "clickup"]):
+            assign("project", 0.8)
+        elif any(token in app_lower for token in ["spotify", "netflix", "vlc", "steam", "discord", "primevideo"]):
+            assign("entertainment", 0.9)
+
+        # Executable path hints
+        if path_lower:
+            for candidate, hints in self.context_process_hints.items():
+                if any(hint in path_lower for hint in hints):
+                    assign(candidate, max(confidence, 0.8))
+
+        # Window class heuristics
+        if class_lower:
+            if "chrome_widgetwin" in class_lower or "browser" in class_lower:
+                if "devtools" in class_lower:
+                    assign("development", 0.6)
+            elif "sunawtframe" in class_lower:
+                assign("development", max(confidence, 0.55))
+
+        # Keyword based refinement using aggregated text
+        for candidate, keywords in self.context_keywords.items():
+            if any(keyword in target_text for keyword in keywords):
+                assign(candidate, max(confidence, 0.6))
+
+        # Browsing domain hints (including derived host)
+        if host:
+            if any(domain in host for domain in ["figma.com", "dribbble.com", "behance.net"]):
+                assign("design", 0.75)
+            elif any(domain in host for domain in ["quickbooks", "stripe.com", "pay.google.com", "bank"]):
+                assign("finance", 0.7)
+
+        for domain, category in self.website_categories.items():
+            if domain in target_text:
+                if category in {"development", "learning", "productivity"}:
+                    assign("research", max(confidence, 0.7))
+                elif category == "distraction":
+                    assign("entertainment", max(confidence, 0.8))
+                elif category == "shopping":
+                    assign("project", max(confidence, 0.5))
+
+        # Negative keyword suppression
+        if label in self.context_negative_keywords:
+            if any(term in target_text for term in self.context_negative_keywords[label]):
+                confidence = max(0.0, confidence - 0.3)
+                if confidence < 0.4:
+                    label = "unknown"
+
+        # Guard against low-confidence assignments
+        if confidence < 0.35:
+            return "unknown", round(confidence, 3)
+
+        return label, round(confidence, 3)
+
     def _calculate_entropy(self, data: List[Any]) -> float:
         """Calculate Shannon entropy of a list"""
         if not data:
@@ -191,14 +372,28 @@ class FeatureExtractor:
         
         # Feature 6 & 7: Productive vs distraction app ratios
         app_categories = []
+        context_counter: Counter[str] = Counter()
+        context_confidence_budget: Dict[str, float] = defaultdict(float)
         for event in window_events:
             if event.app_name:
                 category = self._categorize_app(
                     event.app_name, 
                     event.window_title or "", 
-                    event.url or ""
+                    event.url or "",
+                    event.process_path,
+                    event.window_class,
                 )
                 app_categories.append(category)
+
+                context_label, context_confidence = self.infer_context(
+                    event.app_name,
+                    event.window_title or "",
+                    event.url or "",
+                    process_path=event.process_path,
+                    window_class=event.window_class,
+                )
+                context_counter[context_label] += 1
+                context_confidence_budget[context_label] += context_confidence
         
         total_categorized = len(app_categories)
         productive_count = app_categories.count("productive")
@@ -284,6 +479,23 @@ class FeatureExtractor:
         # Handle any NaN or infinite values
         features = np.nan_to_num(features, nan=0.0, posinf=1.0, neginf=0.0)
         
+        # Persist a lightweight context summary for downstream consumers.
+        if context_counter:
+            dominant_label, hits = context_counter.most_common(1)[0]
+            total_context = sum(context_counter.values()) or 1
+            avg_confidence = context_confidence_budget[dominant_label] / max(hits, 1)
+            self._last_context_summary = {
+                "dominant_context": dominant_label,
+                "context_confidence": round(min(avg_confidence + (hits / total_context) * 0.2, 1.0), 3),
+                "context_counts": dict(context_counter),
+            }
+        else:
+            self._last_context_summary = {
+                "dominant_context": "unknown",
+                "context_confidence": 0.0,
+                "context_counts": {},
+            }
+
         # Log feature extraction
         logger.debug(f"Extracted features from {len(window_events)} events: {dict(zip(FEATURE_NAMES, features))}")
         
@@ -312,6 +524,10 @@ class FeatureExtractor:
     def get_feature_names(self) -> List[str]:
         """Get list of feature names"""
         return FEATURE_NAMES.copy()
+
+    def get_last_context_summary(self) -> Dict[str, Any]:
+        """Expose the latest inferred work context summary."""
+        return self._last_context_summary.copy()
     
     def get_feature_descriptions(self) -> Dict[str, str]:
         """Get descriptions of each feature"""

@@ -45,6 +45,11 @@ interface PredictionMetadata {
   features?: Record<string, number>
   rawPrediction?: PredictionSummary | null
   predictionLabel?: 'focused' | 'distracted' | null
+  contextLabel?: string | null
+  contextConfidence?: number | null
+  contextCounts?: Record<string, number> | null
+  distractionScore?: number | null
+  url?: string | null
 }
 
 interface ProcessedEvent extends ActivityEvent, PredictionMetadata {
@@ -70,6 +75,11 @@ export const ActivityFeed: React.FC = () => {
       case 'prediction': {
         displayType = 'prediction'
         const predictionPayload = rawEvent.prediction ?? safeParseDetail(rawEvent.detail)
+        const payloadContext = predictionPayload?.context
+        const eventContext = (rawEvent as any).context
+        const detailContextLabel = predictionPayload?.dominant_context ?? predictionPayload?.dominantContext
+        const detailContextConfidence = predictionPayload?.context_confidence ?? predictionPayload?.contextConfidence
+        const detailContextCounts = predictionPayload?.context_counts ?? predictionPayload?.contextCounts
         const combined = predictionPayload?.combined_score ?? predictionPayload?.combinedScore
         const confidence = predictionPayload?.confidence
         const anomaly = predictionPayload?.anomaly_score ?? predictionPayload?.anomalyScore
@@ -112,6 +122,20 @@ export const ActivityFeed: React.FC = () => {
         if (heuristic) {
           description += ' • Heuristic triggered'
         }
+        const resolvedContextLabel = payloadContext?.label ?? eventContext?.label ?? detailContextLabel ?? null
+        const resolvedContextConfidence = payloadContext?.confidence ?? eventContext?.confidence ?? detailContextConfidence ?? null
+        if (resolvedContextLabel) {
+          const confidenceText = typeof resolvedContextConfidence === 'number' ? ` (${Math.round(resolvedContextConfidence * 100)}%)` : ''
+          description += ` • Context: ${resolvedContextLabel}${confidenceText}`
+        }
+        const resolvedDistractionScore = typeof predictionPayload?.distraction_score === 'number'
+          ? predictionPayload.distraction_score
+          : typeof (rawEvent as any).distraction_score === 'number'
+            ? (rawEvent as any).distraction_score
+            : null
+        if (typeof resolvedDistractionScore === 'number') {
+          description += ` • Score ${resolvedDistractionScore.toFixed(1)}`
+        }
 
         return {
           id: `${rawEvent.timestamp}-${index}`,
@@ -132,6 +156,11 @@ export const ActivityFeed: React.FC = () => {
           rawPrediction: predictionPayload ?? null,
           predictionLabel: predictedLabel,
           requiresFeedback: false,
+          contextLabel: resolvedContextLabel,
+          contextConfidence: resolvedContextConfidence,
+          contextCounts: payloadContext?.counts ?? eventContext?.counts ?? detailContextCounts ?? null,
+          distractionScore: resolvedDistractionScore,
+          url: (rawEvent as any).url ?? null,
         }
       }
       case 'app_switch':
@@ -170,6 +199,10 @@ export const ActivityFeed: React.FC = () => {
       displayType,
       description,
       requiresFeedback: false,
+      contextLabel: rawEvent.context?.label ?? null,
+      contextConfidence: rawEvent.context?.confidence ?? null,
+      contextCounts: rawEvent.context?.counts ?? null,
+      url: rawEvent.url ?? null,
     }
   }
 
@@ -393,6 +426,17 @@ export const ActivityFeed: React.FC = () => {
                       {event.detail}
                     </p>
                   )}
+                  {event.contextLabel && (
+                    <p className="text-xs text-slate-400 mt-1 truncate">
+                      Context: {event.contextLabel}
+                      {typeof event.contextConfidence === 'number' ? ` (${Math.round(event.contextConfidence * 100)}%)` : ''}
+                    </p>
+                  )}
+                  {typeof event.distractionScore === 'number' && (
+                    <p className="text-xs text-slate-400 mt-1 truncate">
+                      Distraction score: {event.distractionScore.toFixed(1)}
+                    </p>
+                  )}
                   {event.displayType === 'prediction' && event.requiresFeedback && (
                     <div className="grid grid-cols-2 gap-2 mt-3 text-xs text-slate-300">
                       {typeof event.combinedScore === 'number' && (
@@ -423,6 +467,12 @@ export const ActivityFeed: React.FC = () => {
                         <div>
                           <span className="font-semibold text-slate-100">Label:</span>{' '}
                           {event.predictionLabel === 'distracted' ? 'Distraction' : 'Focus'}
+                        </div>
+                      )}
+                      {typeof event.distractionScore === 'number' && (
+                        <div>
+                          <span className="font-semibold text-slate-100">Score:</span>{' '}
+                          {event.distractionScore.toFixed(1)}
                         </div>
                       )}
                       {event.heuristicTriggered !== undefined && (

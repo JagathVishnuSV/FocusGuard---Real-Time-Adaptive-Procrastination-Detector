@@ -10,7 +10,7 @@ import logging
 from pathlib import Path
 from datetime import datetime, timedelta
 from collections import Counter
-from typing import Any
+from typing import Any, Tuple
 import time
 import pandas as pd
 import numpy as np
@@ -167,6 +167,12 @@ class AnalyticsEngine:
     def get_top_distractions(self) -> dict:
         """Get top distraction triggers"""
         counts: Counter[str] = Counter()
+        dynamic_scores: Dict[str, Dict[str, Any]] = {}
+        if REAL_TIME_AVAILABLE and focus_controller:
+            try:
+                dynamic_scores = focus_controller.get_recent_distraction_scores()
+            except Exception as exc:
+                logger.debug("Failed to compute recent distraction scores: %s", exc)
 
         def is_distraction_label(label: Any) -> bool:
             if label is None:
@@ -238,9 +244,27 @@ class AnalyticsEngine:
                 logger.debug("Failed to read passive personalization labels: %s", exc)
 
         if not counts:
-            return {}
+            # Fall back to dynamic scores if any exist even when legacy counts are empty.
+            if not dynamic_scores:
+                return {}
 
-        return {app: hits for app, hits in counts.most_common(5)}
+        enriched = {}
+        for app, hits in counts.items():
+            enriched[app] = {"hits": hits}
+
+        for app, snapshot in dynamic_scores.items():
+            payload = enriched.setdefault(app, {})
+            payload.update(snapshot)
+
+        # Sort by highest average score if available, otherwise by hit count.
+        def ranking(item: Tuple[str, Dict[str, Any]]) -> Tuple[float, int]:
+            _, data = item
+            avg_score = float(data.get("avg_score", 0.0) or 0.0)
+            hits_value = int(data.get("hits", 0))
+            return (avg_score, hits_value)
+
+        top_entries = sorted(enriched.items(), key=ranking, reverse=True)[:5]
+        return {app: data for app, data in top_entries}
     
     def get_feature_importance(self) -> dict:
         """Get feature importance from classifier"""
@@ -303,11 +327,18 @@ class AnalyticsEngine:
         
         # Top distraction
         if top_distractions:
-            top_app = list(top_distractions.keys())[0]
+            top_app, top_meta = next(iter(top_distractions.items()))
+            avg_score = None
+            if isinstance(top_meta, dict):
+                avg_score = top_meta.get("avg_score")
             insights.append({
                 "type": "danger",
                 "title": f"🚫 Distraction Alert",
-                "text": f"{top_app} is your biggest distraction. Consider blocking it during work hours.",
+                "text": (
+                    f"{top_app} is your biggest distraction"
+                    + (f" with an intensity score around {avg_score:.0f}." if isinstance(avg_score, (int, float)) else ".")
+                    + " Consider blocking it during work hours."
+                ),
                 "action": "Enable blocker"
             })
         
@@ -418,6 +449,9 @@ def get_session_status():
                     'confidence': float(prediction_meta.get('confidence', 0.0) or 0.0),
                     'heuristic_triggered': bool(prediction_meta.get('heuristic_triggered', False)),
                     'prediction_timestamp': prediction_meta.get('timestamp'),
+                    'distraction_score': float(prediction_meta.get('distraction_score', 0.0) or 0.0),
+                    'dominant_context': prediction_meta.get('dominant_context'),
+                    'context_confidence': float(prediction_meta.get('context_confidence', 0.0) or 0.0),
                 })
 
             if current_session['active'] and focus_controller.session_start_time:
@@ -551,16 +585,41 @@ def get_recent_activity():
             activity_data = []
             
             for event in recent_events:
+                context_payload = None
+                if focus_controller and focus_controller.feature_extractor and event.app_name:
+                    try:
+                        label, confidence = focus_controller.feature_extractor.infer_context(
+                            event.app_name,
+                            event.window_title or "",
+                            event.url or "",
+                            process_path=getattr(event, "process_path", None),
+                            window_class=getattr(event, "window_class", None),
+                        )
+                        if label or confidence:
+                            context_payload = {
+                                "label": label,
+                                "confidence": confidence,
+                            }
+                    except Exception as exc:
+                        logger.debug("Context inference failed for event: %s", exc)
+
                 activity_data.append({
                     "timestamp": datetime.fromtimestamp(event.timestamp).isoformat(),
                     "type": getattr(event.event_type, "value", str(event.event_type)),
                     "app": event.app_name or "Unknown",
                     "title": event.window_title or "",
-                    "detail": event.detail or ""
+                    "detail": event.detail or "",
+                    "url": event.url or "",
+                    "context": context_payload,
                 })
 
             if focus_controller.last_prediction:
                 prediction = focus_controller.last_prediction
+                prediction_context = {
+                    "label": prediction.get("dominant_context"),
+                    "confidence": prediction.get("context_confidence"),
+                    "counts": prediction.get("context_counts"),
+                }
                 activity_data.append({
                     "timestamp": datetime.fromtimestamp(prediction.get("timestamp", datetime.now().timestamp())).isoformat(),
                     "type": "prediction",
@@ -572,10 +631,15 @@ def get_recent_activity():
                         "classifier_probability": prediction.get("classifier_probability"),
                         "confidence": prediction.get("confidence"),
                         "heuristic_triggered": prediction.get("heuristic_triggered"),
+                        "distraction_score": prediction.get("distraction_score"),
+                        "dominant_context": prediction.get("dominant_context"),
+                        "context_confidence": prediction.get("context_confidence"),
                     }),
                     "prediction": prediction,
                     "session_id": prediction.get("session_id", focus_controller.current_session_id),
                     "features": prediction.get("features"),
+                    "distraction_score": prediction.get("distraction_score"),
+                    "context": prediction_context,
                 })
             
             return jsonify(activity_data)

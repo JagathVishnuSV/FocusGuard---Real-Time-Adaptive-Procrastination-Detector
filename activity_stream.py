@@ -48,6 +48,8 @@ class ActivityEvent:
     window_title: Optional[str] = None
     url: Optional[str] = None
     detail: Optional[str] = None
+    process_path: Optional[str] = None
+    window_class: Optional[str] = None
     
     def to_dict(self):
         return {
@@ -57,6 +59,8 @@ class ActivityEvent:
             "window_title": self.window_title,
             "url": self.url,
             "detail": self.detail,
+            "process_path": self.process_path,
+            "window_class": self.window_class,
         }
 
 
@@ -115,18 +119,30 @@ class RealTimeActivityMonitor:
             try:
                 process = psutil.Process(process_id)
                 app_name = process.name()
+                try:
+                    process_path = process.exe()
+                except (psutil.AccessDenied, psutil.NoSuchProcess):
+                    process_path = None
             except (psutil.NoSuchProcess, psutil.AccessDenied):
                 app_name = "Unknown"
+                process_path = None
+
+            try:
+                window_class = win32gui.GetClassName(hwnd)
+            except Exception:
+                window_class = None
             
             return {
                 "app_name": app_name,
                 "window_title": window_title,
                 "process_id": process_id,
-                "hwnd": hwnd
+                "hwnd": hwnd,
+                "process_path": process_path,
+                "window_class": window_class,
             }
         except Exception as e:
             logger.error(f"Error getting active window info: {e}")
-            return {"app_name": "Unknown", "window_title": "Unknown", "process_id": 0}
+            return {"app_name": "Unknown", "window_title": "Unknown", "process_id": 0, "process_path": None, "window_class": None}
     
     def _extract_url_from_title(self, title: str, app_name: str) -> Optional[str]:
         """Extract URL from browser window title (basic implementation)"""
@@ -168,7 +184,9 @@ class RealTimeActivityMonitor:
             event_type=EventType.KEYSTROKE,
             app_name=window_info["app_name"],
             window_title=window_info["window_title"],
-            detail=str(key) if hasattr(key, 'char') else str(key)
+            detail=str(key) if hasattr(key, 'char') else str(key),
+            process_path=window_info.get("process_path"),
+            window_class=window_info.get("window_class"),
         )
         
         self.events_queue.append(event)
@@ -187,7 +205,9 @@ class RealTimeActivityMonitor:
                 event_type=EventType.CLICK,
                 app_name=window_info["app_name"],
                 window_title=window_info["window_title"],
-                detail=f"{button.name}_click_at_{x}_{y}"
+                detail=f"{button.name}_click_at_{x}_{y}",
+                process_path=window_info.get("process_path"),
+                window_class=window_info.get("window_class"),
             )
             
             self.events_queue.append(event)
@@ -214,7 +234,9 @@ class RealTimeActivityMonitor:
                             window_info["window_title"], 
                             window_info["app_name"]
                         ),
-                        detail=f"switched_from_{self.last_app}_to_{window_info['app_name']}"
+                        detail=f"switched_from_{self.last_app}_to_{window_info['app_name']}",
+                        process_path=window_info.get("process_path"),
+                        window_class=window_info.get("window_class"),
                     )
                     
                     self.events_queue.append(event)
@@ -228,7 +250,9 @@ class RealTimeActivityMonitor:
                         timestamp=current_time,
                         event_type=EventType.IDLE,
                         app_name=window_info["app_name"],
-                        detail=f"idle_for_{idle_time:.1f}s"
+                        detail=f"idle_for_{idle_time:.1f}s",
+                        process_path=window_info.get("process_path"),
+                        window_class=window_info.get("window_class"),
                     )
                     self.events_queue.append(event)
                     last_check = current_time

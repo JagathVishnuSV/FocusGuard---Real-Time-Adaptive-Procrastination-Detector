@@ -28,6 +28,14 @@ export interface Insight {
   action: string;
 }
 
+export interface DistractionStat {
+  hits?: number;
+  avg_score?: number;
+  max_score?: number;
+  dominant_context?: string | null;
+  last_seen?: string | null;
+}
+
 export interface SessionStatus {
   active: boolean;
   is_running?: boolean; // Backend might send this
@@ -45,6 +53,9 @@ export interface SessionStatus {
     confidence?: number;
     heuristic_triggered?: boolean;
     prediction_timestamp?: string | null;
+    distraction_score?: number | null;
+    dominant_context?: string | null;
+    context_confidence?: number | null;
   };
   alerts: any[];
   prediction?: PredictionSummary | null;
@@ -59,6 +70,15 @@ export interface PredictionSummary {
   timestamp?: string | null;
   session_id?: string | null;
   features?: Record<string, number>;
+  distraction_score?: number;
+  dominant_context?: string | null;
+  context_confidence?: number | null;
+  context_counts?: Record<string, number>;
+  context?: {
+    label?: string | null;
+    confidence?: number | null;
+    counts?: Record<string, number>;
+  } | null;
 }
 
 export interface HealthStatus {
@@ -77,6 +97,13 @@ export interface ActivityEvent {
   prediction?: PredictionSummary;
   session_id?: string | null;
   features?: Record<string, number>;
+  url?: string | null;
+  context?: {
+    label?: string | null;
+    confidence?: number | null;
+    counts?: Record<string, number>;
+  } | null;
+  distraction_score?: number | null;
 }
 
 export interface PersonalFeedbackRequest {

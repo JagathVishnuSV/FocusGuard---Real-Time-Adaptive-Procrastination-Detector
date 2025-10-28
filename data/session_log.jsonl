@@ -13,3 +13,10 @@
 {"timestamp": "2025-10-27T21:41:06.402764", "duration": 69.89759302139282, "focused_time": 37.22703266143799, "distracted_time": 30.522057056427002, "total_events": 28, "anomalies_detected": 2, "feedback_collected": 0}
 {"timestamp": "2025-10-27T22:01:19.987077", "duration": 196.57363724708557, "focused_time": 88.89429712295532, "distracted_time": 104.94975566864014, "total_events": 96, "anomalies_detected": 20, "feedback_collected": 1}
 {"timestamp": "2025-10-27T22:54:16.323158", "duration": 1235.8634111881256, "focused_time": 1201.6539554595947, "distracted_time": 33.62808561325073, "total_events": 232, "anomalies_detected": 8, "feedback_collected": 1}
+{"timestamp": "2025-10-28T11:10:53.514926", "duration": 853.6958711147308, "focused_time": 744.1152017116547, "distracted_time": 46.38238501548767, "total_events": 649, "anomalies_detected": 11, "feedback_collected": 0}
+{"timestamp": "2025-10-28T11:12:01.292630", "duration": 10.064029932022095, "focused_time": 7.965397119522095, "distracted_time": 0, "total_events": 1, "anomalies_detected": 0, "feedback_collected": 0}
+{"timestamp": "2025-10-28T11:38:18.792537", "duration": 597.8371796607971, "focused_time": 0.10666799545288086, "distracted_time": 0, "total_events": 711, "anomalies_detected": 0, "feedback_collected": 0}
+{"timestamp": "2025-10-28T12:39:44.726110", "duration": 973.2314488887787, "focused_time": 907.8465600013733, "distracted_time": 63.14186763763428, "total_events": 803, "anomalies_detected": 14, "feedback_collected": 1}
+{"timestamp": "2025-10-28T14:04:59.657528", "duration": 182.9587481021881, "focused_time": 180.4125828742981, "distracted_time": 0, "total_events": 46, "anomalies_detected": 0, "feedback_collected": 1}
+{"timestamp": "2025-10-28T15:24:19.003341", "duration": 418.16665601730347, "focused_time": 416.34463596343994, "distracted_time": 0, "total_events": 444, "anomalies_detected": 0, "feedback_collected": 1}
+{"timestamp": "2025-10-28T15:54:53.179592", "duration": 932.6827383041382, "focused_time": 930.897262096405, "distracted_time": 0, "total_events": 406, "anomalies_detected": 0, "feedback_collected": 0}

@@ -11,7 +11,7 @@ import numpy as np
 from pathlib import Path
 from datetime import datetime
 from typing import Any, List, Dict, Optional, Tuple
-from collections import deque, Counter
+from collections import deque, Counter, defaultdict
 
 from config import *
 from activity_stream import RealTimeActivityMonitor, ActivityEvent
@@ -59,7 +59,92 @@ class FocusGuardController:
         self._initialise_models_from_disk()
         self._last_passive_label_time: float = 0.0
         self._prediction_warning_logged: bool = False
+        self._distraction_score_history: Dict[str, deque] = defaultdict(lambda: deque(maxlen=72))
         
+    def _compute_dynamic_distraction_score(
+        self,
+        *,
+        feature_map: Dict[str, Any],
+        combined_score: Optional[float],
+        confidence: Optional[float],
+        is_anomaly: bool,
+        context_label: Optional[str],
+    ) -> float:
+        """Compute a rolling distraction severity score (0-100)."""
+        distraction_ratio = float(feature_map.get("distraction_app_ratio", 0.0) or 0.0)
+        idle_ratio = float(feature_map.get("idle_time_ratio", 0.0) or 0.0)
+        productive_ratio = float(feature_map.get("productive_app_ratio", 0.0) or 0.0)
+        app_switch_frequency = float(feature_map.get("app_switch_frequency", 0.0) or 0.0)
+        context_switch_cost = float(feature_map.get("context_switch_cost", 0.0) or 0.0)
+        click_burst = float(feature_map.get("click_burst_score", 0.0) or 0.0)
+
+        switch_pressure = min(app_switch_frequency * (DETECTION_WINDOW_SIZE / 10.0), 1.0)
+        base = (
+            0.5 * distraction_ratio
+            + 0.15 * idle_ratio
+            + 0.15 * switch_pressure
+            + 0.1 * context_switch_cost
+            + 0.1 * click_burst
+        )
+
+        model_signal = 0.0
+        if combined_score is not None:
+            model_signal = max(model_signal, min(max(combined_score, 0.0), 1.0))
+        if confidence is not None:
+            model_signal = max(model_signal, min(max(confidence, 0.0), 1.0))
+
+        if is_anomaly:
+            base = max(base, model_signal)
+        else:
+            base = max(base, model_signal * 0.6)
+
+        context_adjustments = {
+            "entertainment": 0.22,
+            "communication": 0.08,
+            "project": -0.04,
+            "development": -0.08,
+            "research": -0.05,
+        }
+        if context_label:
+            base += context_adjustments.get(context_label, 0.0)
+
+        if productive_ratio >= 0.7 and distraction_ratio <= 0.2:
+            base -= 0.1
+
+        bounded = max(0.0, min(base, 1.0))
+        return round(bounded * 100.0, 1)
+
+    def get_recent_distraction_scores(self, lookback_seconds: int = 3600) -> Dict[str, Dict[str, Any]]:
+        """Summarise recent distraction scores for analytics endpoints."""
+        cutoff = time.time() - max(lookback_seconds, 60)
+        summary: Dict[str, Dict[str, Any]] = {}
+
+        for app_name, history in self._distraction_score_history.items():
+            filtered = [entry for entry in history if entry.get("timestamp", 0.0) >= cutoff]
+            if not filtered:
+                continue
+
+            scores = [float(entry.get("score", 0.0) or 0.0) for entry in filtered]
+            if not scores:
+                continue
+
+            contexts = Counter(
+                entry.get("context", "unknown")
+                for entry in filtered
+                if entry.get("context")
+            )
+            dominant_context = contexts.most_common(1)[0][0] if contexts else "unknown"
+
+            summary[app_name] = {
+                "hits": len(filtered),
+                "avg_score": round(sum(scores) / len(scores), 1),
+                "max_score": round(max(scores), 1),
+                "dominant_context": dominant_context,
+                "last_seen": datetime.fromtimestamp(filtered[-1]["timestamp"]).isoformat(),
+            }
+
+        return summary
+
     def _import_config(self):
         """Import configuration"""
         import config
@@ -617,6 +702,12 @@ class FocusGuardController:
                     for name, value in zip(self.feature_extractor.get_feature_names(), feature_array)
                 }
 
+                context_summary = self.feature_extractor.get_last_context_summary()
+                dominant_context = context_summary.get("dominant_context", "unknown")
+                context_confidence = float(context_summary.get("context_confidence", 0.0) or 0.0)
+                context_counts = context_summary.get("context_counts", {})
+                feature_map["context_confidence"] = context_confidence
+
                 # Get prediction
                 results = self.model_ensemble.predict(features)
                 
@@ -656,6 +747,14 @@ class FocusGuardController:
                     heuristic_triggered,
                 )
 
+                dynamic_distraction_score = self._compute_dynamic_distraction_score(
+                    feature_map=feature_map,
+                    combined_score=combined_score if combined_score is not None else 0.0,
+                    confidence=confidence,
+                    is_anomaly=is_anomaly,
+                    context_label=dominant_context,
+                )
+
                 # Update stats based on real-time prediction
                 last_time = getattr(self, 'last_check_time', self.session_start_time)
                 time_delta = max(current_time - last_time, 0.0)
@@ -665,6 +764,10 @@ class FocusGuardController:
                 else:
                     self.session_stats['focused_time'] += time_delta
 
+                self.session_stats['dominant_context'] = dominant_context
+                self.session_stats['context_confidence'] = context_confidence
+                self.session_stats['distraction_score'] = dynamic_distraction_score
+
                 self.last_prediction = {
                     "timestamp": current_time,
                     "confidence": confidence,
@@ -673,6 +776,10 @@ class FocusGuardController:
                     "classifier_probability": classifier_probability,
                     "heuristic_triggered": heuristic_triggered,
                     "is_anomaly": is_anomaly,
+                    "distraction_score": dynamic_distraction_score,
+                    "dominant_context": dominant_context,
+                    "context_confidence": context_confidence,
+                    "context_counts": context_counts,
                 }
 
                 try:
@@ -693,6 +800,16 @@ class FocusGuardController:
                     )
                     if app_counts:
                         dominant_app = app_counts.most_common(1)[0][0]
+
+                if dominant_app:
+                    history_entry = {
+                        "timestamp": current_time,
+                        "score": dynamic_distraction_score,
+                        "context": dominant_context,
+                        "confidence": context_confidence,
+                        "combined_score": combined_score if combined_score is not None else None,
+                    }
+                    self._distraction_score_history[dominant_app].append(history_entry)
 
                 passive_label_emitted = False
                 time_since_passive = current_time - getattr(self, "_last_passive_label_time", 0.0)

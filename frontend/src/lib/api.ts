@@ -9,6 +9,7 @@ import type {
   ActivityEvent,
   PredictionSummary,
   PersonalFeedbackRequest,
+  DistractionStat,
 } from './types'
 
 const API_BASE_URL = 'http://127.0.0.1:8000'
@@ -48,7 +49,7 @@ export const apiService = {
     return response.data
   },
 
-  async getTopDistractions(): Promise<Record<string, number>> {
+  async getTopDistractions(): Promise<Record<string, DistractionStat>> {
     const response = await api.get('/api/distractions/top')
     return response.data
   },
@@ -131,4 +132,5 @@ export type {
   ActivityEvent,
   PredictionSummary,
   PersonalFeedbackRequest,
+  DistractionStat,
 } from './types'
