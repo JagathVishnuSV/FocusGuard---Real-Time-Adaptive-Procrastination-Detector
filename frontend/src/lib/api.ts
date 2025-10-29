@@ -43,6 +43,11 @@ export const apiService = {
     return response.data
   },
 
+  async getWhatIf(hour: number): Promise<{ hour: string; predicted_focus: number | null; hours: string[]; pattern: number[] }> {
+    const response = await api.get('/api/predict/whatif', { params: { hour } })
+    return response.data
+  },
+
   // Insights and analysis
   async getInsights(): Promise<Insight[]> {
     const response = await api.get('/api/insights')
