@@ -21,7 +21,7 @@
       "app_focus_duration",
       "context_switch_cost"
     ],
-    "trained_at": "2025-10-26T13:12:17.295419Z",
+    "trained_at": "2025-10-29T06:01:53.667936Z",
     "parameters": {
       "n_estimators": 300,
       "contamination": 0.05,
@@ -29,15 +29,15 @@
       "n_jobs": -1
     },
     "metrics": {
-      "n_samples": 20000.0,
+      "n_samples": 702.0,
       "n_features": 16.0,
-      "n_anomalies": 600.0,
-      "n_normal": 19400.0,
-      "anomaly_ratio": 0.03,
-      "score_min": 0.3587981884408228,
-      "score_max": 0.7344156155986391,
-      "score_mean": 0.43504051873302035,
-      "score_std": 0.057301839262957295
+      "n_anomalies": 22.0,
+      "n_normal": 680.0,
+      "anomaly_ratio": 0.03133903133903134,
+      "score_min": 0.3930445282508825,
+      "score_max": 0.6358161872258942,
+      "score_mean": 0.4536615153810076,
+      "score_std": 0.05077779325413407
     },
     "metadata": {}
   },
@@ -63,7 +63,7 @@
       "app_focus_duration",
       "context_switch_cost"
     ],
-    "trained_at": "2025-10-26T13:12:30.765617Z",
+    "trained_at": "2025-10-29T06:02:06.895967Z",
     "parameters": {
       "n_estimators": 300,
       "max_depth": 15,
@@ -74,18 +74,18 @@
       "class_weight": "balanced"
     },
     "metrics": {
-      "n_samples": 16000.0,
+      "n_samples": 122.0,
       "n_features": 16.0,
-      "n_distractions": 4006.0,
-      "n_normal": 11994.0,
-      "cv_mean_f1": 0.8049905088120581,
-      "cv_std_f1": 0.009242049368644659,
-      "auc_score": 0.99858897246926,
-      "feature::productive_app_ratio": 0.2356721448315814,
-      "feature::distraction_app_ratio": 0.23023696796959411,
-      "feature::app_focus_duration": 0.10461057199895273,
-      "feature::keystroke_burst_score": 0.07482742820898332,
-      "feature::keystroke_click_ratio": 0.045850551842836054
+      "n_distractions": 38.0,
+      "n_normal": 84.0,
+      "cv_mean_f1": 0.9615686274509805,
+      "cv_std_f1": 0.031509504982903,
+      "auc_score": 1.0,
+      "feature::distraction_app_ratio": 0.3447099548105179,
+      "feature::productive_app_ratio": 0.3059609864289768,
+      "feature::context_switch_cost": 0.10504693487978295,
+      "feature::app_switch_frequency": 0.05416937544734776,
+      "feature::app_switches": 0.05010690948276743
     },
     "metadata": {
       "scaler_path": "C:\\Users\\jagat\\Downloads\\FocusGuard\\models\\scaler.joblib",

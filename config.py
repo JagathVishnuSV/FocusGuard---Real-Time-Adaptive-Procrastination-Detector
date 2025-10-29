@@ -116,6 +116,8 @@ REPORT_INTERVAL_SECONDS = 300  # Generate report every 5 minutes
 MIN_SAMPLES_FOR_TRAINING = 100  # Minimum labeled samples before retraining
 RETRAINING_INTERVAL_MINUTES = 30  # Retrain model every 30 minutes
 MIN_PERSONAL_FEEDBACK_FOR_RETRAIN = 12
+# Allow a lower threshold to retrain when explicit user feedback is provided during a session
+MIN_PERSONAL_FEEDBACK_FOR_RETRAIN_SMALL = 3
 
 # ===== WEBSITE CATEGORIZATION =====
 WEBSITE_CATEGORIES: Dict[str, str] = {

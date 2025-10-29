@@ -17,6 +17,10 @@ import numpy as np
 
 from config import *
 from personalization import FeedbackRecord, record_feedback, ensure_storage, upsert_override
+from ml.ensembles.focus_guard import FocusGuardEnsemble
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import roc_auc_score
+import shutil
 
 logger = logging.getLogger(__name__)
 
@@ -387,6 +391,38 @@ def get_hourly_stats():
     })
 
 
+@app.route('/api/predict/whatif', methods=['GET'])
+def predict_whatif():
+    """What-if prediction for a selected hour. Returns predicted focus percentage for that hour.
+
+    Query params:
+      - hour (int, 0-23) optional: hour to evaluate. Defaults to current hour.
+    """
+    try:
+        hour = request.args.get('hour', default=None, type=int)
+        if hour is None:
+            hour = datetime.now().hour
+        if hour < 0 or hour > 23:
+            return jsonify({"error": "hour must be between 0 and 23"}), 400
+
+        pattern = analytics_engine.get_hourly_pattern()
+        hours = [f"{i:02d}:00" for i in range(24)]
+
+        predicted = None
+        if isinstance(pattern, list) and 0 <= hour < len(pattern):
+            predicted = float(pattern[hour])
+
+        return jsonify({
+            "hour": f"{hour:02d}:00",
+            "predicted_focus": predicted,
+            "hours": hours,
+            "pattern": pattern
+        })
+    except Exception as exc:
+        logger.exception("Failed to compute what-if prediction: %s", exc)
+        return jsonify({"error": "internal error"}), 500
+
+
 @app.route('/api/distractions/top', methods=['GET'])
 def get_top_distractions():
     """Get top distractions"""
@@ -410,6 +446,157 @@ def get_model_registry():
         except Exception as exc:
             logger.error(f"Failed to load model registry: {exc}")
     return jsonify([])
+
+
+@app.route('/api/models/retrain', methods=['POST'])
+def retrain_models():
+    """Trigger model retraining from collected web feedback.
+
+    Behaviour:
+      - Reads `data/personalization/feedback.jsonl` and converts to feature/label rows.
+      - Optionally mixes in a small sample from `data/labeled_feedback.csv` for regularization.
+      - Trains a candidate classifier on a train split and evaluates on validation split (ROC-AUC).
+      - Compares candidate AUC to current classifier AUC (if available). If candidate is better or equal,
+        the new artefacts are installed and the controller is asked to reload models.
+    """
+    payload = request.get_json(silent=True) or {}
+    mix_in_global = bool(payload.get("mix_in_global", True))
+    min_samples = int(payload.get("min_samples", getattr(__import__('config'), 'MIN_PERSONAL_FEEDBACK_FOR_RETRAIN_SMALL', 3)))
+
+    try:
+        # Load feedback JSONL
+        samples = []
+        if USER_FEEDBACK_FILE.exists():
+            with USER_FEEDBACK_FILE.open('r', encoding='utf-8') as fh:
+                for raw in fh:
+                    raw = raw.strip()
+                    if not raw:
+                        continue
+                    try:
+                        entry = json.loads(raw)
+                    except json.JSONDecodeError:
+                        continue
+                    features = entry.get('features') or {}
+                    label = entry.get('user_label') or entry.get('label')
+                    if isinstance(label, str):
+                        label = 1 if label.lower() == 'distracted' else 0
+                    elif isinstance(label, (int, float)):
+                        label = int(label)
+                    else:
+                        continue
+                    vec = [float(features.get(name, 0.0)) for name in FEATURE_NAMES]
+                    samples.append((vec, label))
+
+        if len(samples) < min_samples:
+            return jsonify({"status": "error", "message": f"Not enough feedback samples ({len(samples)}) - need at least {min_samples}"}), 400
+
+        # Optionally mix in labeled CSV samples for stability
+        if mix_in_global and LABELED_DATA_FILE.exists():
+            try:
+                df_legacy = pd.read_csv(LABELED_DATA_FILE)
+                # take up to 200 legacy samples (balanced if possible)
+                take = min(200, len(df_legacy))
+                if take > 0:
+                    sampled = df_legacy.sample(n=take, random_state=42)
+                    for _, row in sampled.iterrows():
+                        # only include if feature columns present
+                        if set(FEATURE_NAMES).issubset(row.index):
+                            vec = [float(row.get(name, 0.0)) for name in FEATURE_NAMES]
+                            lbl = int(row.get('label', 0))
+                            samples.append((vec, lbl))
+            except Exception:
+                pass
+
+        X = np.array([s[0] for s in samples])
+        y = np.array([s[1] for s in samples])
+
+        # require both classes
+        if len(np.unique(y)) < 2:
+            return jsonify({"status": "error", "message": "Training data must contain both classes"}), 400
+
+        X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.2, stratify=y, random_state=42)
+
+        # Train candidate ensemble/classifier in a temp directory
+        ensemble = FocusGuardEnsemble(__import__('config'))
+        temp_dir = MODELS_DIR / "retrain_temp"
+        temp_dir.mkdir(parents=True, exist_ok=True)
+        model_path = temp_dir / Path(RANDOM_FOREST_MODEL_FILE).name
+        scaler_path = temp_dir / Path(SCALER_FILE).name
+        calibrator_path = temp_dir / Path(CLASSIFIER_CALIBRATOR_FILE).name
+
+        report = ensemble.classification_pipeline.fit(X_train, y_train, model_path, scaler_path, calibrator_path)
+
+        # Evaluate candidate on validation set
+        try:
+            _, probs = ensemble.classifier.predict(X_val)
+            new_auc = float(roc_auc_score(y_val, probs))
+        except Exception:
+            new_auc = 0.0
+
+        # Baseline AUC from current running controller if present
+        baseline_auc = 0.0
+        try:
+            if REAL_TIME_AVAILABLE and focus_controller and getattr(focus_controller.model_ensemble.classifier, 'is_fitted', False):
+                _, base_probs = focus_controller.model_ensemble.classifier.predict(X_val)
+                baseline_auc = float(roc_auc_score(y_val, base_probs))
+        except Exception:
+            baseline_auc = 0.0
+
+        accepted = new_auc >= baseline_auc
+
+        if accepted:
+            # Atomically install new artefacts
+            try:
+                shutil.copyfile(str(model_path), str(RANDOM_FOREST_MODEL_FILE))
+                shutil.copyfile(str(scaler_path), str(SCALER_FILE))
+                if Path(calibrator_path).exists():
+                    shutil.copyfile(str(calibrator_path), str(CLASSIFIER_CALIBRATOR_FILE))
+
+                # Register artifact in metadata
+                try:
+                    from ml.artifacts import read_metadata, write_metadata
+                    artifact = report.artifact
+                    existing = read_metadata(MODEL_REGISTRY_FILE)
+                    updated = [e for e in existing if e.name != artifact.name]
+                    updated.append(artifact)
+                    write_metadata(updated, MODEL_REGISTRY_FILE)
+                except Exception:
+                    pass
+
+                # Ask running controller to reload models
+                if REAL_TIME_AVAILABLE and focus_controller:
+                    try:
+                        focus_controller.model_ensemble.load(MODELS_DIR)
+                        # update controller registry
+                        if hasattr(focus_controller, '_register_artifact'):
+                            try:
+                                focus_controller._register_artifact(report.artifact)
+                            except Exception:
+                                pass
+                    except Exception:
+                        pass
+
+            except Exception as exc:
+                logger.exception("Failed to install retrained model: %s", exc)
+                accepted = False
+
+        # Clean up temp dir
+        try:
+            shutil.rmtree(temp_dir)
+        except Exception:
+            pass
+
+        return jsonify({
+            "status": "ok",
+            "accepted": bool(accepted),
+            "baseline_auc": float(baseline_auc),
+            "new_auc": float(new_auc),
+            "samples_used": int(len(samples)),
+        })
+
+    except Exception as exc:
+        logger.exception("Retrain failed: %s", exc)
+        return jsonify({"status": "error", "message": str(exc)}), 500
 
 
 @app.route('/api/insights', methods=['GET'])

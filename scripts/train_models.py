@@ -182,19 +182,66 @@ def main() -> int:
     val_df: Optional[pd.DataFrame] = None
     train_df = df
 
+    # Robust handling of label column: only use rows with parseable/non-empty labels
+    def _parse_label(v) -> Optional[int]:
+        # Return 0/1 or None for missing/unparseable
+        if pd.isna(v):
+            return None
+        if isinstance(v, str):
+            s = v.strip().lower()
+            if s == "":
+                return None
+            if s in {"distracted", "1", "true", "yes"}:
+                return 1
+            if s in {"focused", "0", "false", "no"}:
+                return 0
+            try:
+                return int(float(s))
+            except Exception:
+                return None
+        try:
+            return int(v)
+        except Exception:
+            try:
+                return int(float(v))
+            except Exception:
+                return None
+
     if not args.skip_classifier and args.label_column in df.columns:
-        validation_split = max(0.0, min(0.5, args.validation_split))
-        if validation_split > 0:
-            labels = df[args.label_column].astype(int)
-            train_df, val_df = train_test_split(
-                df,
-                test_size=validation_split,
-                random_state=42,
-                stratify=labels,
-            )
+        # build a labeled-only dataframe by parsing the label column
+        parsed = df[args.label_column].apply(_parse_label)
+        labeled_mask = parsed.notna()
+        df_labeled = df.loc[labeled_mask].copy()
+        df_labeled[args.label_column] = parsed[labeled_mask].astype(int)
+
+        if df_labeled.empty:
             print(
-                f"Split dataset into {len(train_df):,} training rows and {len(val_df):,} validation rows"
+                "No labeled rows found in dataset; classifier training will be skipped. "
+                "Use a dataset with non-empty labels or run the prepare script to join labels to snapshots."
             )
+            # leave train_df as full df; classifier will be skipped below
+        else:
+            # Validate at least two classes present
+            unique_labels = df_labeled[args.label_column].unique()
+            if len(unique_labels) < 2:
+                print(
+                    "Labeled dataset contains a single class; classifier training will be skipped."
+                )
+                # do not set train_df; classifier branch below will detect and skip
+            else:
+                validation_split = max(0.0, min(0.5, args.validation_split))
+                if validation_split > 0:
+                    train_df, val_df = train_test_split(
+                        df_labeled,
+                        test_size=validation_split,
+                        random_state=42,
+                        stratify=df_labeled[args.label_column],
+                    )
+                    print(
+                        f"Split dataset into {len(train_df):,} training rows and {len(val_df):,} validation rows"
+                    )
+                else:
+                    train_df = df_labeled
 
     contamination_override = maybe_tune_isolation_forest(train_df, val_df, args.label_column)
     if contamination_override is not None:

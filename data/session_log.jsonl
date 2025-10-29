@@ -20,3 +20,10 @@
 {"timestamp": "2025-10-28T14:04:59.657528", "duration": 182.9587481021881, "focused_time": 180.4125828742981, "distracted_time": 0, "total_events": 46, "anomalies_detected": 0, "feedback_collected": 1}
 {"timestamp": "2025-10-28T15:24:19.003341", "duration": 418.16665601730347, "focused_time": 416.34463596343994, "distracted_time": 0, "total_events": 444, "anomalies_detected": 0, "feedback_collected": 1}
 {"timestamp": "2025-10-28T15:54:53.179592", "duration": 932.6827383041382, "focused_time": 930.897262096405, "distracted_time": 0, "total_events": 406, "anomalies_detected": 0, "feedback_collected": 0}
+{"timestamp": "2025-10-28T18:17:26.216750", "duration": 64.20463109016418, "focused_time": 62.34664821624756, "distracted_time": 0, "total_events": 32, "anomalies_detected": 0, "feedback_collected": 0}
+{"timestamp": "2025-10-28T18:22:38.406332", "duration": 5.058904647827148, "focused_time": 4.92374062538147, "distracted_time": 0, "total_events": 1, "anomalies_detected": 0, "feedback_collected": 0}
+{"timestamp": "2025-10-28T18:28:01.230598", "duration": 3.0589704513549805, "focused_time": 1.2276043891906738, "distracted_time": 0, "total_events": 0, "anomalies_detected": 0, "feedback_collected": 0}
+{"timestamp": "2025-10-28T21:14:42.860444", "duration": 293.45430970191956, "focused_time": 291.7616808414459, "distracted_time": 0, "total_events": 63, "anomalies_detected": 0, "feedback_collected": 0}
+{"timestamp": "2025-10-28T21:29:51.244394", "duration": 484.6486749649048, "focused_time": 482.1070294380188, "distracted_time": 0, "total_events": 65, "anomalies_detected": 0, "feedback_collected": 3}
+{"timestamp": "2025-10-28T21:34:55.073894", "duration": 177.50356531143188, "focused_time": 173.81573152542114, "distracted_time": 0, "total_events": 168, "anomalies_detected": 0, "feedback_collected": 1}
+{"timestamp": "2025-10-29T11:11:53.165209", "duration": 352.70905590057373, "focused_time": 347.53926491737366, "distracted_time": 0, "total_events": 324, "anomalies_detected": 0, "feedback_collected": 5}

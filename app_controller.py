@@ -6,6 +6,7 @@ Orchestrates calibration and detection phases
 import logging
 import time
 import json
+import hashlib
 import pandas as pd
 import numpy as np
 from pathlib import Path
@@ -196,6 +197,45 @@ class FocusGuardController:
 
         except Exception as exc:
             logger.warning(f"Failed to load passive labels for retraining: {exc}")
+
+        return samples
+
+    def _load_user_feedback_samples(self) -> List[Tuple[List[float], int]]:
+        """Load user-provided JSONL feedback (from web UI) into feature vectors for retraining."""
+        samples: List[Tuple[List[float], int]] = []
+
+        if not USER_FEEDBACK_FILE.exists():
+            return samples
+
+        try:
+            with USER_FEEDBACK_FILE.open("r", encoding="utf-8") as fh:
+                for raw in fh:
+                    raw = raw.strip()
+                    if not raw:
+                        continue
+                    try:
+                        entry = json.loads(raw)
+                    except json.JSONDecodeError:
+                        continue
+
+                    features = entry.get("features") or {}
+                    if not isinstance(features, dict):
+                        continue
+
+                    vector = [float(features.get(name, 0.0)) for name in FEATURE_NAMES]
+                    # user_label may be 'focused' or 'distracted' (recorded by submit_personal_feedback)
+                    label = entry.get("user_label") or entry.get("label")
+                    if isinstance(label, str):
+                        if label.lower() == "distracted":
+                            samples.append((vector, 1))
+                        elif label.lower() == "focused":
+                            samples.append((vector, 0))
+                    elif isinstance(label, (int, float)):
+                        # Support numeric labels (1/0)
+                        samples.append((vector, int(label)))
+
+        except Exception as exc:
+            logger.warning(f"Failed to load user feedback samples for retraining: {exc}")
 
         return samples
 
@@ -458,8 +498,34 @@ class FocusGuardController:
             except Exception as exc:
                 logger.warning(f"Failed to inspect passive labels for retraining: {exc}")
 
+        # Also consider user-submitted feedback (web JSONL) for retraining
+        if not should_retrain and USER_FEEDBACK_FILE.exists():
+            try:
+                with USER_FEEDBACK_FILE.open("r", encoding="utf-8") as fh:
+                    user_feedback_count = sum(1 for line in fh if line.strip())
+                if user_feedback_count >= MIN_PERSONAL_FEEDBACK_FOR_RETRAIN:
+                    logger.info("Enough user feedback (%d) for retraining", user_feedback_count)
+                    should_retrain = True
+            except Exception as exc:
+                logger.warning(f"Failed to inspect user feedback for retraining: {exc}")
+
         if should_retrain:
             self._retrain_classifier()
+
+        else:
+            # If no global thresholds met, check if the current session collected user feedback
+            # and if so allow a small-sample retrain to personalize quickly.
+            try:
+                user_feedback_count = 0
+                if USER_FEEDBACK_FILE.exists():
+                    with USER_FEEDBACK_FILE.open("r", encoding="utf-8") as fh:
+                        user_feedback_count = sum(1 for line in fh if line.strip())
+
+                if self.session_stats.get("user_feedback_collected", 0) > 0 and user_feedback_count >= getattr(self.config, "MIN_PERSONAL_FEEDBACK_FOR_RETRAIN_SMALL", 3):
+                    logger.info("Triggering small-sample retrain: user feedback collected during session (%d entries)", user_feedback_count)
+                    self._retrain_classifier()
+            except Exception as exc:
+                logger.warning("Failed to evaluate small-sample retrain criteria: %s", exc)
         
         self._save_session_analytics()
         self._print_final_report()
@@ -467,6 +533,26 @@ class FocusGuardController:
     def _retrain_classifier(self):
         """Retrain classifier with labeled feedback"""
         logger.info("Retraining classifier with personalized feedback...")
+
+        # Compute a hash of the user feedback JSONL so we only retrain when feedback changed
+        feedback_hash = None
+        last_retrain_file = USER_DATA_DIR / "last_retrain.json"
+        try:
+            if USER_FEEDBACK_FILE.exists():
+                feedback_bytes = USER_FEEDBACK_FILE.read_bytes()
+                feedback_hash = hashlib.sha256(feedback_bytes).hexdigest()
+        except Exception as exc:
+            logger.debug("Failed to compute feedback hash: %s", exc)
+
+        if feedback_hash and last_retrain_file.exists():
+            try:
+                prev = json.loads(last_retrain_file.read_text(encoding="utf-8")).get("feedback_hash")
+            except Exception:
+                prev = None
+
+            if prev and prev == feedback_hash:
+                logger.info("Feedback unchanged since last retrain; skipping redundant retrain")
+                return
 
         try:
             feature_vectors: List[List[float]] = []
@@ -502,14 +588,39 @@ class FocusGuardController:
                 feature_vectors.append(vector)
                 label_targets.append(target)
 
+            # Include user-submitted JSONL feedback saved by the web UI
+            try:
+                user_samples = self._load_user_feedback_samples()
+                for vector, target in user_samples:
+                    feature_vectors.append(vector)
+                    label_targets.append(target)
+            except Exception:
+                # Already logged inside loader
+                pass
+
             total_samples = len(feature_vectors)
-            if total_samples < MIN_PERSONAL_FEEDBACK_FOR_RETRAIN:
-                logger.info(
-                    "Skipping retraining; need at least %d personalized samples (have %d)",
-                    MIN_PERSONAL_FEEDBACK_FOR_RETRAIN,
-                    total_samples,
-                )
-                return
+            # Allow small-sample retraining if explicitly requested by recent user feedback
+            min_for_full = MIN_PERSONAL_FEEDBACK_FOR_RETRAIN
+            min_for_small = getattr(self.config, "MIN_PERSONAL_FEEDBACK_FOR_RETRAIN_SMALL", 3)
+
+            if total_samples < min_for_full:
+                # If we have at least the small threshold and user feedback was collected this session, allow retrain
+                user_feedback_present = False
+                try:
+                    if USER_FEEDBACK_FILE.exists():
+                        with USER_FEEDBACK_FILE.open("r", encoding="utf-8") as fh:
+                            user_feedback_present = any(line.strip() for line in fh)
+                except Exception:
+                    user_feedback_present = False
+
+                if not (user_feedback_present and total_samples >= min_for_small):
+                    logger.info(
+                        "Skipping retraining; need at least %d personalized samples (have %d). Or use %d samples with explicit user feedback.",
+                        min_for_full,
+                        total_samples,
+                        min_for_small,
+                    )
+                    return
 
             if len(set(label_targets)) < 2:
                 logger.info("Skipping retraining; require both focus and distraction labels")
@@ -530,6 +641,15 @@ class FocusGuardController:
             self.model_ensemble.save(MODELS_DIR)
             logger.info(f"Classifier retraining completed: {stats}")
             print(f"\nΓ£¿ Classifier retrained with {total_samples} samples")
+
+            # Record the feedback hash so we don't retrain again on unchanged JSONL
+            try:
+                if feedback_hash:
+                    last_retrain_file.parent.mkdir(parents=True, exist_ok=True)
+                    with last_retrain_file.open("w", encoding="utf-8") as fh:
+                        json.dump({"feedback_hash": feedback_hash, "retrained_at": datetime.now().isoformat()}, fh)
+            except Exception as exc:
+                logger.warning("Failed to write last retrain marker: %s", exc)
 
         except Exception as e:
             logger.error(f"Retraining failed: {e}")
