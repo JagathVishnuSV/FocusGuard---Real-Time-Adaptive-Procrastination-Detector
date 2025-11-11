@@ -4,10 +4,18 @@ FocusGuard is a Windows-first productivity copilot that watches desktop activity
 
 ---
 
+## What's New (Q4 2025 Update)
+- **Cognitive Twin (Ghost)** – lightweight predictor (`nextgen/ghost.py`) that forecasts your next app/domain and near-term distraction probability. Controlled via `ENABLE_GHOST_TWIN` in `config.py`.
+- **Controller Integration** – `app_controller.FocusGuardController` now maintains a live ghost snapshot even before the ML ensemble warms up, so `/api/session/status` always exposes `prediction.cognitive_twin` when events arrive.
+- **Dashboard Enhancements** – new `CognitiveTwinPanel` and richer activity feed entries present ghost insights, transition depth, and distraction risk gauge.
+- **Session Payload Improvements** – Flask server sanitises prediction metadata for JSON clients and resets ghost state cleanly on session start/stop.
+
+---
+
 ## 1. What FocusGuard Does
 - **Capture** low-level desktop activity (keystrokes, clicks, active window metadata, URLs).
 - **Transform** signals into 16 behavioural features every 30 seconds.
-- **Classify** each window as focused or distracted using a hybrid ML ensemble.
+- **Classify** each window as focused or distracted using a hybrid ML ensemble, and augment with ghost twin look-ahead signals.
 - **Surface** real-time alerts, today’s stats, week trends, feature importance, and AI insights through a Flask API + Vite/React UI.
 - **Adapt** continuously as you provide feedback or upload fresh labelled datasets.
 
@@ -29,6 +37,7 @@ Windows Hooks  →  Activity Stream  →  Feature Extractor  →  ML Ensemble
 | `ml/` | Modern ML package with anomaly detector, classifier, model ensemble, and training pipelines. |
 | `app_controller.py` | Orchestrates calibration, live detection, feedback capture, heuristics, and analytics logging. |
 | `web_server.py` | Flask REST API with session management, stats, insights, and model registry endpoints. |
+| `nextgen/ghost.py` | Cognitive twin heuristics that track app transitions, distraction heuristics, and produce dashboard snapshots. |
 | `frontend/` | Vite + React dashboard (SWR data hooks, Tailwind styling, Lucide icons). |
 | `data/` | Calibration data, labelled feedback, weekly analytics log, and demo dataset (`focusguard_windows_sessions.csv`). |
 | `models/` | Persisted artefacts: `anomaly_detector.joblib`, `classifier.joblib`, `scaler.joblib`, and registry metadata. |
@@ -42,6 +51,7 @@ Windows Hooks  →  Activity Stream  →  Feature Extractor  →  ML Ensemble
 | **Baseline detector** | Isolation Forest (`sklearn`) | Zero-shot anomaly detection directly after calibration. |
 | **Supervised classifier** | Random Forest (`sklearn`) with StandardScaler | Learns your personalised “focused vs distracted” boundary from labelled data. |
 | **Ensemble combiner** | `ml/ensembles/focus_guard.py` | Normalises anomaly scores and blends them (30% anomaly, 70% classifier) into a single procrastination probability. |
+| **Cognitive twin** | `nextgen/ghost.py` | Maintains transition history and distraction heuristics to forecast next-app context and risk. |
 
 ### Model Artefacts
 | File | Description |
@@ -144,7 +154,7 @@ python main.py detect     # Run live detection for a fixed window
 ## 6. API Surface (Selected)
 | Endpoint | Description |
 |----------|-------------|
-| `GET /api/session/status` | Live session stats, latest prediction scores, heuristic flag. |
+| `GET /api/session/status` | Live session stats, latest prediction scores, heuristic flag, and `prediction.cognitive_twin` snapshot (when ghost enabled). |
 | `POST /api/session/start` / `stop` | Start/stop monitoring sessions controlled by the dashboard. |
 | `GET /api/stats/today` | Aggregated focus stats for the current day. |
 | `GET /api/stats/weekly` | Seven-day focus score trend. |
@@ -161,6 +171,7 @@ All endpoints are CORS-enabled for `localhost:3000` (frontend) and `localhost:30
 
 ## 7. Troubleshooting & Tips
 - **Dashboard shows zeros:** start a monitoring session; top metrics fall back to live session stats until `/api/stats/today` is populated from session logs.
+- **Cognitive twin shows “Unknown”:** ensure a session is running, the activity monitor is producing events, and `ENABLE_GHOST_TWIN = True` in `config.py`; the twin needs at least one transition to emit meaningful predictions.
 - **Classifier values missing:** ensure `models/classifier.joblib` and `models/scaler.joblib` exist; rerun `scripts/train_models.py` if needed.
 - **Dashboard activity badges look off:** the activity feed now mirrors the ensemble’s label (`Focus`/`Distraction`), not raw click/keystroke events.
 - **Didn’t retrain after a long session:** confirm you crossed both thresholds—either 100 manual labels or at least 12 passive labels with focus and distraction coverage.
