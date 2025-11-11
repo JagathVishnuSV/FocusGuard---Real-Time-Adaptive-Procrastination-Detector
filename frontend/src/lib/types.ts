@@ -28,6 +28,18 @@ export interface Insight {
   action: string;
 }
 
+export interface CognitiveTwinSnapshot {
+  predicted_next: string;
+  prob_distracted: number;
+  support?: number;
+  last_app?: string;
+  history_size?: number;
+  transitions_observed?: number;
+  horizon_seconds?: number;
+  buffer_events?: number;
+  new_events_considered?: number;
+}
+
 export interface DistractionStat {
   hits?: number;
   avg_score?: number;
@@ -79,6 +91,7 @@ export interface PredictionSummary {
     confidence?: number | null;
     counts?: Record<string, number>;
   } | null;
+  cognitive_twin?: CognitiveTwinSnapshot | null;
 }
 
 export interface HealthStatus {
@@ -104,6 +117,7 @@ export interface ActivityEvent {
     counts?: Record<string, number>;
   } | null;
   distraction_score?: number | null;
+  cognitive_twin?: CognitiveTwinSnapshot | null;
 }
 
 export interface PersonalFeedbackRequest {

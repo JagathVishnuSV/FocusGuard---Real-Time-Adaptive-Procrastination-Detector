@@ -42,6 +42,15 @@ class FocusGuardController:
         self.activity_monitor = RealTimeActivityMonitor(self.config)
         self.feature_extractor = FeatureExtractor(self.config)
         self.model_ensemble = ModelEnsemble(self.config)
+        # Lightweight cognitive twin (ghost) for predicted next-actions and distraction probability
+        self.ghost_twin = None
+        if getattr(self.config, "ENABLE_GHOST_TWIN", False):
+            try:
+                from nextgen.ghost import GhostTwin
+
+                self.ghost_twin = GhostTwin(self.config)
+            except Exception as exc:  # pragma: no cover - defensive
+                logger.warning("Failed to initialise GhostTwin: %s", exc)
         
         self.events_buffer = deque(maxlen=10000)
         self.calibration_complete = False
@@ -61,6 +70,7 @@ class FocusGuardController:
         self._last_passive_label_time: float = 0.0
         self._prediction_warning_logged: bool = False
         self._distraction_score_history: Dict[str, deque] = defaultdict(lambda: deque(maxlen=72))
+        self._ghost_last_buffer_len = 0
         
     def _compute_dynamic_distraction_score(
         self,
@@ -114,6 +124,33 @@ class FocusGuardController:
 
         bounded = max(0.0, min(base, 1.0))
         return round(bounded * 100.0, 1)
+
+    def _produce_ghost_snapshot(self, feature_map: Optional[Dict[str, Any]] = None) -> Optional[Dict[str, Any]]:
+        """Generate a cognitive twin snapshot using any newly collected events."""
+        ghost = getattr(self, "ghost_twin", None)
+        if ghost is None:
+            return None
+
+        try:
+            buffer_len = len(self.events_buffer)
+            if buffer_len > self._ghost_last_buffer_len:
+                slice_start = max(self._ghost_last_buffer_len, 0)
+                new_events = list(self.events_buffer)[slice_start:]
+            else:
+                new_events = []
+
+            snapshot = ghost.predict(
+                events=new_events if new_events else None,
+                feature_map=feature_map,
+                horizon_seconds=getattr(self.config, "GHOST_PREDICT_HORIZON_SECONDS", 60),
+            )
+            snapshot["buffer_events"] = buffer_len
+            snapshot["new_events_considered"] = len(new_events)
+            self._ghost_last_buffer_len = buffer_len
+            return snapshot
+        except Exception as exc:  # pragma: no cover - defensive
+            logger.debug("GhostTwin prediction failed: %s", exc)
+            return None
 
     def get_recent_distraction_scores(self, lookback_seconds: int = 3600) -> Dict[str, Dict[str, Any]]:
         """Summarise recent distraction scores for analytics endpoints."""
@@ -713,6 +750,12 @@ class FocusGuardController:
             self.session_start_time - PASSIVE_LABEL_MIN_INTERVAL_SECONDS
         )
         self._prediction_warning_logged = False
+        self._ghost_last_buffer_len = 0
+        if getattr(self, "ghost_twin", None) is not None:
+            try:
+                self.ghost_twin.reset()
+            except Exception as exc:
+                logger.debug("Failed to reset GhostTwin state: %s", exc)
 
         # Reset event buffer in the activity monitor so each session starts clean
         if hasattr(self.activity_monitor, "clear_events"):
@@ -888,6 +931,9 @@ class FocusGuardController:
                 self.session_stats['context_confidence'] = context_confidence
                 self.session_stats['distraction_score'] = dynamic_distraction_score
 
+                # Ask cognitive twin for a lightweight prediction (non-blocking)
+                ghost_pred = self._produce_ghost_snapshot(feature_map)
+
                 self.last_prediction = {
                     "timestamp": current_time,
                     "confidence": confidence,
@@ -900,6 +946,8 @@ class FocusGuardController:
                     "dominant_context": dominant_context,
                     "context_confidence": context_confidence,
                     "context_counts": context_counts,
+                    "cognitive_twin": ghost_pred,
+                    "features": feature_map,
                 }
 
                 try:
@@ -982,10 +1030,46 @@ class FocusGuardController:
                 if not self._prediction_warning_logged:
                     logger.warning("Real-time prediction unavailable: %s", exc)
                     self._prediction_warning_logged = True
-                self.last_prediction = None
+                ghost_pred = self._produce_ghost_snapshot()
+                if ghost_pred is not None:
+                    self.last_prediction = {
+                        "timestamp": current_time,
+                        "confidence": None,
+                        "combined_score": None,
+                        "anomaly_score": None,
+                        "classifier_probability": None,
+                        "heuristic_triggered": False,
+                        "is_anomaly": None,
+                        "distraction_score": None,
+                        "dominant_context": None,
+                        "context_confidence": None,
+                        "context_counts": {},
+                        "cognitive_twin": ghost_pred,
+                        "features": None,
+                    }
+                else:
+                    self.last_prediction = None
             except Exception as exc:
                 logger.warning(f"Real-time prediction failed: {exc}")
-                self.last_prediction = None
+                ghost_pred = self._produce_ghost_snapshot()
+                if ghost_pred is not None:
+                    self.last_prediction = {
+                        "timestamp": current_time,
+                        "confidence": None,
+                        "combined_score": None,
+                        "anomaly_score": None,
+                        "classifier_probability": None,
+                        "heuristic_triggered": False,
+                        "is_anomaly": None,
+                        "distraction_score": None,
+                        "dominant_context": None,
+                        "context_confidence": None,
+                        "context_counts": {},
+                        "cognitive_twin": ghost_pred,
+                        "features": None,
+                    }
+                else:
+                    self.last_prediction = None
         else:
             if len(self.events_buffer) > 5 and not model_ready and not self._prediction_warning_logged:
                 logger.warning("Skipping live predictions; anomaly detector not fitted yet")
@@ -996,7 +1080,25 @@ class FocusGuardController:
             time_delta = max(current_time - last_time, 0.0)
             if time_delta > 0:
                 self.session_stats['focused_time'] += time_delta
-            self.last_prediction = None
+            ghost_pred = self._produce_ghost_snapshot()
+            if ghost_pred is not None:
+                self.last_prediction = {
+                    "timestamp": current_time,
+                    "confidence": None,
+                    "combined_score": None,
+                    "anomaly_score": None,
+                    "classifier_probability": None,
+                    "heuristic_triggered": False,
+                    "is_anomaly": None,
+                    "distraction_score": None,
+                    "dominant_context": None,
+                    "context_confidence": None,
+                    "context_counts": {},
+                    "cognitive_twin": ghost_pred,
+                    "features": None,
+                }
+            else:
+                self.last_prediction = None
 
         self.last_check_time = current_time
 

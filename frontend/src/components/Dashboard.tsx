@@ -16,6 +16,7 @@ import { MetricsCard } from './MetricsCard'
 import { FocusChart } from './FocusChart'
 import { ActivityFeed } from './ActivityFeed'
 import { InsightsPanel } from './InsightsPanel'
+import { CognitiveTwinPanel } from './CognitiveTwinPanel'
 import { cn, formatDuration } from '@/lib/utils'
 import { useApi, useSessionStatus } from '@/hooks/useApi'
 import type { TodayStats, SessionStatus } from '@/lib/types'
@@ -140,6 +141,7 @@ const Dashboard: React.FC = () => {
   const classifierProb = predictionMeta?.classifier_probability ?? sessionStats?.classifier_probability ?? null
   const confidence = predictionMeta?.confidence ?? sessionStats?.confidence ?? null
   const heuristicTriggered = predictionMeta?.heuristic_triggered ?? sessionStats?.heuristic_triggered ?? false
+  const cognitiveTwin = predictionMeta?.cognitive_twin ?? null
 
   if ((isSessionLoading && !sessionStatus) || (isTodayLoading && !todayStats)) {
     return (
@@ -347,6 +349,18 @@ const Dashboard: React.FC = () => {
             <ActivityFeed />
           </motion.div>
         </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.12 }}
+        >
+          <CognitiveTwinPanel
+            data={cognitiveTwin}
+            isActive={isSessionActive}
+            lastUpdated={predictionMeta?.timestamp ?? null}
+          />
+        </motion.div>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}

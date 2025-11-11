@@ -182,3 +182,12 @@ ALERT_STYLES = {
 APP_NAME = "FocusGuard"
 APP_VERSION = "1.0.0"
 APP_DESCRIPTION = "Real-Time Adaptive Procrastination Detector"
+
+# ===== NEXT-GEN / GHOST (Cognitive Twin) =====
+# Toggle the lightweight cognitive twin (ghost) feature that simulates
+# predicted next-actions and distraction probability. This implementation
+# is intentionally lightweight and heuristic-driven so it can be swapped
+# with an ML model later with minimal code changes.
+ENABLE_GHOST_TWIN = True
+GHOST_TWIN_HISTORY = 128  # how many recent app events to retain for transitions
+GHOST_PREDICT_HORIZON_SECONDS = 60  # default horizon for ghost predictions

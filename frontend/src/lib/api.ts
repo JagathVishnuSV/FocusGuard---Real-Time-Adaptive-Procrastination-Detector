@@ -30,17 +30,36 @@ export const apiService = {
   // Statistics
   async getTodayStats(): Promise<TodayStats> {
     const response = await api.get('/api/stats/today')
-    return response.data
+    const data = response.data
+    // Provide a safe default so dashboards render gracefully when backend returns empty
+    if (!data) {
+      return {
+        focus_score: 0,
+        focused_time: 0,
+        distracted_time: 0,
+        anomalies: 0,
+        sessions: 0,
+      }
+    }
+    return data
   },
 
   async getWeeklyStats(): Promise<WeeklyStats> {
     const response = await api.get('/api/stats/weekly')
-    return response.data
+    const data = response.data
+    if (!data || !Array.isArray(data.days) || !Array.isArray(data.scores)) {
+      return { days: [], scores: [] }
+    }
+    return data
   },
 
   async getHourlyStats(): Promise<HourlyStats> {
     const response = await api.get('/api/stats/hourly')
-    return response.data
+    const data = response.data
+    if (!data || !Array.isArray(data.hours) || !Array.isArray(data.pattern)) {
+      return { hours: [], pattern: [] }
+    }
+    return data
   },
 
   async getWhatIf(hour: number): Promise<{ hour: string; predicted_focus: number | null; hours: string[]; pattern: number[] }> {
@@ -51,17 +70,20 @@ export const apiService = {
   // Insights and analysis
   async getInsights(): Promise<Insight[]> {
     const response = await api.get('/api/insights')
-    return response.data
+    const data = response.data
+    return Array.isArray(data) ? data : []
   },
 
   async getTopDistractions(): Promise<Record<string, DistractionStat>> {
     const response = await api.get('/api/distractions/top')
-    return response.data
+    const data = response.data
+    return data && typeof data === 'object' ? data : {}
   },
 
   async getFeatureImportance(): Promise<Record<string, number>> {
     const response = await api.get('/api/features/importance')
-    return response.data
+    const data = response.data
+    return data && typeof data === 'object' ? data : {}
   },
 
   // Session management
@@ -132,6 +154,7 @@ export type {
   WeeklyStats,
   HourlyStats,
   Insight,
+  CognitiveTwinSnapshot,
   SessionStatus,
   HealthStatus,
   ActivityEvent,

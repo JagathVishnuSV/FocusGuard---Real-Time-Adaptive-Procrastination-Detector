@@ -7,6 +7,7 @@ from flask import Flask, render_template_string, jsonify, request
 from flask_cors import CORS
 import json
 import logging
+import numbers
 from pathlib import Path
 from datetime import datetime, timedelta
 from collections import Counter
@@ -45,7 +46,8 @@ current_session = {
         "distracted_time": 0,
         "elapsed_time": 0,
     },
-    "alerts": []
+    "alerts": [],
+    "prediction": None,
 }
 
 # Import real-time monitoring components
@@ -641,6 +643,66 @@ def get_session_status():
                     'context_confidence': float(prediction_meta.get('context_confidence', 0.0) or 0.0),
                 })
 
+                context_counts = prediction_meta.get('context_counts') or {}
+                if not isinstance(context_counts, dict):
+                    context_counts = dict(context_counts)
+
+                context_payload = {
+                    'label': prediction_meta.get('dominant_context'),
+                    'confidence': prediction_meta.get('context_confidence'),
+                    'counts': context_counts,
+                }
+
+                cognitive_twin = prediction_meta.get('cognitive_twin')
+                if isinstance(cognitive_twin, dict):
+                    cognitive_snapshot = {
+                        str(key): (
+                            float(value) if isinstance(value, numbers.Number) and not isinstance(value, bool) else value
+                        )
+                        for key, value in cognitive_twin.items()
+                    }
+                else:
+                    cognitive_snapshot = cognitive_twin if cognitive_twin is not None else None
+
+                features_payload = prediction_meta.get('features')
+                if isinstance(features_payload, dict):
+                    features_payload = {
+                        str(key): (
+                            float(value) if isinstance(value, numbers.Number) and not isinstance(value, bool) else value
+                        )
+                        for key, value in features_payload.items()
+                    }
+
+                current_session['prediction'] = {
+                    'timestamp': prediction_meta.get('timestamp'),
+                    'combined_score': prediction_meta.get('combined_score'),
+                    'anomaly_score': prediction_meta.get('anomaly_score'),
+                    'classifier_probability': prediction_meta.get('classifier_probability'),
+                    'confidence': prediction_meta.get('confidence'),
+                    'heuristic_triggered': bool(prediction_meta.get('heuristic_triggered', False)),
+                    'distraction_score': prediction_meta.get('distraction_score'),
+                    'dominant_context': prediction_meta.get('dominant_context'),
+                    'context_confidence': prediction_meta.get('context_confidence'),
+                    'context_counts': context_counts,
+                    'context': context_payload,
+                    'session_id': prediction_meta.get('session_id') or current_session.get('session_id'),
+                    'features': features_payload,
+                    'cognitive_twin': cognitive_snapshot,
+                }
+            else:
+                current_session['stats'].update({
+                    'combined_score': None,
+                    'anomaly_score': None,
+                    'classifier_probability': None,
+                    'confidence': None,
+                    'heuristic_triggered': False,
+                    'prediction_timestamp': None,
+                    'distraction_score': None,
+                    'dominant_context': None,
+                    'context_confidence': None,
+                })
+                current_session['prediction'] = None
+
             if current_session['active'] and focus_controller.session_start_time:
                 current_session['start_time'] = datetime.fromtimestamp(
                     focus_controller.session_start_time
@@ -674,6 +736,7 @@ def start_session():
                 "elapsed_time": 0,
             }
             current_session['alerts'] = []
+            current_session['prediction'] = None
             return jsonify({
                 "status": "started", 
                 "session": current_session, 
@@ -698,6 +761,7 @@ def start_session():
             "focused_time": 0,
             "distracted_time": 0,
         }
+        current_session['prediction'] = None
         return jsonify({
             "status": "started", 
             "session": current_session, 
@@ -729,6 +793,7 @@ def stop_session():
                 current_session['session_id'] = session_data.get('session_id')
             
             current_session['active'] = False
+            current_session['prediction'] = None
             return jsonify({
                 "status": "stopped", 
                 "session": current_session, 
@@ -746,6 +811,7 @@ def stop_session():
             })
     else:
         current_session['active'] = False
+        current_session['prediction'] = None
         return jsonify({
             "status": "stopped", 
             "session": current_session, 

@@ -15,7 +15,7 @@ import {
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { apiService, type ActivityEvent } from '@/lib/api'
-import type { PredictionSummary } from '@/lib/types'
+import type { PredictionSummary, CognitiveTwinSnapshot } from '@/lib/types'
 
 const normalizeFeatures = (input?: Record<string, unknown>) => {
   if (!input) {
@@ -35,6 +35,23 @@ const normalizeFeatures = (input?: Record<string, unknown>) => {
   return entries.length > 0 ? Object.fromEntries(entries) : undefined
 }
 
+const formatGhostTarget = (raw?: string | null) => {
+  if (!raw) {
+    return 'Unknown'
+  }
+
+  const trimmed = raw.trim()
+  if (!trimmed || trimmed === 'unknown') {
+    return 'Unknown'
+  }
+
+  if (trimmed.length <= 2) {
+    return trimmed.toUpperCase()
+  }
+
+  return trimmed.replace(/^https?:\/\//, '')
+}
+
 interface PredictionMetadata {
   combinedScore?: number
   anomalyScore?: number
@@ -50,6 +67,7 @@ interface PredictionMetadata {
   contextCounts?: Record<string, number> | null
   distractionScore?: number | null
   url?: string | null
+  cognitiveTwin?: CognitiveTwinSnapshot | null
 }
 
 interface ProcessedEvent extends ActivityEvent, PredictionMetadata {
@@ -88,6 +106,9 @@ export const ActivityFeed: React.FC = () => {
         const sessionId = predictionPayload?.session_id ?? rawEvent.session_id ?? null
         const features = normalizeFeatures(predictionPayload?.features ?? (rawEvent as any).features)
         const explicitLabel = predictionPayload?.prediction_label ?? predictionPayload?.predictionLabel
+        const cognitiveTwin = (predictionPayload?.cognitive_twin ?? (rawEvent as any).cognitive_twin ?? null) as
+          | CognitiveTwinSnapshot
+          | null
 
         let predictedLabel: 'focused' | 'distracted' | null = null
         if (typeof explicitLabel === 'string') {
@@ -161,6 +182,7 @@ export const ActivityFeed: React.FC = () => {
           contextCounts: payloadContext?.counts ?? eventContext?.counts ?? detailContextCounts ?? null,
           distractionScore: resolvedDistractionScore,
           url: (rawEvent as any).url ?? null,
+          cognitiveTwin,
         }
       }
       case 'app_switch':
@@ -203,6 +225,7 @@ export const ActivityFeed: React.FC = () => {
       contextConfidence: rawEvent.context?.confidence ?? null,
       contextCounts: rawEvent.context?.counts ?? null,
       url: rawEvent.url ?? null,
+      cognitiveTwin: (rawEvent as any).cognitive_twin ?? null,
     }
   }
 
@@ -212,6 +235,72 @@ export const ActivityFeed: React.FC = () => {
     }
 
     try {
+              {event.cognitiveTwin && (
+                <div className="mt-3 rounded-md border border-purple-500/20 bg-purple-500/5 p-3">
+                  <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-purple-200">
+                    <Brain className="w-3.5 h-3.5" />
+                    Cognitive Twin Insight
+                  </div>
+                  <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] text-purple-100">
+                    <div>
+                      <span className="text-xs font-semibold text-purple-100">Predicted Next</span>
+                      <p className="mt-0.5 text-sm font-semibold text-purple-50">
+                        {formatGhostTarget(event.cognitiveTwin.predicted_next)}
+                      </p>
+                    </div>
+                    <div>
+                      <span className="text-xs font-semibold text-purple-100">Distraction Risk</span>
+                      <p className="mt-0.5 text-sm font-semibold text-purple-50">
+                        {(Math.min(Math.max(event.cognitiveTwin.prob_distracted * 100, 0), 100)).toFixed(1)}%
+                      </p>
+                    </div>
+                    {event.cognitiveTwin.last_app && (
+                      <div>
+                        <span className="text-xs font-semibold text-purple-100">Last Observed App</span>
+                        <p className="mt-0.5 text-sm font-medium text-purple-50">
+                          {formatGhostTarget(event.cognitiveTwin.last_app)}
+                        </p>
+                      </div>
+                    )}
+                    {typeof event.cognitiveTwin.support === 'number' && (
+                      <div>
+                        <span className="text-xs font-semibold text-purple-100">Supporting Transitions</span>
+                        <p className="mt-0.5 text-sm font-medium text-purple-50">{event.cognitiveTwin.support}</p>
+                      </div>
+                    )}
+                    {typeof event.cognitiveTwin.transitions_observed === 'number' && (
+                      <div>
+                        <span className="text-xs font-semibold text-purple-100">Transitions Tracked</span>
+                        <p className="mt-0.5 text-sm font-medium text-purple-50">{event.cognitiveTwin.transitions_observed}</p>
+                      </div>
+                    )}
+                    {typeof event.cognitiveTwin.history_size === 'number' && (
+                      <div>
+                        <span className="text-xs font-semibold text-purple-100">History Depth</span>
+                        <p className="mt-0.5 text-sm font-medium text-purple-50">{event.cognitiveTwin.history_size}</p>
+                      </div>
+                    )}
+                    {typeof event.cognitiveTwin.buffer_events === 'number' && (
+                      <div>
+                        <span className="text-xs font-semibold text-purple-100">Buffer Size</span>
+                        <p className="mt-0.5 text-sm font-medium text-purple-50">{event.cognitiveTwin.buffer_events}</p>
+                      </div>
+                    )}
+                    {typeof event.cognitiveTwin.new_events_considered === 'number' && (
+                      <div>
+                        <span className="text-xs font-semibold text-purple-100">New Events Considered</span>
+                        <p className="mt-0.5 text-sm font-medium text-purple-50">{event.cognitiveTwin.new_events_considered}</p>
+                      </div>
+                    )}
+                    {typeof event.cognitiveTwin.horizon_seconds === 'number' && (
+                      <div>
+                        <span className="text-xs font-semibold text-purple-100">Prediction Horizon</span>
+                        <p className="mt-0.5 text-sm font-medium text-purple-50">{event.cognitiveTwin.horizon_seconds}s</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
       return JSON.parse(detail)
     } catch (err) {
       console.debug('Could not parse prediction detail payload', err)

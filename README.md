@@ -85,6 +85,29 @@ If the classifier is unsure (confidence below the `ANOMALY_CONFIDENCE_THRESHOLD`
   - `app_controller.FocusGuardController` loads available artefacts on start so web sessions immediately consume the latest models.
   - Registry entries are exposed via `/api/models/registry` for dashboards or integrations.
 
+### Personalization: preparing web feedback and retraining
+
+To make the model learn from web feedback captured by the dashboard, two helper utilities are provided:
+
+- `scripts/prepare_training_from_feedback.py` — joins `data/personalization/feature_snapshots.jsonl` with `data/personalization/feedback.jsonl` and `passive_labels.jsonl`, performs mean-imputation for missing features, and writes two CSVs:
+  - `data/personalization/feedback_for_training.csv` (labeled rows suitable for `train_models.py`)
+  - `data/personalization/snapshots_with_labels.csv` (full snapshot audit with label metadata)
+
+- `POST /api/models/retrain` — server-side retrain endpoint that will run the converter + training in a sandbox, evaluate the candidate model on a held-out validation set, and atomically install the new artefacts only if validation AUC is not worse than the current model. Use this when you want the server to manage training and safe deployment.
+
+Typical flow:
+
+```bash
+python scripts/prepare_training_from_feedback.py
+python scripts/train_models.py --dataset data/personalization/feedback_for_training.csv --label-column label
+# or trigger server-side retrain
+curl -X POST http://127.0.0.1:8000/api/models/retrain
+```
+
+Notes:
+- The prepare script uses a 5s temporal tolerance when joining feedback to snapshots by session id and timestamp; change the script if you need a wider window.
+- The retrain endpoint validates candidate models and will not replace existing artefacts if the candidate performs worse on the validation fold.
+
 ---
 
 ## 5. Running FocusGuard
