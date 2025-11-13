@@ -232,12 +232,12 @@ export const InsightsPanel: React.FC = () => {
   )
 
   const copyBlockerName = useCallback(async () => {
-    const appName = 'FocusGuard Ensemble'
+    const appName = 'FocusGuard'
 
     if (typeof navigator !== 'undefined' && navigator.clipboard) {
       try {
         await navigator.clipboard.writeText(appName)
-        setActionFeedback('Copied “FocusGuard Ensemble” to your clipboard.')
+        setActionFeedback('Copied “FocusGuard” to your clipboard.')
         return
       } catch (err) {
         console.debug('Clipboard copy failed', err)
@@ -598,7 +598,7 @@ export const InsightsPanel: React.FC = () => {
                     </li>
                   </ol>
                   <Button variant="outline" className="justify-start" onClick={copyBlockerName}>
-                    Copy “FocusGuard Ensemble” to block list
+                    Copy “FocusGuard” to block list
                   </Button>
                   <p className="text-xs text-muted-foreground">
                     Need inspiration? Pair this with <span className="text-white">LeechBlock</span> (browser) or <span className="text-white">Cold Turkey</span> (desktop) for time-based locks.

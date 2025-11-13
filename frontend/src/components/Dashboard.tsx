@@ -7,7 +7,7 @@ import {
   Activity as ActivityIcon,
   Play,
   Square,
-  Brain
+  Brain,
 } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -136,11 +136,6 @@ const Dashboard: React.FC = () => {
 
   const focusScoreProgress = Math.min(Math.max(resolvedTodayStats.focus_score, 0), 100)
   const predictionMeta = sessionStatus?.prediction ?? null
-  const combinedScore = predictionMeta?.combined_score ?? sessionStats?.combined_score ?? null
-  const anomalyScore = predictionMeta?.anomaly_score ?? sessionStats?.anomaly_score ?? null
-  const classifierProb = predictionMeta?.classifier_probability ?? sessionStats?.classifier_probability ?? null
-  const confidence = predictionMeta?.confidence ?? sessionStats?.confidence ?? null
-  const heuristicTriggered = predictionMeta?.heuristic_triggered ?? sessionStats?.heuristic_triggered ?? false
   const cognitiveTwin = predictionMeta?.cognitive_twin ?? null
 
   if ((isSessionLoading && !sessionStatus) || (isTodayLoading && !todayStats)) {
@@ -169,9 +164,9 @@ const Dashboard: React.FC = () => {
     <div className="min-h-screen">
       <header className="border-b border-white/5 bg-black/60 backdrop-blur-md sticky top-0 z-50">
         <div className="container mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
             <motion.div
-              className="flex items-center space-x-3"
+              className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4"
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5 }}
@@ -179,21 +174,23 @@ const Dashboard: React.FC = () => {
               <div className="p-2 bg-primary/10 rounded-lg">
                 <Target className="w-6 h-6 text-primary" />
               </div>
-              <div>
+              <div className="space-y-1">
                 <h1 className="text-2xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
                   FocusGuard
                 </h1>
-                <p className="text-sm text-muted-foreground">Real-time Procrastination Detection</p>
+                <p className="text-sm text-muted-foreground">
+                  Real-time Procrastination Detection
+                </p>
               </div>
             </motion.div>
 
             <motion.div
-              className="flex items-center space-x-3"
+              className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-end sm:gap-4"
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center gap-3">
                 <div
                   className={cn(
                     'w-2 h-2 rounded-full animate-pulse',
@@ -202,10 +199,10 @@ const Dashboard: React.FC = () => {
                 />
                 <div
                   className={cn(
-                    'px-3 py-1 rounded-full text-xs font-medium backdrop-blur',
+                    'px-3 py-1 rounded-full text-xs font-medium backdrop-blur border',
                     isSessionActive
-                      ? 'bg-emerald-500/10 text-emerald-300 border border-emerald-500/20'
-                      : 'bg-slate-500/10 text-slate-300 border border-slate-500/20'
+                      ? 'border-emerald-500/20 bg-emerald-500/10 text-emerald-300'
+                      : 'border-slate-500/20 bg-slate-500/10 text-slate-300'
                   )}
                 >
                   {isSessionActive ? '🟢 Monitoring Active' : '⏸️ Not Monitoring'}
@@ -213,11 +210,6 @@ const Dashboard: React.FC = () => {
                 {isSessionActive && sessionStatus?.start_time && (
                   <div className="text-xs text-muted-foreground">
                     {new Date(sessionStatus.start_time).toLocaleTimeString()}
-                  </div>
-                )}
-                {combinedScore !== null && (
-                  <div className="px-3 py-1 rounded-full text-xs font-medium bg-purple-500/10 border border-purple-500/20 text-purple-200">
-                    Latest score {(combinedScore * 100).toFixed(1)}%
                   </div>
                 )}
               </div>
@@ -353,7 +345,7 @@ const Dashboard: React.FC = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.12 }}
+          transition={{ duration: 0.5, delay: 0.14 }}
         >
           <CognitiveTwinPanel
             data={cognitiveTwin}
@@ -365,7 +357,7 @@ const Dashboard: React.FC = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.15 }}
+          transition={{ duration: 0.5, delay: 0.17 }}
         >
           <InsightsPanel />
         </motion.div>
@@ -373,7 +365,7 @@ const Dashboard: React.FC = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
+          transition={{ duration: 0.5, delay: 0.22 }}
         >
           <Card>
             <CardHeader>
@@ -403,42 +395,6 @@ const Dashboard: React.FC = () => {
                 <p className="text-lg font-semibold">{formatDuration(sessionStats.distracted_time ?? 0)}</p>
               </div>
             </CardContent>
-            {(combinedScore !== null || anomalyScore !== null || classifierProb !== null || confidence !== null || heuristicTriggered) && (
-              <CardContent className="border-t border-white/5 pt-4">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  {combinedScore !== null && (
-                    <div>
-                      <p className="text-xs uppercase text-muted-foreground">Combined Score</p>
-                      <p className="text-lg font-semibold">{(combinedScore * 100).toFixed(1)}%</p>
-                    </div>
-                  )}
-                  {anomalyScore !== null && (
-                    <div>
-                      <p className="text-xs uppercase text-muted-foreground">Anomaly Score</p>
-                      <p className="text-lg font-semibold">{anomalyScore.toFixed(3)}</p>
-                    </div>
-                  )}
-                  {classifierProb !== null && (
-                    <div>
-                      <p className="text-xs uppercase text-muted-foreground">Classifier Probability</p>
-                      <p className="text-lg font-semibold">{(classifierProb * 100).toFixed(1)}%</p>
-                    </div>
-                  )}
-                  {confidence !== null && (
-                    <div>
-                      <p className="text-xs uppercase text-muted-foreground">Decision Confidence</p>
-                      <p className="text-lg font-semibold">{(confidence * 100).toFixed(1)}%</p>
-                    </div>
-                  )}
-                  {heuristicTriggered && (
-                    <div className="md:col-span-3">
-                      <p className="text-xs uppercase text-muted-foreground">Heuristic Override</p>
-                      <p className="text-sm text-amber-300">Rule-based override boosted the latest prediction.</p>
-                    </div>
-                  )}
-                </div>
-              </CardContent>
-            )}
           </Card>
         </motion.div>
       </main>

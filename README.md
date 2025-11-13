@@ -1,198 +1,189 @@
 # FocusGuard – Real-Time Adaptive Procrastination Detector
 
-FocusGuard is a Windows-first productivity copilot that watches desktop activity and surfaces real-time focus insights. A dual-model machine learning stack detects when behaviour veers from your productive baseline, while a modern React dashboard visualises metrics, insights, and distraction triggers.
+FocusGuard is a Windows-first focus companion that senses desktop behaviour, forecasts where your attention is heading, and nudges you back toward deep work. It combines native activity capture, adaptive machine learning, and a modern dashboard to surface actionable productivity insights in real time.
 
 ---
 
-## What's New (Q4 2025 Update)
-- **Cognitive Twin (Ghost)** – lightweight predictor (`nextgen/ghost.py`) that forecasts your next app/domain and near-term distraction probability. Controlled via `ENABLE_GHOST_TWIN` in `config.py`.
-- **Controller Integration** – `app_controller.FocusGuardController` now maintains a live ghost snapshot even before the ML ensemble warms up, so `/api/session/status` always exposes `prediction.cognitive_twin` when events arrive.
-- **Dashboard Enhancements** – new `CognitiveTwinPanel` and richer activity feed entries present ghost insights, transition depth, and distraction risk gauge.
-- **Session Payload Improvements** – Flask server sanitises prediction metadata for JSON clients and resets ghost state cleanly on session start/stop.
+## Why FocusGuard
+- **Stay in flow:** See distraction spikes the moment they happen and spot which apps are pulling you off task.
+- **Understand context shifts:** A cognitive “ghost twin” predicts your next likely app or domain and estimates the risk of distraction before it lands.
+- **Personalise the signal:** Blend passive telemetry, explicit feedback, and lightweight retraining to keep the model aligned with the way *you* work.
+- **Own your data:** Everything runs locally. Models, analytics, and session history live on your machine, not in the cloud.
 
 ---
 
-## 1. What FocusGuard Does
-- **Capture** low-level desktop activity (keystrokes, clicks, active window metadata, URLs).
-- **Transform** signals into 16 behavioural features every 30 seconds.
-- **Classify** each window as focused or distracted using a hybrid ML ensemble, and augment with ghost twin look-ahead signals.
-- **Surface** real-time alerts, today’s stats, week trends, feature importance, and AI insights through a Flask API + Vite/React UI.
-- **Adapt** continuously as you provide feedback or upload fresh labelled datasets.
+## Core Capabilities
+- **Rich activity sensing** – keystrokes, clicks, active window metadata, URLs, idle streaks, and app switches streamed in real time.
+- **Feature engineering** – 16 behavioural metrics summarised every 30 seconds for anomaly and classification pipelines.
+- **Hybrid intelligence** – anomaly detector + supervised classifier + ensemble combiner determine focus vs distraction with confidence scores.
+- **Cognitive twin forecasting** – Ghost heuristic models transitions to predict the next context and probability of near-term distraction.
+- **Visual command center** – Vite/React dashboard with gradients, micro-animations, and glanceable cards for today’s stats, activity feed, and AI insights.
+- **Feedback + retraining loop** – capture manual or passive labels, prep datasets, and trigger safe model refreshes without leaving the app.
 
 ---
 
-## 2. System Overview
+## Architecture at a Glance
 ```
 Windows Hooks  →  Activity Stream  →  Feature Extractor  →  ML Ensemble
-                        (16 engineered features)    │
-                                          │
-                      Flask API  ←  FocusGuard Controller  →  React Dashboard
+    (pynput / pywin32)       (16 engineered metrics)          │
+                                                           │
+                                       FocusGuard Controller (Flask API)
+                                                   │
+                                   ┌───────────────┴───────────────┐
+                                   │                               │
+                          Ghost Cognitive Twin            React Dashboard (Vite)
 ```
 
-### Key Components
+### Project Structure Highlights
 | Path | Purpose |
 |------|---------|
-| `activity_stream.py` | Captures real Windows activity (keystrokes, clicks, app switches, idle time). |
-| `feature_extractor.py` | Converts raw events into the 16-feature vector consumed by the models. |
-| `ml/` | Modern ML package with anomaly detector, classifier, model ensemble, and training pipelines. |
-| `app_controller.py` | Orchestrates calibration, live detection, feedback capture, heuristics, and analytics logging. |
-| `web_server.py` | Flask REST API with session management, stats, insights, and model registry endpoints. |
-| `nextgen/ghost.py` | Cognitive twin heuristics that track app transitions, distraction heuristics, and produce dashboard snapshots. |
-| `frontend/` | Vite + React dashboard (SWR data hooks, Tailwind styling, Lucide icons). |
-| `data/` | Calibration data, labelled feedback, weekly analytics log, and demo dataset (`focusguard_windows_sessions.csv`). |
-| `models/` | Persisted artefacts: `anomaly_detector.joblib`, `classifier.joblib`, `scaler.joblib`, and registry metadata. |
+| `activity_stream.py` | Hooks into Windows input/window events and buffers recent activity. |
+| `feature_extractor.py` | Transforms raw events into the model-ready feature vector. |
+| `ml/` | Isolation Forest + Random Forest pipelines, ensemble logic, and artefact management. |
+| `nextgen/ghost.py` | Cognitive twin heuristics for next-app prediction and distraction probability. |
+| `app_controller.py` | Orchestrates calibration, live detection, heuristics, ghost integration, and analytics logging. |
+| `web_server.py` | Flask REST surface (`/api/session/*`, insights, retrain) and session cache. |
+| `frontend/` | Vite + React dashboard (SWR data hooks, Tailwind theme, Lucide icons). |
+| `data/` | Raw event captures, feedback datasets, personalization logs, analytics exports. |
+| `models/` | Persisted artefacts (`anomaly_detector.joblib`, `classifier.joblib`, `scaler.joblib`, metadata). |
 
 ---
 
-## 3. Machine Learning Stack
+## Intelligence Stack
+| Layer | Technology | Role |
+|-------|------------|------|
+| **Baseline detector** | Isolation Forest (`scikit-learn`) | Zero-shot anomaly scoring straight after calibration. |
+| **Supervised classifier** | Random Forest + StandardScaler | Learns your personalised focus vs distraction boundary from labelled data. |
+| **Ensemble combiner** | `ml/ensembles/focus_guard.py` | Blends anomaly and classifier outputs into a stable procrastination probability. |
+| **Cognitive twin (Ghost)** | `nextgen/ghost.py` | Tracks app transitions, estimates distraction risk, and feeds the dashboard even before ML converges. |
+| **Heuristic guardrails** | Controller rules | Boost confidence when distraction signals are obvious (e.g., low typing + high entertainment ratio). |
 
-| Layer | Technology | Purpose |
-|-------|------------|---------|
-| **Baseline detector** | Isolation Forest (`sklearn`) | Zero-shot anomaly detection directly after calibration. |
-| **Supervised classifier** | Random Forest (`sklearn`) with StandardScaler | Learns your personalised “focused vs distracted” boundary from labelled data. |
-| **Ensemble combiner** | `ml/ensembles/focus_guard.py` | Normalises anomaly scores and blends them (30% anomaly, 70% classifier) into a single procrastination probability. |
-| **Cognitive twin** | `nextgen/ghost.py` | Maintains transition history and distraction heuristics to forecast next-app context and risk. |
-
-### Model Artefacts
-| File | Description |
-|------|-------------|
-| `models/anomaly_detector.joblib` | Isolation Forest trained on the 4 000 sample demo dataset (10% contamination). |
-| `models/classifier.joblib` | Random Forest (300 estimators, balanced class weights) trained on the same dataset’s labels. |
-| `models/scaler.joblib` | `StandardScaler` fitted on feature columns used by the classifier. |
-| `models/artifacts.json` | Metadata (metrics, parameters, timestamps) for UI diagnostics or downstream tooling. |
-
-### Feature Set (16)
+### Feature Catalogue
 `keystrokes_per_sec`, `clicks_per_sec`, `app_switches`, `app_entropy`, `idle_time_ratio`, `productive_app_ratio`, `distraction_app_ratio`, `keystroke_burst_score`, `click_burst_score`, `app_switch_frequency`, `keystroke_variance`, `click_variance`, `keystroke_click_ratio`, `idle_transitions`, `app_focus_duration`, `context_switch_cost`.
 
-### Heuristic Assist
-If the classifier is unsure (confidence below the `ANOMALY_CONFIDENCE_THRESHOLD`) but the active window looks very distraction-heavy (e.g., YouTube with low keystrokes), the controller elevates the prediction through a guardrail heuristic so obviously distracting sessions do not stay marked as “focused”.
+### Ghost Twin Snapshot
+- **predicted_next** – likely upcoming app/domain token.
+- **prob_distracted** – heuristic probability of drifting off task (0–1).
+- **support/history** – transition counts and buffer depth.
+- **new_events_considered** – incremental events used since the last snapshot.
+
+Snapshots appear in `/api/session/status` under `prediction.cognitive_twin` and power the dashboard’s Cognitive Twin panel.
 
 ---
 
-## 4. Data & Training Workflow
-
-1. **Calibration / Baseline**
-  ```bash
-  python main.py calibrate
-  ```
-  - Collects raw events into `data/raw_uncalibrated.csv`.
-  - Trains the Isolation Forest via `FocusGuardEnsemble.train_baseline()` and saves to `models/anomaly_detector.joblib`.
-
-2. **Supervised Training (optional but recommended)**
-  - Provide labelled rows (0 = focused, 1 = distracted) in `data/labeled_feedback.csv` or another CSV with the same feature column names.
-  - Use the training utility:
-    ```bash
-    python scripts/train_models.py --dataset data/focusguard_windows_sessions.csv --label-column label
-    ```
-  - The script fits both detector and classifier, registers metadata, and writes artefacts back into `models/`.
-
-3. **Real-Time Feedback Loop**
-  - During live monitoring the app can request user feedback (`y/n` prompts) which append to `data/labeled_feedback.csv`.
-  - High-confidence predictions emit passive labels into `data/personalization/passive_labels.jsonl`; once `MIN_PERSONAL_FEEDBACK_FOR_RETRAIN` (default 12) combined passive + manual samples exist with both labels, retraining can kick off even without CSV feedback.
-  - When the minimum labelled sample threshold (`MIN_SAMPLES_FOR_TRAINING`, default 100) is met, the controller retrains the classifier automatically.
-
-4. **Model Registry**
-  - `app_controller.FocusGuardController` loads available artefacts on start so web sessions immediately consume the latest models.
-  - Registry entries are exposed via `/api/models/registry` for dashboards or integrations.
-
-### Personalization: preparing web feedback and retraining
-
-To make the model learn from web feedback captured by the dashboard, two helper utilities are provided:
-
-- `scripts/prepare_training_from_feedback.py` — joins `data/personalization/feature_snapshots.jsonl` with `data/personalization/feedback.jsonl` and `passive_labels.jsonl`, performs mean-imputation for missing features, and writes two CSVs:
-  - `data/personalization/feedback_for_training.csv` (labeled rows suitable for `train_models.py`)
-  - `data/personalization/snapshots_with_labels.csv` (full snapshot audit with label metadata)
-
-- `POST /api/models/retrain` — server-side retrain endpoint that will run the converter + training in a sandbox, evaluate the candidate model on a held-out validation set, and atomically install the new artefacts only if validation AUC is not worse than the current model. Use this when you want the server to manage training and safe deployment.
-
-Typical flow:
-
-```bash
-python scripts/prepare_training_from_feedback.py
-python scripts/train_models.py --dataset data/personalization/feedback_for_training.csv --label-column label
-# or trigger server-side retrain
-curl -X POST http://127.0.0.1:8000/api/models/retrain
-```
-
-Notes:
-- The prepare script uses a 5s temporal tolerance when joining feedback to snapshots by session id and timestamp; change the script if you need a wider window.
-- The retrain endpoint validates candidate models and will not replace existing artefacts if the candidate performs worse on the validation fold.
+## Frontend Experience
+- **Dashboard hero** – live focus score, session controls, and status badges.
+- **Metrics grid** – focus score, focused minutes, distractions, session count.
+- **Focus chart** – trend visualisations derived from aggregated analytics.
+- **Activity feed** – chronological events with contextual labels and latest ensemble decision capsule.
+- **Cognitive Twin panel** – animated gauge, predicted next context, transition stats, and buffer insights.
+- **Insights panel** – AI-style recommendations grouped by severity.
+- **Live session summary** – counters for elapsed time, events, focus/distract splits, and score breakdowns.
 
 ---
 
-## 5. Running FocusGuard
+## Getting Started
 
-### 5.1 Backend (Flask API + Real-Time Engine)
+### Prerequisites
+- Windows 10/11 workstation.
+- Python 3.9+ (for backend and CLI utilities).
+- Node.js 18+ (for the Vite frontend).
+
+### Backend Setup
 ```bash
 python -m venv .venv
-.\.venv\Scripts\activate   # PowerShell (adjust for bash or cmd)
+\.venv\Scripts\activate  # adapt for CMD or bash shells
 pip install -r requirements.txt
-python web_server.py  # Starts API at http://127.0.0.1:8000
+python web_server.py  # serves http://127.0.0.1:8000
 ```
-The server initialises the controller, loads saved artefacts, and streams live stats at `/api/session/status` (updated every ~2.5 seconds).
+The server initialises the controller, loads existing artefacts, and streams session updates at `/api/session/status` (refreshed every ~2.5s).
 
-### 5.2 Frontend Dashboard
+### Frontend Setup
 ```bash
 cd frontend
 npm install
-npm run dev  # Vite dev server at http://localhost:3000
+npm run dev  # http://localhost:3000
 ```
-SWR hooks poll backend endpoints to populate:
-- Today focus metrics (fallbacks to live session stats if daily aggregates are empty).
-- Focus chart (weekly/hourly trends).
-- Activity feed, AI insights, feature importance, distraction triggers.
-- Real-time session summary with combined scores when available.
+The dashboard uses SWR to poll backend endpoints and renders live cards, charts, and ghost insights.
 
-### 5.3 CLI Workflow (Optional)
+### CLI Utilities (optional)
 ```bash
-python main.py start      # Calibrate (if needed) then run detection
-python main.py detect     # Run live detection for a fixed window
+python main.py calibrate  # collect baseline data
+python main.py start      # run live detection (CLI mode)
+python main.py detect     # run detection for a fixed window
 ```
 
 ---
 
-## 6. API Surface (Selected)
-| Endpoint | Description |
-|----------|-------------|
-| `GET /api/session/status` | Live session stats, latest prediction scores, heuristic flag, and `prediction.cognitive_twin` snapshot (when ghost enabled). |
-| `POST /api/session/start` / `stop` | Start/stop monitoring sessions controlled by the dashboard. |
-| `GET /api/stats/today` | Aggregated focus stats for the current day. |
-| `GET /api/stats/weekly` | Seven-day focus score trend. |
-| `GET /api/stats/hourly` | Hourly focus pattern. |
-| `GET /api/insights` | AI-generated recommendations (success/warning/danger/info). |
-| `GET /api/features/importance` | Top model feature contributions (requires classifier artefact). |
-| `GET /api/distractions/top` | Ranked distraction sources sourced from labelled feedback. |
-| `GET /api/export` | Snapshot export for external analysis. |
-| `GET /health` | Simple service heartbeat. |
+## Operating FocusGuard
+1. **Start the backend** (`python web_server.py`).
+2. **Launch the dashboard** (`npm run dev` in `frontend/`).
+3. **Begin a session** via the dashboard “Start Session” button or `POST /api/session/start`.
+4. **Work as usual** – the controller aggregates events, predicts focus, and emits ghost snapshots.
+5. **Stop the session** from the UI or `POST /api/session/stop`; summaries persist to `data/session_log.jsonl`.
 
-All endpoints are CORS-enabled for `localhost:3000` (frontend) and `localhost:3001` if you run multiple dev servers.
+FocusGuard keeps a rolling buffer of the latest 10 000 events. Ghost predictions update even before the ML ensemble has enough data, so the UI never goes silent while warming up.
 
 ---
 
-## 7. Troubleshooting & Tips
-- **Dashboard shows zeros:** start a monitoring session; top metrics fall back to live session stats until `/api/stats/today` is populated from session logs.
-- **Cognitive twin shows “Unknown”:** ensure a session is running, the activity monitor is producing events, and `ENABLE_GHOST_TWIN = True` in `config.py`; the twin needs at least one transition to emit meaningful predictions.
-- **Classifier values missing:** ensure `models/classifier.joblib` and `models/scaler.joblib` exist; rerun `scripts/train_models.py` if needed.
-- **Dashboard activity badges look off:** the activity feed now mirrors the ensemble’s label (`Focus`/`Distraction`), not raw click/keystroke events.
-- **Didn’t retrain after a long session:** confirm you crossed both thresholds—either 100 manual labels or at least 12 passive labels with focus and distraction coverage.
-- **Insights buttons don’t respond:** they now reveal contextual messages and only switch tabs when data exists (e.g., feature importance requires trained classifier).
-- **Watching YouTube still shows “Focused”:** backend heuristics are now in place; restart the server to load the latest controller if you still see focused status.
+## Personalisation & Model Refresh
+- **Feedback capture** – manual prompts and passive labels store entries in `data/labeled_feedback.csv` and `data/personalization/*.jsonl`.
+- **Dataset preparation** – `scripts/prepare_training_from_feedback.py` builds clean CSVs for retraining.
+- **Training** – run `scripts/train_models.py` locally, or hit `POST /api/models/retrain` to let the server validate and atomically swap artefacts.
+- **Thresholds** – controller auto-retrains when `MIN_SAMPLES_FOR_TRAINING` (default 100) or passive label thresholds are met, and also supports mini-retrains when a smaller batch of explicit feedback is captured mid-session.
 
 ---
 
-## 8. Roadmap Ideas
-- Adaptive thresholding based on rolling focus scores.
-- Multi-user profiles with separate artefact registries.
-- Optional cloud sync for analytics (current build is local-only by design).
-- Fine-grained website and application tagging from the UI.
+## API Highlights
+| Endpoint | Purpose |
+|----------|---------|
+| `GET /api/session/status` | Live session stats, ensemble scores, heuristic flag, and `prediction.cognitive_twin`. |
+| `POST /api/session/start` / `stop` | Begin or end monitoring sessions (dashboard uses these). |
+| `GET /api/stats/today` | Aggregated focus metrics for the current day, backed by session logs. |
+| `GET /api/stats/weekly` / `hourly` | Historical trends for weekly and hourly focus scores. |
+| `GET /api/insights` | AI-style recommendations based on recent behaviour. |
+| `GET /api/features/importance` | Feature importance exposure when a classifier is available. |
+| `GET /api/distractions/top` | Ranked distractions sourced from labelled sessions. |
+| `POST /api/models/retrain` | Safe model retraining with validation gating. |
+| `GET /api/export` | Bundle of key analytics for external analysis. |
+
+All routes are CORS-enabled for `http://localhost:3000` and `http://localhost:3001` by default.
 
 ---
 
-## 9. License
-MIT licensed. See `LICENSE` for details.
+## Troubleshooting
+- **Dashboard shows zeros** – ensure a session is active; live stats fill placeholders until daily aggregates exist.
+- **Cognitive Twin stays “Unknown”** – check `ENABLE_GHOST_TWIN = True` and confirm events are streaming (watch the log). At least one transition is required.
+- **Classifier metrics missing** – verify `models/classifier.joblib` and `models/scaler.joblib` are present; rerun training utilities if needed.
+- **Retrain didn’t trigger** – confirm both focus and distraction labels exist and you crossed the configured thresholds.
+- **Frontend build fails** – delete `frontend/node_modules`, reinstall, and ensure Node.js 18+ is in use.
+- **APIs return stale data** – restart the Flask server after editing controller or ghost modules so in-memory state resets.
 
 ---
 
-## 10. Credits
-Built with Python 3.9+, scikit-learn, Flask, Pandas, Vite, React, Tailwind, Framer Motion, `pywin32`, and `pynput`.
+## Roadmap
+- Adaptive thresholds based on rolling focus scores and circadian patterns.
+- Multi-user profiles with isolated artefact registries and dashboards.
+- Optional secure sync to back up analytics while staying privacy-first.
+- Finer-grained app and domain tagging directly from the UI.
+- Ghost Twin upgrades powered by lightweight embedding models.
+
+---
+
+## Contributing
+Ideas, bug reports, and pull requests are welcome. Please lint and run relevant tests before submitting changes:
+```bash
+python -m compileall app_controller.py web_server.py
+cd frontend && npm run lint
+```
+
+---
+
+## License
+FocusGuard is released under the MIT License. See `LICENSE` for full terms.
+
+---
+
+## Credits
+Built with Python 3.9+, Flask, scikit-learn, Pandas, Vite, React, Tailwind CSS, Framer Motion, Lucide, `pywin32`, and `pynput`.
 

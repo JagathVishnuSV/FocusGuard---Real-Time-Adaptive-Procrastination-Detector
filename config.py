@@ -7,8 +7,13 @@ import os
 from pathlib import Path
 from typing import Dict, List
 
+from dotenv import load_dotenv
+
 # ===== PROJECT PATHS =====
 PROJECT_ROOT = Path(__file__).parent.absolute()
+
+# Load environment overrides from .env if present so CLI users do not have to export vars manually.
+load_dotenv(dotenv_path=PROJECT_ROOT / ".env", override=False)
 DATA_DIR = PROJECT_ROOT / "data"
 MODELS_DIR = PROJECT_ROOT / "models"
 LOGS_DIR = PROJECT_ROOT / "logs"
@@ -191,3 +196,13 @@ APP_DESCRIPTION = "Real-Time Adaptive Procrastination Detector"
 ENABLE_GHOST_TWIN = True
 GHOST_TWIN_HISTORY = 128  # how many recent app events to retain for transitions
 GHOST_PREDICT_HORIZON_SECONDS = 60  # default horizon for ghost predictions
+
+# ===== AI ENRICHMENT (Gemini) =====
+# Optional Google Gemini integration for richer insights and explanations.
+ENABLE_GEMINI = str(os.environ.get("ENABLE_GEMINI", "false")).strip().lower() in {"1", "true", "yes", "on"}
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
+GEMINI_MODEL_NAME = os.environ.get("GEMINI_MODEL_NAME", "gemini-2.5-flash")
+GEMINI_TIMEOUT_SECONDS = float(os.environ.get("GEMINI_TIMEOUT_SECONDS", "8.0"))
+GEMINI_CACHE_TTL_SECONDS = int(os.environ.get("GEMINI_CACHE_TTL_SECONDS", "600"))
+GEMINI_API_BASE = os.environ.get("GEMINI_API_BASE", "https://generativelanguage.googleapis.com/v1beta/models")
+GEMINI_REFRESH_MIN_SECONDS = float(os.environ.get("GEMINI_REFRESH_MIN_SECONDS", "15"))

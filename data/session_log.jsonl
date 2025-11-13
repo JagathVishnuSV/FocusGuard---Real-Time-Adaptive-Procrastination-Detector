@@ -30,3 +30,5 @@
 {"timestamp": "2025-11-11T18:01:02.764688", "duration": 1800.9896841049194, "focused_time": 1798.3753561973572, "distracted_time": 0, "total_events": 776, "anomalies_detected": 0, "feedback_collected": 0}
 {"timestamp": "2025-11-11T18:15:20.521252", "duration": 585.8252868652344, "focused_time": 521.3297708034515, "distracted_time": 61.52599596977234, "total_events": 199, "anomalies_detected": 15, "feedback_collected": 2}
 {"timestamp": "2025-11-11T18:37:24.351719", "duration": 44.99085760116577, "focused_time": 42.23094081878662, "distracted_time": 0, "total_events": 20, "anomalies_detected": 0, "feedback_collected": 0}
+{"timestamp": "2025-11-13T18:32:25.851358", "duration": 632.1840069293976, "focused_time": 630.3487946987152, "distracted_time": 0, "total_events": 1071, "anomalies_detected": 0, "feedback_collected": 0}
+{"timestamp": "2025-11-13T19:27:57.888716", "duration": 342.50316405296326, "focused_time": 341.7577021121979, "distracted_time": 0, "total_events": 342, "anomalies_detected": 0, "feedback_collected": 0}

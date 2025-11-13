@@ -10,6 +10,9 @@ import type {
   PredictionSummary,
   PersonalFeedbackRequest,
   DistractionStat,
+  CognitiveTwinSnapshot,
+  GeminiEnrichment,
+  GeminiPredictionExplanation,
 } from './types'
 
 const API_BASE_URL = 'http://127.0.0.1:8000'
@@ -161,4 +164,6 @@ export type {
   PredictionSummary,
   PersonalFeedbackRequest,
   DistractionStat,
+  GeminiEnrichment,
+  GeminiPredictionExplanation,
 } from './types'

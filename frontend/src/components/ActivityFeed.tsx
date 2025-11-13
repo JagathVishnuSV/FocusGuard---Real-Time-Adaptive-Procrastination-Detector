@@ -15,7 +15,7 @@ import {
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { apiService, type ActivityEvent } from '@/lib/api'
-import type { PredictionSummary, CognitiveTwinSnapshot } from '@/lib/types'
+import type { PredictionSummary, CognitiveTwinSnapshot, GeminiEnrichment } from '@/lib/types'
 
 const normalizeFeatures = (input?: Record<string, unknown>) => {
   if (!input) {
@@ -35,23 +35,6 @@ const normalizeFeatures = (input?: Record<string, unknown>) => {
   return entries.length > 0 ? Object.fromEntries(entries) : undefined
 }
 
-const formatGhostTarget = (raw?: string | null) => {
-  if (!raw) {
-    return 'Unknown'
-  }
-
-  const trimmed = raw.trim()
-  if (!trimmed || trimmed === 'unknown') {
-    return 'Unknown'
-  }
-
-  if (trimmed.length <= 2) {
-    return trimmed.toUpperCase()
-  }
-
-  return trimmed.replace(/^https?:\/\//, '')
-}
-
 interface PredictionMetadata {
   combinedScore?: number
   anomalyScore?: number
@@ -68,6 +51,7 @@ interface PredictionMetadata {
   distractionScore?: number | null
   url?: string | null
   cognitiveTwin?: CognitiveTwinSnapshot | null
+  aiEnrichment?: GeminiEnrichment | null
 }
 
 interface ProcessedEvent extends ActivityEvent, PredictionMetadata {
@@ -109,6 +93,9 @@ export const ActivityFeed: React.FC = () => {
         const cognitiveTwin = (predictionPayload?.cognitive_twin ?? (rawEvent as any).cognitive_twin ?? null) as
           | CognitiveTwinSnapshot
           | null
+        const aiEnrichment = (predictionPayload?.ai_enrichment ?? (rawEvent as any).ai_enrichment ?? null) as
+          | GeminiEnrichment
+          | null
 
         let predictedLabel: 'focused' | 'distracted' | null = null
         if (typeof explicitLabel === 'string') {
@@ -128,20 +115,20 @@ export const ActivityFeed: React.FC = () => {
         const confidenceDisplay = typeof confidence === 'number' ? `${Math.round(confidence * 100)}%` : null
 
         if (predictedLabel === 'distracted') {
-          description = 'Model flagged distraction'
+          description = 'FocusGuard flagged a potential distraction'
         } else if (predictedLabel === 'focused') {
-          description = 'Model confirmed focus'
+          description = 'FocusGuard confirmed you stayed on task'
         } else {
-          description = 'Ensemble prediction generated'
+          description = 'Fresh focus insight available'
         }
         if (combinedDisplay) {
-          description += ` • Combined ${combinedDisplay}`
+          description += ` • Focus score ${combinedDisplay}`
         }
         if (confidenceDisplay) {
           description += ` • Confidence ${confidenceDisplay}`
         }
         if (heuristic) {
-          description += ' • Heuristic triggered'
+          description += ' • Safety check applied'
         }
         const resolvedContextLabel = payloadContext?.label ?? eventContext?.label ?? detailContextLabel ?? null
         const resolvedContextConfidence = payloadContext?.confidence ?? eventContext?.confidence ?? detailContextConfidence ?? null
@@ -183,6 +170,7 @@ export const ActivityFeed: React.FC = () => {
           distractionScore: resolvedDistractionScore,
           url: (rawEvent as any).url ?? null,
           cognitiveTwin,
+          aiEnrichment,
         }
       }
       case 'app_switch':
@@ -226,6 +214,7 @@ export const ActivityFeed: React.FC = () => {
       contextCounts: rawEvent.context?.counts ?? null,
       url: rawEvent.url ?? null,
       cognitiveTwin: (rawEvent as any).cognitive_twin ?? null,
+      aiEnrichment: (rawEvent as any).ai_enrichment ?? null,
     }
   }
 
@@ -235,72 +224,6 @@ export const ActivityFeed: React.FC = () => {
     }
 
     try {
-              {event.cognitiveTwin && (
-                <div className="mt-3 rounded-md border border-purple-500/20 bg-purple-500/5 p-3">
-                  <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-purple-200">
-                    <Brain className="w-3.5 h-3.5" />
-                    Cognitive Twin Insight
-                  </div>
-                  <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] text-purple-100">
-                    <div>
-                      <span className="text-xs font-semibold text-purple-100">Predicted Next</span>
-                      <p className="mt-0.5 text-sm font-semibold text-purple-50">
-                        {formatGhostTarget(event.cognitiveTwin.predicted_next)}
-                      </p>
-                    </div>
-                    <div>
-                      <span className="text-xs font-semibold text-purple-100">Distraction Risk</span>
-                      <p className="mt-0.5 text-sm font-semibold text-purple-50">
-                        {(Math.min(Math.max(event.cognitiveTwin.prob_distracted * 100, 0), 100)).toFixed(1)}%
-                      </p>
-                    </div>
-                    {event.cognitiveTwin.last_app && (
-                      <div>
-                        <span className="text-xs font-semibold text-purple-100">Last Observed App</span>
-                        <p className="mt-0.5 text-sm font-medium text-purple-50">
-                          {formatGhostTarget(event.cognitiveTwin.last_app)}
-                        </p>
-                      </div>
-                    )}
-                    {typeof event.cognitiveTwin.support === 'number' && (
-                      <div>
-                        <span className="text-xs font-semibold text-purple-100">Supporting Transitions</span>
-                        <p className="mt-0.5 text-sm font-medium text-purple-50">{event.cognitiveTwin.support}</p>
-                      </div>
-                    )}
-                    {typeof event.cognitiveTwin.transitions_observed === 'number' && (
-                      <div>
-                        <span className="text-xs font-semibold text-purple-100">Transitions Tracked</span>
-                        <p className="mt-0.5 text-sm font-medium text-purple-50">{event.cognitiveTwin.transitions_observed}</p>
-                      </div>
-                    )}
-                    {typeof event.cognitiveTwin.history_size === 'number' && (
-                      <div>
-                        <span className="text-xs font-semibold text-purple-100">History Depth</span>
-                        <p className="mt-0.5 text-sm font-medium text-purple-50">{event.cognitiveTwin.history_size}</p>
-                      </div>
-                    )}
-                    {typeof event.cognitiveTwin.buffer_events === 'number' && (
-                      <div>
-                        <span className="text-xs font-semibold text-purple-100">Buffer Size</span>
-                        <p className="mt-0.5 text-sm font-medium text-purple-50">{event.cognitiveTwin.buffer_events}</p>
-                      </div>
-                    )}
-                    {typeof event.cognitiveTwin.new_events_considered === 'number' && (
-                      <div>
-                        <span className="text-xs font-semibold text-purple-100">New Events Considered</span>
-                        <p className="mt-0.5 text-sm font-medium text-purple-50">{event.cognitiveTwin.new_events_considered}</p>
-                      </div>
-                    )}
-                    {typeof event.cognitiveTwin.horizon_seconds === 'number' && (
-                      <div>
-                        <span className="text-xs font-semibold text-purple-100">Prediction Horizon</span>
-                        <p className="mt-0.5 text-sm font-medium text-purple-50">{event.cognitiveTwin.horizon_seconds}s</p>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
       return JSON.parse(detail)
     } catch (err) {
       console.debug('Could not parse prediction detail payload', err)
@@ -362,8 +285,9 @@ export const ActivityFeed: React.FC = () => {
 
       setFeedbackStatus((prev) => ({ ...prev, [event.id]: 'pending' }))
 
-  const combinedScore = typeof event.combinedScore === 'number' ? event.combinedScore : null
-  const predictedLabel = event.predictionLabel ?? (combinedScore !== null && combinedScore >= 0.6 ? 'distracted' : 'focused')
+      const combinedScore = typeof event.combinedScore === 'number' ? event.combinedScore : null
+      const predictedLabel =
+        event.predictionLabel ?? (combinedScore !== null && combinedScore >= 0.6 ? 'distracted' : 'focused')
 
       try {
         await apiService.submitPersonalFeedback({
@@ -437,7 +361,7 @@ export const ActivityFeed: React.FC = () => {
         if (event.predictionLabel === 'focused') {
           return <Badge variant="outline" className="border-emerald-500/40 bg-emerald-500/10 text-emerald-200">Focus</Badge>
         }
-        return <Badge variant="outline" className="border-purple-500/40 bg-purple-500/10 text-purple-200">Ensemble</Badge>
+        return <Badge variant="outline" className="border-purple-500/40 bg-purple-500/10 text-purple-200">Insight</Badge>
       default:
         return <Badge variant="outline" className="border-slate-500/40 bg-slate-500/10 text-slate-300">Activity</Badge>
     }
@@ -490,119 +414,126 @@ export const ActivityFeed: React.FC = () => {
             </div>
           ) : (
             events.map((event) => (
-              <motion.div
-                key={event.id}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 20 }}
-                className="flex items-start gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
-              >
-                <div className="mt-1">
-                  {getEventIcon(event)}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    {getEventBadge(event)}
-                    <span className="text-xs text-slate-400">
-                      {new Date(event.timestamp).toLocaleTimeString()}
-                    </span>
+                <motion.div
+                  key={event.id}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 20 }}
+                  className="flex items-start gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
+                >
+                  <div className="mt-1">
+                    {getEventIcon(event)}
                   </div>
-                  <p className="text-sm text-slate-100 truncate">
-                    {event.description}
-                  </p>
-                  {event.detail && event.displayType !== 'prediction' && (
-                    <p className="text-xs text-slate-400 mt-1 truncate">
-                      {event.detail}
-                    </p>
-                  )}
-                  {event.contextLabel && (
-                    <p className="text-xs text-slate-400 mt-1 truncate">
-                      Context: {event.contextLabel}
-                      {typeof event.contextConfidence === 'number' ? ` (${Math.round(event.contextConfidence * 100)}%)` : ''}
-                    </p>
-                  )}
-                  {typeof event.distractionScore === 'number' && (
-                    <p className="text-xs text-slate-400 mt-1 truncate">
-                      Distraction score: {event.distractionScore.toFixed(1)}
-                    </p>
-                  )}
-                  {event.displayType === 'prediction' && event.requiresFeedback && (
-                    <div className="grid grid-cols-2 gap-2 mt-3 text-xs text-slate-300">
-                      {typeof event.combinedScore === 'number' && (
-                        <div>
-                          <span className="font-semibold text-slate-100">Combined:</span>{' '}
-                          {event.combinedScore.toFixed(2)}
-                        </div>
-                      )}
-                      {typeof event.confidence === 'number' && (
-                        <div>
-                          <span className="font-semibold text-slate-100">Confidence:</span>{' '}
-                          {(event.confidence * 100).toFixed(0)}%
-                        </div>
-                      )}
-                      {typeof event.anomalyScore === 'number' && (
-                        <div>
-                          <span className="font-semibold text-slate-100">Anomaly:</span>{' '}
-                          {event.anomalyScore.toFixed(2)}
-                        </div>
-                      )}
-                      {typeof event.classifierProbability === 'number' && (
-                        <div>
-                          <span className="font-semibold text-slate-100">Classifier:</span>{' '}
-                          {(event.classifierProbability * 100).toFixed(0)}%
-                        </div>
-                      )}
-                      {event.predictionLabel && (
-                        <div>
-                          <span className="font-semibold text-slate-100">Label:</span>{' '}
-                          {event.predictionLabel === 'distracted' ? 'Distraction' : 'Focus'}
-                        </div>
-                      )}
-                      {typeof event.distractionScore === 'number' && (
-                        <div>
-                          <span className="font-semibold text-slate-100">Score:</span>{' '}
-                          {event.distractionScore.toFixed(1)}
-                        </div>
-                      )}
-                      {event.heuristicTriggered !== undefined && (
-                        <div className="col-span-2">
-                          <span className="font-semibold text-slate-100">Heuristic:</span>{' '}
-                          {event.heuristicTriggered ? 'Triggered safeguards' : 'No heuristic trigger'}
-                        </div>
-                      )}
-                      <div className="col-span-2 flex items-center gap-2 pt-2 border-t border-white/10 mt-2">
-                        <button
-                          type="button"
-                          onClick={() => handleFeedback(event, 'focused')}
-                          disabled={feedbackStatus[event.id] === 'pending'}
-                          className="inline-flex items-center gap-1 rounded-md border border-emerald-500/30 bg-emerald-500/10 px-2 py-1 text-emerald-100 text-xs hover:bg-emerald-500/20 disabled:opacity-50"
-                          aria-label="Mark as focused"
-                        >
-                          <ThumbsUp className="w-3.5 h-3.5" />
-                          Focused
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => handleFeedback(event, 'distracted')}
-                          disabled={feedbackStatus[event.id] === 'pending'}
-                          className="inline-flex items-center gap-1 rounded-md border border-rose-500/30 bg-rose-500/10 px-2 py-1 text-rose-100 text-xs hover:bg-rose-500/20 disabled:opacity-50"
-                          aria-label="Mark as distracted"
-                        >
-                          <ThumbsDown className="w-3.5 h-3.5" />
-                          Distracted
-                        </button>
-                        {feedbackStatus[event.id] === 'success' && (
-                          <span className="text-[11px] text-slate-300">Thanks for the feedback!</span>
-                        )}
-                        {feedbackStatus[event.id] === 'error' && (
-                          <span className="text-[11px] text-rose-300">Submission failed. Try again.</span>
-                        )}
-                      </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                      {getEventBadge(event)}
+                      <span className="text-xs text-slate-400">
+                        {new Date(event.timestamp).toLocaleTimeString()}
+                      </span>
                     </div>
-                  )}
-                </div>
-              </motion.div>
-            ))
+                    <p className="text-sm text-slate-100 truncate">
+                      {event.description}
+                    </p>
+                    {event.detail && event.displayType !== 'prediction' && (
+                      <p className="text-xs text-slate-400 mt-1 truncate">
+                        {event.detail}
+                      </p>
+                    )}
+                    {event.contextLabel && (
+                      <p className="text-xs text-slate-400 mt-1 truncate">
+                        Context: {event.contextLabel}
+                        {typeof event.contextConfidence === 'number'
+                          ? ` (${Math.round(event.contextConfidence * 100)}%)`
+                          : ''}
+                      </p>
+                    )}
+                    {typeof event.distractionScore === 'number' && (
+                      <p className="text-xs text-slate-400 mt-1 truncate">
+                        Distraction index: {event.distractionScore.toFixed(1)}
+                      </p>
+                    )}
+                    {event.displayType === 'prediction' && event.aiEnrichment?.context_summary && (
+                      <p className="mt-2 text-xs leading-relaxed text-primary-50">
+                        {event.aiEnrichment.context_summary}
+                      </p>
+                    )}
+                    {event.displayType === 'prediction' && event.requiresFeedback && (
+                      <div className="grid grid-cols-2 gap-2 mt-3 text-xs text-slate-300">
+                        {typeof event.combinedScore === 'number' && (
+                          <div>
+                            <span className="font-semibold text-slate-100">Focus score:</span>{' '}
+                            {event.combinedScore.toFixed(2)}
+                          </div>
+                        )}
+                        {typeof event.confidence === 'number' && (
+                          <div>
+                            <span className="font-semibold text-slate-100">Confidence:</span>{' '}
+                            {(event.confidence * 100).toFixed(0)}%
+                          </div>
+                        )}
+                        {typeof event.anomalyScore === 'number' && (
+                          <div>
+                            <span className="font-semibold text-slate-100">Anomaly:</span>{' '}
+                            {event.anomalyScore.toFixed(2)}
+                          </div>
+                        )}
+                        {typeof event.classifierProbability === 'number' && (
+                          <div>
+                            <span className="font-semibold text-slate-100">Focus probability:</span>{' '}
+                            {(event.classifierProbability * 100).toFixed(0)}%
+                          </div>
+                        )}
+                        {event.predictionLabel && (
+                          <div>
+                            <span className="font-semibold text-slate-100">Label:</span>{' '}
+                            {event.predictionLabel === 'distracted' ? 'Distraction' : 'Focus'}
+                          </div>
+                        )}
+                        {typeof event.distractionScore === 'number' && (
+                          <div>
+                            <span className="font-semibold text-slate-100">Distraction index:</span>{' '}
+                            {event.distractionScore.toFixed(1)}
+                          </div>
+                        )}
+                        {event.heuristicTriggered !== undefined && (
+                          <div className="col-span-2">
+                            <span className="font-semibold text-slate-100">Safety check:</span>{' '}
+                            {event.heuristicTriggered ? 'Applied safeguards' : 'No additional safeguards'}
+                          </div>
+                        )}
+                        <div className="col-span-2 flex items-center gap-2 pt-2 border-t border-white/10 mt-2">
+                          <button
+                            type="button"
+                            onClick={() => handleFeedback(event, 'focused')}
+                            disabled={feedbackStatus[event.id] === 'pending'}
+                            className="inline-flex items-center gap-1 rounded-md border border-emerald-500/30 bg-emerald-500/10 px-2 py-1 text-emerald-100 text-xs hover:bg-emerald-500/20 disabled:opacity-50"
+                            aria-label="Mark as focused"
+                          >
+                            <ThumbsUp className="w-3.5 h-3.5" />
+                            Focused
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleFeedback(event, 'distracted')}
+                            disabled={feedbackStatus[event.id] === 'pending'}
+                            className="inline-flex items-center gap-1 rounded-md border border-rose-500/30 bg-rose-500/10 px-2 py-1 text-rose-100 text-xs hover:bg-rose-500/20 disabled:opacity-50"
+                            aria-label="Mark as distracted"
+                          >
+                            <ThumbsDown className="w-3.5 h-3.5" />
+                            Distracted
+                          </button>
+                          {feedbackStatus[event.id] === 'success' && (
+                            <span className="text-[11px] text-slate-300">Thanks for the feedback!</span>
+                          )}
+                          {feedbackStatus[event.id] === 'error' && (
+                            <span className="text-[11px] text-rose-300">Submission failed. Try again.</span>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </motion.div>
+              ))
           )}
         </AnimatePresence>
       </CardContent>
