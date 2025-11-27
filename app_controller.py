@@ -306,38 +306,44 @@ class FocusGuardController:
                 "features": feature_map,
             }
 
-        context_text = None
-        insight_text = None
-        explanation = None
+        context_inputs = {
+            "app_name": current_state.get("current_app") if isinstance(current_state, dict) else None,
+            "window_title": current_state.get("window_title") if isinstance(current_state, dict) else None,
+            "url": current_state.get("current_url") if isinstance(current_state, dict) else None,
+            "context_label": context_label,
+            "context_confidence": context_confidence,
+            "dominant_app": dominant_app,
+        }
 
+        bundle: Dict[str, Optional[str]] = {}
         try:
-            context_text = client.summarise_context(
-                app_name=current_state.get("current_app") if isinstance(current_state, dict) else None,
-                window_title=current_state.get("window_title") if isinstance(current_state, dict) else None,
-                url=current_state.get("current_url") if isinstance(current_state, dict) else None,
-                context_label=context_label,
-                context_confidence=context_confidence,
-            )
-        except Exception as exc:  # pragma: no cover - defensive
-            logger.debug("Gemini context summary failed: %s", exc)
-
-        try:
-            insight_text = client.generate_focus_insight(
+            bundle = client.generate_enrichment_bundle(
+                context=context_inputs,
                 stats_today=stats_today,
-                weekly_trend=weekly_trend,
-                hourly_pattern=hourly_pattern,
+                prediction=prediction_payload,
+                ghost_snapshot=ghost_snapshot if isinstance(ghost_snapshot, dict) else None,
                 top_distractions=top_distractions,
             )
         except Exception as exc:  # pragma: no cover - defensive
-            logger.debug("Gemini focus insight failed: %s", exc)
+            logger.debug("Gemini enrichment bundle failed: %s", exc)
 
-        try:
-            explanation = client.explain_prediction(
-                prediction=prediction_payload,
-                cognitive_twin=ghost_snapshot if isinstance(ghost_snapshot, dict) else None,
-            )
-        except Exception as exc:  # pragma: no cover - defensive
-            logger.debug("Gemini prediction explanation failed: %s", exc)
+        def _clean_text(value: Optional[str]) -> Optional[str]:
+            if not value:
+                return None
+            cleaned = str(value).strip()
+            return cleaned or None
+
+        context_text = _clean_text(bundle.get("context_summary"))
+        insight_text = _clean_text(bundle.get("focus_insight"))
+        prediction_text = _clean_text(bundle.get("prediction_summary"))
+        ghost_text = _clean_text(bundle.get("ghost_narrative"))
+
+        explanation = None
+        if prediction_text or ghost_text:
+            explanation = {
+                "summary": prediction_text,
+                "ghost_narrative": ghost_text,
+            }
 
         enrichment_payload = {
             "context_summary": context_text,
@@ -347,13 +353,21 @@ class FocusGuardController:
             "generated_at": datetime.fromtimestamp(now).isoformat(),
         }
 
-        if any(value for key, value in enrichment_payload.items() if key != "model"):
+        has_prediction_text = bool(
+            (enrichment_payload["context_summary"])
+            or (enrichment_payload["focus_insight"])
+            or (explanation and any(part for part in explanation.values()))
+        )
+
+        if has_prediction_text:
             self._gemini_enrichment = enrichment_payload
-        else:
+            if payload_hash:
+                self._gemini_last_payload_hash = payload_hash
+        elif not self._gemini_enrichment:
+            # Only clear when we have no previous enrichment to fall back on.
             self._gemini_enrichment = {}
 
         self._gemini_last_refresh = now
-        self._gemini_last_payload_hash = payload_hash
 
     def get_recent_distraction_scores(self, lookback_seconds: int = 3600) -> Dict[str, Dict[str, Any]]:
         """Summarise recent distraction scores for analytics endpoints."""

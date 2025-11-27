@@ -1,196 +1,436 @@
-import React from 'react'
+import React, { useMemo } from 'react'
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from 'recharts'
+import { Calendar, TrendingUp, Timer, Sparkles } from 'lucide-react'
+
 import { useApi, useSessionStatus } from '../hooks/useApi'
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts'
-import { Calendar, TrendingUp, Timer } from 'lucide-react'
+import type {
+  ActivityEvent,
+  HourlyStats,
+  DistractionStat,
+  SessionStatus,
+  GeminiEnrichment,
+} from '@/lib/types'
 
-export default function FocusDeepDive() {
-  const { data: activities } = useApi<any[]>('/api/activity/recent')
-  const { data: hourly } = useApi<{ hours: string[]; pattern: number[] }>('/api/stats/hourly')
-  const { data: features } = useApi<{ feature: string; importance: number }[]>('/api/features/importance')
-  const { data: topDistractions } = useApi<any[]>('/api/distractions/top')
-  const { sessionStatus } = useSessionStatus()
+interface HeatmapPoint {
+  hour: string
+  focus: number
+}
 
-  // Use backend hourly stats if available, otherwise empty array
-  const heatmap = (hourly?.hours ?? []).map((hour, idx) => {
-    const raw = hourly?.pattern?.[idx] ?? 0
-    // normalize if pattern looks like 0..1
-    const value = raw <= 1 ? Math.round(raw * 100) : Math.round(raw)
-    return { hour, focus: value }
-  })
+interface CorrelationPoint {
+  context: string
+  focusRate: number
+  total: number
+}
 
-  // Time to first distraction in minutes since session start (if available)
-  let timeToFirstDistraction: string | null = null
-  try {
-    const first = (activities ?? []).find((a: any) => ((a.label || a.type) || '').toString().toLowerCase().includes('distract'))
-    if (first && sessionStatus?.start_time) {
-      const started = new Date(sessionStatus.start_time as string)
-      const firstT = new Date(first.timestamp)
-      const minutes = Math.max(0, Math.round((firstT.getTime() - started.getTime()) / 60000))
-      timeToFirstDistraction = `${minutes} min`
-    }
-  } catch (e) {
-    // ignore parsing issues
+const PIE_COLOURS = ['#22d3ee', '#a855f7', '#fbbf24', '#f97316', '#c084fc']
+const PIE_COLOUR_CLASSES = ['bg-cyan-300', 'bg-purple-400', 'bg-amber-300', 'bg-orange-400', 'bg-fuchsia-400']
+
+const normaliseScore = (value: number | null | undefined) => {
+  if (typeof value !== 'number' || Number.isNaN(value)) {
+    return 0
+  }
+  if (value <= 1) {
+    return Math.round(value * 100)
+  }
+  return Math.round(value)
+}
+
+const extractGeminiNarrative = (enrichment?: GeminiEnrichment | null) => {
+  if (!enrichment) {
+    return null
   }
 
-  // Persona using latest prediction combined_score if available
-  const personaScore = sessionStatus?.prediction?.combined_score ?? sessionStatus?.stats?.combined_score ?? 0
-  const persona = personaScore > 0.8 ? '🏃 The Morning Sprinter' : personaScore > 0.6 ? '🏃‍♀️ The Consistent Cruiser' : '🐢 The Steady Builder'
+  const parts: string[] = []
+  if (enrichment.context_summary) {
+    parts.push(enrichment.context_summary)
+  }
+  if (enrichment.focus_insight) {
+    parts.push(enrichment.focus_insight)
+  }
+  if (enrichment.prediction_explanation?.summary) {
+    parts.push(enrichment.prediction_explanation.summary)
+  }
 
-  // Build context counts from activity list
-  const contextCorrelation = (activities ?? []).reduce((acc: any, a: any) => {
-    const ctx = (a.context && (a.context.label || a.context)) || a.context || a.detail || a.app || 'Unknown'
-    if (!acc[ctx]) acc[ctx] = { focused: 0, distracted: 0 }
-    const isFocused = ((a.label || a.type) === 'Focused') || ((a.prediction?.combined_score ?? a.distraction_score ?? 0) < 0.5)
-    if (isFocused) acc[ctx].focused++
-    else acc[ctx].distracted++
+  if (parts.length === 0) {
+    return null
+  }
+
+  return parts.join(' ')
+}
+
+const buildHeatmap = (stats?: HourlyStats | null): HeatmapPoint[] => {
+  if (!stats || !Array.isArray(stats.hours) || !Array.isArray(stats.pattern)) {
+    return []
+  }
+
+  return stats.hours.map((hour, idx) => {
+    const raw = stats.pattern[idx] ?? 0
+    return { hour, focus: normaliseScore(raw) }
+  })
+}
+
+const findFirstDistractionMinutes = (events: ActivityEvent[], session?: SessionStatus | null): string | null => {
+  if (!session?.start_time || events.length === 0) {
+    return null
+  }
+
+  const firstDistraction = events
+    .map((evt) => ({ evt, ts: new Date(evt.timestamp).getTime() }))
+    .filter(({ evt }) => {
+      const label = `${evt.type ?? ''}`.toLowerCase()
+      if (label.includes('distract') || label.includes('procrast')) {
+        return true
+      }
+      const distraction = evt.prediction?.distraction_score ?? evt.distraction_score ?? null
+      return typeof distraction === 'number' && distraction >= 0.6
+    })
+    .sort((a, b) => a.ts - b.ts)[0]
+
+  if (!firstDistraction) {
+    return null
+  }
+
+  const sessionStart = new Date(session.start_time).getTime()
+  if (Number.isNaN(sessionStart)) {
+    return null
+  }
+
+  const minutes = Math.max(0, Math.round((firstDistraction.ts - sessionStart) / 60000))
+  return `${minutes} min`
+}
+
+const computePersona = (score: number) => {
+  if (score >= 0.8) {
+    return { label: 'The Morning Sprinter', emoji: '🏃‍♂️', description: 'You ramp into deep work quickly when sessions begin.' }
+  }
+  if (score >= 0.6) {
+    return { label: 'The Consistent Cruiser', emoji: '🚴‍♀️', description: 'You maintain a steady focus cadence across the session.' }
+  }
+  return { label: 'The Steady Builder', emoji: '🏗️', description: 'Focus is building gradually; micro-habits will help accelerate momentum.' }
+}
+
+const buildContextCorrelation = (events: ActivityEvent[]): CorrelationPoint[] => {
+  const counts = events.reduce<Record<string, { focused: number; distracted: number }>>((acc, evt) => {
+    const key =
+      evt.context?.label ||
+      evt.prediction?.dominant_context ||
+      evt.app ||
+      evt.title ||
+      'Unknown'
+    if (!acc[key]) {
+      acc[key] = { focused: 0, distracted: 0 }
+    }
+
+    const distractionScore = evt.prediction?.distraction_score ?? evt.distraction_score ?? null
+    const isDistracted = typeof distractionScore === 'number'
+      ? distractionScore >= 0.6
+      : (evt.type ?? '').toLowerCase().includes('distract')
+    if (isDistracted) {
+      acc[key].distracted += 1
+    } else {
+      acc[key].focused += 1
+    }
     return acc
   }, {})
 
-  const correlationData = Object.entries(contextCorrelation).map(([context, data]: any) => ({ context, focusRate: data.focused + data.distracted > 0 ? Math.round((data.focused / (data.focused + data.distracted)) * 100) : 0 }))
+  return Object.entries(counts)
+    .map(([context, data]) => {
+      const total = data.focused + data.distracted
+      return {
+        context,
+        focusRate: total > 0 ? Math.round((data.focused / total) * 100) : 0,
+        total,
+      }
+    })
+    .sort((a, b) => b.total - a.total)
+}
 
-  // Distraction fingerprint: detect whether distractions are clustered or scattered.
-  const distractionEvents = (activities ?? []).filter((a: any) => {
-    const lbl = (a.label || a.type || '').toString().toLowerCase()
-    const predScore = a.prediction?.combined_score ?? a.distraction_score ?? a.prediction?.distraction_score
-    return lbl.includes('distract') || lbl.includes('procrast') || (predScore !== undefined && predScore >= 0.5)
-  }).map((a: any) => new Date(a.timestamp).getTime()).sort((x: number, y: number) => x - y)
+const computeFingerprint = (events: ActivityEvent[]) => {
+  const distractionTimestamps = events
+    .filter((evt) => {
+      const label = `${evt.type ?? ''}`.toLowerCase()
+      const distraction = evt.prediction?.distraction_score ?? evt.distraction_score ?? null
+      return label.includes('distract') || (typeof distraction === 'number' && distraction >= 0.6)
+    })
+    .map((evt) => new Date(evt.timestamp).getTime())
+    .filter((ts) => !Number.isNaN(ts))
+    .sort((a, b) => a - b)
 
-  let fingerprint = { type: 'None', description: 'Not enough data' }
-  if (distractionEvents.length > 0) {
-    const gaps: number[] = []
-    for (let i = 1; i < distractionEvents.length; i++) gaps.push((distractionEvents[i] - distractionEvents[i - 1]) / 60000)
-    const avgGap = gaps.length ? gaps.reduce((s, g) => s + g, 0) / gaps.length : Infinity
-    const clusters = gaps.filter(g => g <= 5).length // gaps <= 5 minutes indicates cluster
-    if (avgGap <= 5 || clusters / Math.max(1, gaps.length) > 0.5) {
-      fingerprint = { type: 'Clustered', description: 'Distractions happen in bursts — likely interruptions that trigger cascades.' }
-    } else if (avgGap > 30) {
-      fingerprint = { type: 'Scattered', description: 'Distractions are spread out — frequent minor interruptions.' }
-    } else {
-      fingerprint = { type: 'Mixed', description: 'A mix of bursts and isolated distractions.' }
-    }
+  if (distractionTimestamps.length === 0) {
+    return { type: 'None', description: 'Not enough distraction signals yet.' }
   }
 
-  // Top contexts
-  const topContexts = Object.entries(contextCorrelation).sort((a: any, b: any) => (b[1].focused + b[1].distracted) - (a[1].focused + a[1].distracted)).slice(0, 5)
+  const gaps: number[] = []
+  for (let i = 1; i < distractionTimestamps.length; i += 1) {
+    gaps.push((distractionTimestamps[i] - distractionTimestamps[i - 1]) / 60000)
+  }
+
+  if (gaps.length === 0) {
+    return { type: 'Isolated', description: 'Only a single distraction observed so far.' }
+  }
+
+  const averageGap = gaps.reduce((sum, gap) => sum + gap, 0) / gaps.length
+  const clusterRatio = gaps.filter((gap) => gap <= 5).length / gaps.length
+
+  if (averageGap <= 5 || clusterRatio > 0.5) {
+    return { type: 'Clustered', description: 'Distractions arrive in bursts — address trigger events before they cascade.' }
+  }
+  if (averageGap >= 45) {
+    return { type: 'Scattered', description: 'Distractions are rare but unpredictable. Use proactive breaks to stay ahead.' }
+  }
+  return { type: 'Mixed', description: 'A balance of brief runs and occasional bursts — buffer focused blocks with short resets.' }
+}
+
+const buildDistractionList = (stats?: Record<string, DistractionStat> | null) => {
+  if (!stats) {
+    return []
+  }
+  return Object.entries(stats)
+    .map(([label, value]) => ({
+      label,
+      hits: value.hits ?? value.avg_score ?? value.max_score ?? 0,
+      dominantContext: value.dominant_context ?? null,
+    }))
+    .sort((a, b) => Number(b.hits) - Number(a.hits))
+}
+
+const buildFeatureImportance = (featureMap?: Record<string, number> | null) => {
+  if (!featureMap) {
+    return []
+  }
+  return Object.entries(featureMap)
+    .map(([feature, importance]) => ({ feature, importance }))
+    .sort((a, b) => b.importance - a.importance)
+}
+
+export default function FocusDeepDive() {
+  const { data: activities } = useApi<ActivityEvent[]>('/api/activity/recent')
+  const { data: hourly } = useApi<HourlyStats>('/api/stats/hourly')
+  const { data: featureImportance } = useApi<Record<string, number>>('/api/features/importance')
+  const { data: distractionMap } = useApi<Record<string, DistractionStat>>('/api/distractions/top')
+  const { sessionStatus } = useSessionStatus()
+
+  const events = activities ?? []
+  const heatmap = useMemo(() => buildHeatmap(hourly), [hourly])
+  const firstDistraction = useMemo(() => findFirstDistractionMinutes(events, sessionStatus), [events, sessionStatus])
+  const contextCorrelation = useMemo(() => buildContextCorrelation(events), [events])
+  const fingerprint = useMemo(() => computeFingerprint(events), [events])
+  const topContexts = contextCorrelation.slice(0, 5)
+  const features = useMemo(() => buildFeatureImportance(featureImportance), [featureImportance])
+  const topDistractions = useMemo(() => buildDistractionList(distractionMap).slice(0, 8), [distractionMap])
+
+  const personaScore = sessionStatus?.prediction?.combined_score ?? sessionStatus?.stats?.combined_score ?? 0
+  const persona = computePersona(personaScore)
+  const geminiNarrative = extractGeminiNarrative(sessionStatus?.gemini?.enrichment ?? null)
+  const focusEfficiency = normaliseScore(personaScore)
+
+  const totalFocusMinutes = Math.round((sessionStatus?.stats?.focused_time ?? 0) / 60)
+  const productiveShare = contextCorrelation.reduce((acc, entry) => acc + (entry.focusRate >= 60 ? entry.total : 0), 0)
+  const contextDiversity = contextCorrelation.length
 
   return (
     <div className="space-y-6">
-      <div className="bg-gradient-to-br from-indigo-800 to-zinc-900 p-6 rounded-lg text-white">
-        <h2 className="text-xl font-semibold">AI-Powered Focus Persona</h2>
-        <p className="mt-2 text-2xl">{persona}</p>
-        <p className="text-sm mt-1 opacity-90">A quick summary derived from your recent sessions</p>
+      <div className="grid gap-4 lg:grid-cols-2">
+        <div className="rounded-lg bg-gradient-to-br from-indigo-600 via-purple-600 to-slate-900 p-6 text-white shadow-lg">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <h2 className="text-lg font-semibold uppercase tracking-wide text-indigo-200">Focus Persona</h2>
+              <p className="mt-2 text-3xl font-bold">{persona.emoji} {persona.label}</p>
+              <p className="mt-3 max-w-lg text-sm text-indigo-100/80">{persona.description}</p>
+            </div>
+            <div className="flex h-20 w-20 items-center justify-center rounded-full bg-indigo-500/30 text-2xl font-semibold">
+              {focusEfficiency}%
+            </div>
+          </div>
+          <dl className="mt-6 grid grid-cols-3 gap-4 text-xs uppercase tracking-wide text-indigo-100/70">
+            <div>
+              <dt className="text-indigo-200/70">Focus Minutes Today</dt>
+              <dd className="mt-1 text-base font-semibold text-white">{totalFocusMinutes}</dd>
+            </div>
+            <div>
+              <dt className="text-indigo-200/70">High-Intent Contexts</dt>
+              <dd className="mt-1 text-base font-semibold text-white">{productiveShare}</dd>
+            </div>
+            <div>
+              <dt className="text-indigo-200/70">Context Diversity</dt>
+              <dd className="mt-1 text-base font-semibold text-white">{contextDiversity}</dd>
+            </div>
+          </dl>
+        </div>
+
+        <div className="rounded-lg bg-slate-900/80 p-6 text-slate-100 shadow-lg border border-white/5">
+          <div className="flex items-center gap-3 text-sm font-semibold uppercase tracking-wide text-slate-300">
+            <Sparkles className="h-4 w-4 text-sky-300" />
+            Gemini Narrative
+          </div>
+          <p className="mt-3 text-sm leading-relaxed text-slate-200">
+            {geminiNarrative ?? 'Gemini context insights will appear here once enrichment is generated during an active session.'}
+          </p>
+          {sessionStatus?.gemini?.enrichment?.generated_at && (
+            <p className="mt-4 text-xs text-slate-400">
+              Last generated at {new Date(sessionStatus.gemini.enrichment.generated_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+            </p>
+          )}
+        </div>
       </div>
-      
-      <div className="grid md:grid-cols-2 gap-4">
-        <div className="bg-zinc-800 p-4 rounded-lg shadow-sm text-white">
-          <h3 className="font-semibold mb-3">Feature Importance</h3>
-          {features && features.length ? (
-            <ul className="space-y-2">
-              {features.slice(0, 8).map((f, i) => (
-                <li key={i} className="flex items-center gap-3">
+
+      <div className="grid gap-4 md:grid-cols-2">
+        <div className="rounded-lg bg-slate-900/70 p-4 text-white shadow-sm border border-white/5">
+          <h3 className="mb-3 font-semibold">Feature Importance</h3>
+          {features.length ? (
+            <ul className="space-y-2 text-sm">
+              {features.slice(0, 8).map((featureItem) => (
+                <li key={featureItem.feature} className="flex items-center gap-3">
                   <div className="flex-1">
-                    <div className="text-sm">{f.feature}</div>
-                    <div className="w-full bg-white/5 h-2 rounded mt-1">
-                      <div className="h-2 rounded bg-indigo-500" style={{ width: `${Math.round(f.importance * 100)}%` }} />
-                    </div>
+                    <div className="font-medium text-slate-100">{featureItem.feature}</div>
+                    <progress
+                      className="mt-1 h-2 w-full overflow-hidden rounded bg-white/10 accent-sky-400"
+                      value={Math.round((featureItem.importance ?? 0) * 100)}
+                      max={100}
+                      aria-hidden
+                    />
                   </div>
-                  <div className="w-12 text-right text-sm font-semibold">{Math.round(f.importance * 100)}%</div>
+                  <span className="w-12 text-right text-xs font-semibold text-slate-200">
+                    {Math.round((featureItem.importance ?? 0) * 100)}%
+                  </span>
                 </li>
               ))}
             </ul>
           ) : (
-            <p className="text-sm text-gray-300">No feature importance data available.</p>
+            <p className="text-sm text-slate-300">No feature importance data available yet.</p>
           )}
         </div>
 
-        <div className="bg-zinc-800 p-4 rounded-lg shadow-sm text-white">
-          <h3 className="font-semibold mb-3">Top Distractions</h3>
-          {topDistractions && topDistractions.length ? (
-            <ul className="space-y-2">
-              {topDistractions.slice(0, 8).map((d: any, i: number) => (
-                <li key={i} className="flex items-center justify-between">
-                  <div className="text-sm">{d.label || d.context || d.app || d.type || 'Unknown'}</div>
-                  <div className="text-sm font-semibold">{d.count ?? d.hits ?? d.score ?? 0}</div>
+        <div className="rounded-lg bg-slate-900/70 p-4 text-white shadow-sm border border-white/5">
+          <h3 className="mb-3 font-semibold">Top Distractions</h3>
+          {topDistractions.length ? (
+            <ul className="space-y-3 text-sm">
+              {topDistractions.map((item) => (
+                <li key={item.label} className="flex items-center justify-between gap-3">
+                  <div>
+                    <div className="font-medium text-slate-100">{item.label}</div>
+                    {item.dominantContext && (
+                      <p className="text-xs text-slate-400">Context: {item.dominantContext}</p>
+                    )}
+                  </div>
+                  <span className="text-xs font-semibold text-slate-200">{item.hits}</span>
                 </li>
               ))}
             </ul>
           ) : (
-            <p className="text-sm text-gray-300">No distraction data available.</p>
+            <p className="text-sm text-slate-300">No distraction signals collected yet.</p>
           )}
         </div>
       </div>
 
-      <div className="grid md:grid-cols-4 gap-4">
-        <div className="bg-zinc-800 p-4 rounded-lg shadow-sm text-white">
-          <div className="flex items-center gap-3"><Timer className="w-6 h-6 text-indigo-300" /><div>
-            <p className="text-xs text-gray-300">Time to First Distraction</p>
-            <p className="text-lg font-semibold">{timeToFirstDistraction ?? '—'}</p>
-          </div></div>
+      <div className="grid gap-4 lg:grid-cols-4">
+        <div className="rounded-lg bg-slate-900/70 p-4 text-white shadow-sm border border-white/5">
+          <div className="flex items-center gap-3">
+            <Timer className="h-6 w-6 text-sky-300" />
+            <div>
+              <p className="text-xs text-slate-400 uppercase tracking-wide">Time to First Distraction</p>
+              <p className="text-lg font-semibold text-white">{firstDistraction ?? '—'}</p>
+            </div>
+          </div>
         </div>
 
-        <div className="bg-zinc-800 p-4 rounded-lg shadow-sm text-white">
-          <div className="flex items-center gap-3"><TrendingUp className="w-6 h-6 text-emerald-300" /><div>
-            <p className="text-xs text-gray-300">Focus Efficiency</p>
-            <p className="text-lg font-semibold">{Math.round((sessionStatus?.prediction?.combined_score ?? sessionStatus?.stats?.combined_score ?? 0) * 100) || 0}%</p>
-          </div></div>
+        <div className="rounded-lg bg-slate-900/70 p-4 text-white shadow-sm border border-white/5">
+          <div className="flex items-center gap-3">
+            <TrendingUp className="h-6 w-6 text-emerald-300" />
+            <div>
+              <p className="text-xs text-slate-400 uppercase tracking-wide">Focus Efficiency</p>
+              <p className="text-lg font-semibold text-white">{focusEfficiency}%</p>
+            </div>
+          </div>
         </div>
 
-        <div className="bg-zinc-800 p-4 rounded-lg shadow-sm text-white">
-          <div className="flex items-center gap-3"><Calendar className="w-6 h-6 text-orange-300" /><div>
-            <p className="text-xs text-gray-300">Peak Hour</p>
-            <p className="text-lg font-semibold">{(hourly?.hours && hourly.hours.length) ? `${hourly.hours[hourly.pattern.indexOf(Math.max(...(hourly.pattern || [0])))]}` : `${new Date().getHours()}:00`}</p>
-          </div></div>
+        <div className="rounded-lg bg-slate-900/70 p-4 text-white shadow-sm border border-white/5">
+          <div className="flex items-center gap-3">
+            <Calendar className="h-6 w-6 text-amber-300" />
+            <div>
+              <p className="text-xs text-slate-400 uppercase tracking-wide">Peak Hour</p>
+              <p className="text-lg font-semibold text-white">
+                {hourly?.hours && hourly.pattern?.length
+                  ? hourly.hours[hourly.pattern.indexOf(Math.max(...hourly.pattern))] ?? '—'
+                  : `${new Date().getHours()}:00`}
+              </p>
+            </div>
+          </div>
         </div>
 
-        <div className="bg-zinc-800 p-4 rounded-lg shadow-sm text-white">
-          <p className="text-xs text-gray-300">Distraction Fingerprint</p>
-          <p className="text-lg font-semibold">{fingerprint.type}</p>
-          <p className="text-sm text-gray-400 mt-2">{fingerprint.description}</p>
+        <div className="rounded-lg bg-slate-900/70 p-4 text-white shadow-sm border border-white/5">
+          <p className="text-xs text-slate-400 uppercase tracking-wide">Distraction Fingerprint</p>
+          <p className="mt-2 text-lg font-semibold text-white">{fingerprint.type}</p>
+          <p className="mt-2 text-xs text-slate-300 leading-relaxed">{fingerprint.description}</p>
         </div>
       </div>
 
-      <div className="bg-zinc-800 p-4 rounded-lg shadow-sm text-white">
-        <h3 className="font-semibold mb-3">Focus Heatmap (hour of day)</h3>
-        {heatmap.length > 0 ? (
+      <div className="rounded-lg bg-slate-900/70 p-4 text-white shadow-sm border border-white/5">
+        <h3 className="mb-3 font-semibold">Focus Heatmap (hour of day)</h3>
+        {heatmap.length ? (
           <ResponsiveContainer width="100%" height={240}>
             <BarChart data={heatmap}>
-              <XAxis dataKey="hour" tick={{ fill: '#cbd5e1' }} />
-              <YAxis tick={{ fill: '#cbd5e1' }} />
-              <Tooltip />
-              <Bar dataKey="focus" fill="#6366f1" />
+              <XAxis dataKey="hour" tick={{ fill: '#cbd5e1' }} interval={0} angle={-35} height={70} textAnchor="end" />
+              <YAxis tick={{ fill: '#cbd5e1' }} domain={[0, 100]} />
+              <Tooltip cursor={{ fill: 'rgba(148, 163, 184, 0.15)' }} />
+              <Bar dataKey="focus" fill="#6366f1" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         ) : (
-          <p className="text-sm text-gray-300">No hourly data available yet.</p>
+          <p className="text-sm text-slate-300">No hourly focus profile available yet.</p>
         )}
       </div>
 
-      <div className="grid md:grid-cols-2 gap-4">
-        <div className="bg-zinc-800 p-4 rounded-lg shadow-sm text-white">
-          <h3 className="font-semibold mb-3">Context Correlation</h3>
-          {correlationData.length > 0 ? (
-            <ResponsiveContainer width="100%" height={240}>
-              <LineChart data={correlationData}>
-                <XAxis dataKey="context" tick={{ fill: '#cbd5e1' }} />
-                <YAxis tick={{ fill: '#cbd5e1' }} />
-                <Tooltip />
-                <Line type="monotone" dataKey="focusRate" stroke="#10b981" />
+      <div className="grid gap-4 lg:grid-cols-2">
+        <div className="rounded-lg bg-slate-900/70 p-4 text-white shadow-sm border border-white/5">
+          <h3 className="mb-3 font-semibold">Context Correlation</h3>
+          {contextCorrelation.length ? (
+            <ResponsiveContainer width="100%" height={260}>
+              <LineChart data={contextCorrelation}>
+                <XAxis dataKey="context" tick={{ fill: '#cbd5e1' }} interval={0} angle={-25} height={80} textAnchor="end" />
+                <YAxis tick={{ fill: '#cbd5e1' }} domain={[0, 100]} />
+                <Tooltip cursor={{ stroke: '#0ea5e9', strokeWidth: 1 }} />
+                <Line type="monotone" dataKey="focusRate" stroke="#34d399" strokeWidth={2} dot={false} />
               </LineChart>
             </ResponsiveContainer>
           ) : (
-            <p className="text-sm text-gray-300">No context data available.</p>
+            <p className="text-sm text-slate-300">No context correlation data captured yet.</p>
           )}
         </div>
 
-        <div className="bg-zinc-800 p-4 rounded-lg shadow-sm text-white">
-          <h3 className="font-semibold mb-3">Top Contexts</h3>
-          <ul className="space-y-2">
-            {topContexts.length ? topContexts.map(([ctx, counts]: any, idx: number) => (
-              <li key={idx} className="flex items-center justify-between">
-                <span className="text-sm">{ctx}</span>
-                <span className="text-sm font-semibold">{counts.focused + counts.distracted}</span>
+        <div className="rounded-lg bg-slate-900/70 p-4 text-white shadow-sm border border-white/5">
+          <h3 className="mb-3 font-semibold">Top Context Mix</h3>
+          {topContexts.length ? (
+            <ResponsiveContainer width="100%" height={260}>
+              <PieChart>
+                <Pie
+                  data={topContexts.map((ctx) => ({ name: ctx.context, value: ctx.total }))}
+                  dataKey="value"
+                  nameKey="name"
+                  innerRadius={60}
+                  outerRadius={90}
+                  paddingAngle={2}
+                >
+                  {topContexts.map((ctx, index) => (
+                    <Cell key={ctx.context} fill={PIE_COLOURS[index % PIE_COLOURS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip formatter={(value: number, _, payload) => [`${value} events`, payload?.payload?.name ?? '']} />
+              </PieChart>
+            </ResponsiveContainer>
+          ) : (
+            <p className="text-sm text-slate-300">No dominant contexts yet. Keep logging sessions.</p>
+          )}
+          <ul className="mt-4 space-y-2 text-sm">
+            {topContexts.map((ctx, index) => (
+              <li key={ctx.context} className="flex items-center gap-3">
+                <span
+                  className={`inline-flex h-3 w-3 flex-shrink-0 rounded-full ${PIE_COLOUR_CLASSES[index % PIE_COLOUR_CLASSES.length]}`}
+                />
+                <span className="flex-1 text-slate-200">{ctx.context}</span>
+                <span className="text-xs text-slate-400">{ctx.total} events</span>
               </li>
-            )) : (<li className="text-sm text-gray-300">No contexts yet.</li>)}
+            ))}
           </ul>
         </div>
       </div>
