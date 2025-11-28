@@ -1,9 +1,9 @@
 import React, { useMemo, useState } from 'react'
-import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, Area, ComposedChart } from 'recharts'
-import { AlertTriangle, Brain, Sparkles, TrendingUp } from 'lucide-react'
+import { ResponsiveContainer, Line, XAxis, YAxis, Tooltip, Area, ComposedChart } from 'recharts'
+import { AlertTriangle, Brain, TrendingUp } from 'lucide-react'
 
 import { useApi, useSessionStatus } from '../hooks/useApi'
-import type { HourlyStats, SessionStatus, GeminiEnrichment } from '@/lib/types'
+import type { HourlyStats, SessionStatus } from '@/lib/types'
 
 interface WhatIfResponse {
   hour: string
@@ -111,16 +111,6 @@ const buildTriggerSignals = (session?: SessionStatus | null, insights?: any[] | 
   return entries
 }
 
-const extractGeminiNarrative = (enrichment?: GeminiEnrichment | null) => {
-  if (!enrichment) return null
-  return (
-    enrichment.prediction_explanation?.summary ??
-    enrichment.focus_insight ??
-    enrichment.context_summary ??
-    null
-  )
-}
-
 const riskColour = (band: string) => {
   if (band === 'High') return 'from-rose-600 via-red-600 to-rose-900 text-white'
   if (band === 'Low') return 'from-emerald-500 via-emerald-600 to-teal-900 text-white'
@@ -138,8 +128,6 @@ export default function PredictiveInsights() {
   const forecast = useMemo(() => buildForecast(hourlyStats, whatIf, selectedHour), [hourlyStats, whatIf, selectedHour])
   const scenarioRows = useMemo(() => buildScenarioTable(forecast.points), [forecast.points])
   const triggers = useMemo(() => buildTriggerSignals(sessionStatus, insights), [sessionStatus, insights])
-  const geminiNarrative = useMemo(() => extractGeminiNarrative(sessionStatus?.gemini?.enrichment ?? null), [sessionStatus])
-  const geminiGeneratedAt = sessionStatus?.gemini?.enrichment?.generated_at ?? null
   const cognitiveTwin = sessionStatus?.prediction?.cognitive_twin ?? null
 
   const currentHourForecast = forecast.points.find((point) => point.selected)
@@ -307,22 +295,6 @@ export default function PredictiveInsights() {
             <p className="mt-4 text-sm text-slate-400">Cognitive twin needs a few more sessions before forecasting reliably.</p>
           )}
         </div>
-      </div>
-
-      {/* 4. Gemini Predictive Narrative */}
-      <div className="rounded-xl border border-white/5 bg-slate-900/60 p-6 text-slate-100 shadow-lg">
-        <div className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-slate-300">
-          <Sparkles className="h-4 w-4 text-sky-300" />
-          Gemini Predictive Narrative
-        </div>
-        <p className="mt-4 text-sm leading-relaxed text-slate-200">
-          {geminiNarrative ?? 'Gemini will summarize predictive patterns after the next enrichment pass.'}
-        </p>
-        {geminiGeneratedAt && (
-          <p className="mt-3 text-xs text-slate-500">
-            Generated at {new Date(geminiGeneratedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-          </p>
-        )}
       </div>
     </div>
   )

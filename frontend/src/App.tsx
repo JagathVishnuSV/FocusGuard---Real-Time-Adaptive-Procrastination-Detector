@@ -5,16 +5,15 @@ import { AnimatePresence, motion } from 'framer-motion'
 
 const Dashboard = React.lazy(() => import('./components/Dashboard'))
 const FocusDeepDive = React.lazy(() => import('./pages/FocusDeepDive'))
-const GoalsTracker = React.lazy(() => import('./pages/GoalsTracker'))
 const PredictiveInsights = React.lazy(() => import('./pages/PredictiveInsights'))
 
-export type PageId = 'dashboard' | 'deepdive' | 'goals' | 'predictive'
+export type PageId = 'dashboard' | 'deepdive' | 'predictive'
 
 function App() {
   const getHashPage = (): PageId => {
     if (typeof window === 'undefined') return 'dashboard'
     const h = (window.location.hash || '').replace('#', '') as PageId
-    return h === 'deepdive' || h === 'goals' || h === 'predictive' ? h : 'dashboard'
+    return h === 'deepdive' || h === 'predictive' ? h : 'dashboard'
   }
 
   const [currentPage, setCurrentPageState] = useState<PageId>(() => getHashPage())
@@ -54,7 +53,6 @@ function App() {
               >
                 {currentPage === 'dashboard' && <Dashboard />}
                 {currentPage === 'deepdive' && <FocusDeepDive />}
-                {currentPage === 'goals' && <GoalsTracker />}
                 {currentPage === 'predictive' && <PredictiveInsights />}
               </motion.div>
             </AnimatePresence>

@@ -11,8 +11,6 @@ import type {
   PersonalFeedbackRequest,
   DistractionStat,
   CognitiveTwinSnapshot,
-  GeminiEnrichment,
-  GeminiPredictionExplanation,
 } from './types'
 
 const API_BASE_URL = 'http://127.0.0.1:8000'
@@ -126,6 +124,7 @@ export const apiService = {
     const response = await api.post('/api/personalization/feedback', payload)
     return response.data
   },
+
 }
 
 // Error handling
@@ -164,6 +163,4 @@ export type {
   PredictionSummary,
   PersonalFeedbackRequest,
   DistractionStat,
-  GeminiEnrichment,
-  GeminiPredictionExplanation,
 } from './types'

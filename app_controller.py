@@ -21,11 +21,6 @@ from ml_model import ModelEnsemble
 from ml.artifacts import ModelArtifact, read_metadata, write_metadata
 from personalization import record_feature_snapshot, record_passive_label
 
-try:
-    from services.gemini_client import GeminiClient
-except Exception:  # pragma: no cover - optional dependency
-    GeminiClient = None
-
 # Setup logging
 logging.basicConfig(
     level=LOG_LEVEL,
@@ -57,26 +52,6 @@ class FocusGuardController:
             except Exception as exc:  # pragma: no cover - defensive
                 logger.warning("Failed to initialise GhostTwin: %s", exc)
 
-        self.gemini_client = None
-        self._gemini_enrichment: Dict[str, Any] = {}
-        self._gemini_last_refresh: float = 0.0
-        self._gemini_last_payload_hash: Optional[str] = None
-        self._gemini_refresh_min_seconds: float = max(
-            5.0,
-            float(getattr(self.config, "GEMINI_REFRESH_MIN_SECONDS", 15.0) or 15.0),
-        )
-        if GeminiClient is not None:
-            try:
-                candidate = GeminiClient.from_config(self.config)
-                if candidate.is_enabled:
-                    self.gemini_client = candidate
-                else:
-                    logger.info("Gemini enrichment disabled; set ENABLE_GEMINI to enable")
-            except Exception as exc:  # pragma: no cover - defensive
-                logger.warning("Failed to initialise GeminiClient: %s", exc)
-        else:
-            logger.debug("Gemini client module unavailable; skipping AI enrichment")
-        
         self.events_buffer = deque(maxlen=10000)
         self.calibration_complete = False
         self.session_start_time = None
@@ -196,178 +171,44 @@ class FocusGuardController:
             return list(value)
         return value
 
-    def _refresh_gemini_enrichment(
-        self,
-        *,
-        current_state: Dict[str, Any],
-        context_summary: Dict[str, Any],
-        prediction_snapshot: Optional[Dict[str, Any]],
-        feature_map: Optional[Dict[str, Any]],
-        ghost_snapshot: Optional[Dict[str, Any]],
-        dominant_app: Optional[str],
-    ) -> None:
-        client = getattr(self, "gemini_client", None)
-        if client is None or not client.is_enabled:
-            self._gemini_enrichment = {}
-            return
-
-        now = time.time()
-        cache_ttl = max(10.0, float(getattr(self.config, "GEMINI_CACHE_TTL_SECONDS", 600)))
-        same_payload_cooldown = max(self._gemini_refresh_min_seconds, cache_ttl / 2.0)
-
-        context_label = context_summary.get("dominant_context") if isinstance(context_summary, dict) else None
-        context_confidence = context_summary.get("context_confidence") if isinstance(context_summary, dict) else None
-
-        digest_payload = {
-            "app": current_state.get("current_app") if isinstance(current_state, dict) else None,
-            "title": current_state.get("window_title") if isinstance(current_state, dict) else None,
-            "url": current_state.get("current_url") if isinstance(current_state, dict) else None,
-            "context_label": context_label,
-            "context_confidence": context_confidence,
-            "dominant_app": dominant_app,
-            "prediction": {
-                "is_anomaly": prediction_snapshot.get("is_anomaly") if isinstance(prediction_snapshot, dict) else None,
-                "confidence": prediction_snapshot.get("confidence") if isinstance(prediction_snapshot, dict) else None,
-                "combined_score": prediction_snapshot.get("combined_score") if isinstance(prediction_snapshot, dict) else None,
-                "distraction_score": prediction_snapshot.get("distraction_score") if isinstance(prediction_snapshot, dict) else None,
-            },
-            "ghost": ghost_snapshot if isinstance(ghost_snapshot, dict) else None,
-        }
-
+    @staticmethod
+    def _round_for_signature(value: Any, digits: int = 2) -> Optional[float]:
         try:
-            payload_hash = hashlib.sha1(
-                json.dumps(digest_payload, sort_keys=True, default=self._json_default).encode("utf-8")
-            ).hexdigest()
-        except Exception:
-            payload_hash = None
+            number = float(value)
+        except (TypeError, ValueError):
+            return None
+        return round(number, digits)
 
-        if payload_hash and self._gemini_last_payload_hash == payload_hash and (now - self._gemini_last_refresh) < same_payload_cooldown:
-            return
-        if (now - self._gemini_last_refresh) < self._gemini_refresh_min_seconds:
-            return
+    @staticmethod
+    def _text_signature(value: Optional[str]) -> Optional[str]:
+        if not value:
+            return None
+        trimmed = value.strip()
+        if not trimmed:
+            return None
+        snippet = trimmed[:160]
+        return hashlib.sha1(snippet.encode("utf-8")).hexdigest()
 
-        top_distractions: Dict[str, Dict[str, Any]] = {}
-        for app_name, history in self._distraction_score_history.items():
-            if not history:
-                continue
-            scores = [float(entry.get("score", 0.0) or 0.0) for entry in history if isinstance(entry, dict)]
-            if not scores:
-                continue
-            avg_score = round(sum(scores) / len(scores), 1)
-            top_distractions[app_name] = {"avg_score": avg_score, "hits": len(scores)}
-
-        if dominant_app and dominant_app not in top_distractions and isinstance(prediction_snapshot, dict):
-            try:
-                top_distractions[dominant_app] = {
-                    "avg_score": float(prediction_snapshot.get("distraction_score", 0.0) or 0.0),
-                    "hits": 1,
-                }
-            except Exception:
-                pass
-
-        if top_distractions:
-            sorted_entries = sorted(
-                top_distractions.items(),
-                key=lambda item: (
-                    float(item[1].get("avg_score", 0.0) or 0.0),
-                    int(item[1].get("hits", 0)),
-                ),
-                reverse=True,
-            )
-            top_distractions = dict(sorted_entries[:3])
-
-        stats_today = {
-            "session_minutes": round(self.session_stats.get("total_time", 0.0) / 60.0, 1),
-            "focused_minutes": round(self.session_stats.get("focused_time", 0.0) / 60.0, 1),
-            "distracted_minutes": round(self.session_stats.get("distracted_time", 0.0) / 60.0, 1),
-            "anomalies": int(self.session_stats.get("anomalies_detected", 0)),
-            "distraction_score": (
-                float(prediction_snapshot.get("distraction_score", 0.0))
-                if isinstance(prediction_snapshot, dict) and prediction_snapshot.get("distraction_score") is not None
-                else None
-            ),
-        }
-
-        weekly_trend = []
-        hourly_pattern = []
-
-        prediction_payload = {}
-        if isinstance(prediction_snapshot, dict):
-            prediction_payload = {
-                "is_anomaly": prediction_snapshot.get("is_anomaly"),
-                "combined_score": prediction_snapshot.get("combined_score"),
-                "confidence": prediction_snapshot.get("confidence"),
-                "anomaly_score": prediction_snapshot.get("anomaly_score"),
-                "classifier_probability": prediction_snapshot.get("classifier_probability"),
-                "distraction_score": prediction_snapshot.get("distraction_score"),
-                "dominant_context": prediction_snapshot.get("dominant_context"),
-                "context_confidence": prediction_snapshot.get("context_confidence"),
-                "heuristic_triggered": prediction_snapshot.get("heuristic_triggered"),
-                "features": feature_map,
-            }
-
-        context_inputs = {
-            "app_name": current_state.get("current_app") if isinstance(current_state, dict) else None,
-            "window_title": current_state.get("window_title") if isinstance(current_state, dict) else None,
-            "url": current_state.get("current_url") if isinstance(current_state, dict) else None,
-            "context_label": context_label,
-            "context_confidence": context_confidence,
-            "dominant_app": dominant_app,
-        }
-
-        bundle: Dict[str, Optional[str]] = {}
+    @staticmethod
+    def _bucket_value(value: Any, bucket: float = 0.05) -> Optional[float]:
         try:
-            bundle = client.generate_enrichment_bundle(
-                context=context_inputs,
-                stats_today=stats_today,
-                prediction=prediction_payload,
-                ghost_snapshot=ghost_snapshot if isinstance(ghost_snapshot, dict) else None,
-                top_distractions=top_distractions,
-            )
-        except Exception as exc:  # pragma: no cover - defensive
-            logger.debug("Gemini enrichment bundle failed: %s", exc)
+            number = float(value)
+        except (TypeError, ValueError):
+            return None
+        if bucket <= 0:
+            return round(number, 2)
+        steps = int(number / bucket)
+        return round(steps * bucket, 3)
 
-        def _clean_text(value: Optional[str]) -> Optional[str]:
-            if not value:
-                return None
-            cleaned = str(value).strip()
-            return cleaned or None
-
-        context_text = _clean_text(bundle.get("context_summary"))
-        insight_text = _clean_text(bundle.get("focus_insight"))
-        prediction_text = _clean_text(bundle.get("prediction_summary"))
-        ghost_text = _clean_text(bundle.get("ghost_narrative"))
-
-        explanation = None
-        if prediction_text or ghost_text:
-            explanation = {
-                "summary": prediction_text,
-                "ghost_narrative": ghost_text,
-            }
-
-        enrichment_payload = {
-            "context_summary": context_text,
-            "focus_insight": insight_text,
-            "prediction_explanation": explanation if explanation else None,
-            "model": getattr(self.config, "GEMINI_MODEL_NAME", None),
-            "generated_at": datetime.fromtimestamp(now).isoformat(),
+    def _ghost_signature(self, ghost_snapshot: Optional[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
+        if not isinstance(ghost_snapshot, dict):
+            return None
+        return {
+            "predicted_next": ghost_snapshot.get("predicted_next"),
+            "prob_distracted": self._round_for_signature(ghost_snapshot.get("prob_distracted")),
+            "support": ghost_snapshot.get("support"),
         }
 
-        has_prediction_text = bool(
-            (enrichment_payload["context_summary"])
-            or (enrichment_payload["focus_insight"])
-            or (explanation and any(part for part in explanation.values()))
-        )
-
-        if has_prediction_text:
-            self._gemini_enrichment = enrichment_payload
-            if payload_hash:
-                self._gemini_last_payload_hash = payload_hash
-        elif not self._gemini_enrichment:
-            # Only clear when we have no previous enrichment to fall back on.
-            self._gemini_enrichment = {}
-
-        self._gemini_last_refresh = now
 
     def get_recent_distraction_scores(self, lookback_seconds: int = 3600) -> Dict[str, Dict[str, Any]]:
         """Summarise recent distraction scores for analytics endpoints."""
@@ -1250,20 +1091,6 @@ class FocusGuardController:
                 self.last_prediction["passive_label_recorded"] = passive_label_emitted
                 self._prediction_warning_logged = False
 
-                self._refresh_gemini_enrichment(
-                    current_state=current_state,
-                    context_summary=context_summary,
-                    prediction_snapshot=self.last_prediction,
-                    feature_map=feature_map,
-                    ghost_snapshot=ghost_pred,
-                    dominant_app=dominant_app,
-                )
-                if isinstance(self.last_prediction, dict):
-                    if self._gemini_enrichment:
-                        self.last_prediction["ai_enrichment"] = self._gemini_enrichment
-                    else:
-                        self.last_prediction.pop("ai_enrichment", None)
-
             except RuntimeError as exc:
                 if not self._prediction_warning_logged:
                     logger.warning("Real-time prediction unavailable: %s", exc)
@@ -1285,29 +1112,8 @@ class FocusGuardController:
                         "cognitive_twin": ghost_pred,
                         "features": None,
                     }
-                    self._refresh_gemini_enrichment(
-                        current_state=current_state,
-                        context_summary=context_summary,
-                        prediction_snapshot=self.last_prediction,
-                        feature_map=None,
-                        ghost_snapshot=ghost_pred,
-                        dominant_app=None,
-                    )
-                    if isinstance(self.last_prediction, dict):
-                        if self._gemini_enrichment:
-                            self.last_prediction["ai_enrichment"] = self._gemini_enrichment
-                        else:
-                            self.last_prediction.pop("ai_enrichment", None)
                 else:
                     self.last_prediction = None
-                    self._refresh_gemini_enrichment(
-                        current_state=current_state,
-                        context_summary=context_summary,
-                        prediction_snapshot=None,
-                        feature_map=None,
-                        ghost_snapshot=None,
-                        dominant_app=None,
-                    )
             except Exception as exc:
                 logger.warning(f"Real-time prediction failed: {exc}")
                 ghost_pred = self._produce_ghost_snapshot()
@@ -1327,29 +1133,8 @@ class FocusGuardController:
                         "cognitive_twin": ghost_pred,
                         "features": None,
                     }
-                    self._refresh_gemini_enrichment(
-                        current_state=current_state,
-                        context_summary=context_summary,
-                        prediction_snapshot=self.last_prediction,
-                        feature_map=None,
-                        ghost_snapshot=ghost_pred,
-                        dominant_app=None,
-                    )
-                    if isinstance(self.last_prediction, dict):
-                        if self._gemini_enrichment:
-                            self.last_prediction["ai_enrichment"] = self._gemini_enrichment
-                        else:
-                            self.last_prediction.pop("ai_enrichment", None)
                 else:
                     self.last_prediction = None
-                    self._refresh_gemini_enrichment(
-                        current_state=current_state,
-                        context_summary=context_summary,
-                        prediction_snapshot=None,
-                        feature_map=None,
-                        ghost_snapshot=None,
-                        dominant_app=None,
-                    )
         else:
             if len(self.events_buffer) > 5 and not model_ready and not self._prediction_warning_logged:
                 logger.warning("Skipping live predictions; anomaly detector not fitted yet")
@@ -1377,34 +1162,10 @@ class FocusGuardController:
                     "cognitive_twin": ghost_pred,
                     "features": None,
                 }
-                self._refresh_gemini_enrichment(
-                    current_state=current_state,
-                    context_summary={},
-                    prediction_snapshot=self.last_prediction,
-                    feature_map=None,
-                    ghost_snapshot=ghost_pred,
-                    dominant_app=None,
-                )
-                if isinstance(self.last_prediction, dict):
-                    if self._gemini_enrichment:
-                        self.last_prediction["ai_enrichment"] = self._gemini_enrichment
-                    else:
-                        self.last_prediction.pop("ai_enrichment", None)
             else:
                 self.last_prediction = None
-                self._refresh_gemini_enrichment(
-                    current_state=current_state,
-                    context_summary={},
-                    prediction_snapshot=None,
-                    feature_map=None,
-                    ghost_snapshot=None,
-                    dominant_app=None,
-                )
 
         self.last_check_time = current_time
-
-        gemini_enabled = bool(self.gemini_client and self.gemini_client.is_enabled)
-        gemini_enrichment = self._gemini_enrichment if gemini_enabled and self._gemini_enrichment else None
 
         return {
             "active": True,
@@ -1414,8 +1175,6 @@ class FocusGuardController:
             "focused_time": self.session_stats['focused_time'],
             "distracted_time": self.session_stats['distracted_time'],
             "prediction": self.last_prediction,
-            "gemini_enabled": gemini_enabled,
-            "gemini_enrichment": gemini_enrichment,
         }
 
     def get_model_registry(self) -> List[Dict[str, Any]]:

@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react'
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from 'recharts'
-import { Calendar, TrendingUp, Timer, Sparkles } from 'lucide-react'
+import { Calendar, TrendingUp, Timer } from 'lucide-react'
 
 import { useApi, useSessionStatus } from '../hooks/useApi'
 import type {
@@ -8,7 +8,6 @@ import type {
   HourlyStats,
   DistractionStat,
   SessionStatus,
-  GeminiEnrichment,
 } from '@/lib/types'
 
 interface HeatmapPoint {
@@ -33,29 +32,6 @@ const normaliseScore = (value: number | null | undefined) => {
     return Math.round(value * 100)
   }
   return Math.round(value)
-}
-
-const extractGeminiNarrative = (enrichment?: GeminiEnrichment | null) => {
-  if (!enrichment) {
-    return null
-  }
-
-  const parts: string[] = []
-  if (enrichment.context_summary) {
-    parts.push(enrichment.context_summary)
-  }
-  if (enrichment.focus_insight) {
-    parts.push(enrichment.focus_insight)
-  }
-  if (enrichment.prediction_explanation?.summary) {
-    parts.push(enrichment.prediction_explanation.summary)
-  }
-
-  if (parts.length === 0) {
-    return null
-  }
-
-  return parts.join(' ')
 }
 
 const buildHeatmap = (stats?: HourlyStats | null): HeatmapPoint[] => {
@@ -221,7 +197,6 @@ export default function FocusDeepDive() {
 
   const personaScore = sessionStatus?.prediction?.combined_score ?? sessionStatus?.stats?.combined_score ?? 0
   const persona = computePersona(personaScore)
-  const geminiNarrative = extractGeminiNarrative(sessionStatus?.gemini?.enrichment ?? null)
   const focusEfficiency = normaliseScore(personaScore)
 
   const totalFocusMinutes = Math.round((sessionStatus?.stats?.focused_time ?? 0) / 60)
@@ -256,21 +231,6 @@ export default function FocusDeepDive() {
               <dd className="mt-1 text-base font-semibold text-white">{contextDiversity}</dd>
             </div>
           </dl>
-        </div>
-
-        <div className="rounded-lg bg-slate-900/80 p-6 text-slate-100 shadow-lg border border-white/5">
-          <div className="flex items-center gap-3 text-sm font-semibold uppercase tracking-wide text-slate-300">
-            <Sparkles className="h-4 w-4 text-sky-300" />
-            Gemini Narrative
-          </div>
-          <p className="mt-3 text-sm leading-relaxed text-slate-200">
-            {geminiNarrative ?? 'Gemini context insights will appear here once enrichment is generated during an active session.'}
-          </p>
-          {sessionStatus?.gemini?.enrichment?.generated_at && (
-            <p className="mt-4 text-xs text-slate-400">
-              Last generated at {new Date(sessionStatus.gemini.enrichment.generated_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-            </p>
-          )}
         </div>
       </div>
 

@@ -53,6 +53,10 @@ export function useSessionStatus() {
     }
   };
 
+  const refreshSessionStatus = () => {
+    mutate(undefined, { revalidate: true });
+  };
+
   return {
     sessionStatus: data,
     isLoading,
@@ -60,5 +64,6 @@ export function useSessionStatus() {
     error,
     startSession,
     stopSession,
+    refreshSessionStatus,
   };
 }

@@ -48,19 +48,6 @@ export interface DistractionStat {
   last_seen?: string | null;
 }
 
-export interface GeminiPredictionExplanation {
-  summary?: string | null;
-  ghost_narrative?: string | null;
-}
-
-export interface GeminiEnrichment {
-  context_summary?: string | null;
-  focus_insight?: string | null;
-  prediction_explanation?: GeminiPredictionExplanation | null;
-  model?: string | null;
-  generated_at?: string | null;
-}
-
 export interface SessionStatus {
   active: boolean;
   is_running?: boolean; // Backend might send this
@@ -84,10 +71,6 @@ export interface SessionStatus {
   };
   alerts: any[];
   prediction?: PredictionSummary | null;
-  gemini?: {
-    enabled: boolean;
-    enrichment?: GeminiEnrichment | null;
-  };
 }
 
 export interface PredictionSummary {
@@ -109,7 +92,6 @@ export interface PredictionSummary {
     counts?: Record<string, number>;
   } | null;
   cognitive_twin?: CognitiveTwinSnapshot | null;
-  ai_enrichment?: GeminiEnrichment | null;
 }
 
 export interface HealthStatus {
@@ -136,7 +118,6 @@ export interface ActivityEvent {
   } | null;
   distraction_score?: number | null;
   cognitive_twin?: CognitiveTwinSnapshot | null;
-  ai_enrichment?: GeminiEnrichment | null;
 }
 
 export interface PersonalFeedbackRequest {

@@ -48,10 +48,6 @@ current_session = {
     },
     "alerts": [],
     "prediction": None,
-    "gemini": {
-        "enabled": False,
-        "enrichment": None,
-    },
 }
 
 # Import real-time monitoring components
@@ -629,12 +625,6 @@ def get_session_status():
                 'elapsed_time': real_stats.get('elapsed_time', 0)
             }
 
-            gemini_enabled = bool(real_stats.get('gemini_enabled'))
-            current_session['gemini'] = {
-                'enabled': gemini_enabled,
-                'enrichment': real_stats.get('gemini_enrichment') if gemini_enabled else None,
-            }
-
             prediction_meta = real_stats.get('prediction') or {}
             if prediction_meta:
                 current_session['stats'].update({
@@ -700,10 +690,6 @@ def get_session_status():
                     'cognitive_twin': cognitive_snapshot,
                 }
 
-                if current_session['gemini']['enrichment']:
-                    current_session['prediction']['ai_enrichment'] = current_session['gemini']['enrichment']
-                elif current_session['prediction'] is not None:
-                    current_session['prediction'].pop('ai_enrichment', None)
             else:
                 current_session['stats'].update({
                     'combined_score': None,
@@ -717,10 +703,6 @@ def get_session_status():
                     'context_confidence': None,
                 })
                 current_session['prediction'] = None
-                current_session['gemini'] = {
-                    'enabled': current_session['gemini']['enabled'],
-                    'enrichment': None,
-                }
 
             if current_session['active'] and focus_controller.session_start_time:
                 current_session['start_time'] = datetime.fromtimestamp(
@@ -756,11 +738,6 @@ def start_session():
             }
             current_session['alerts'] = []
             current_session['prediction'] = None
-            gemini_enabled = bool(getattr(focus_controller, 'gemini_client', None) and focus_controller.gemini_client.is_enabled)
-            current_session['gemini'] = {
-                "enabled": gemini_enabled,
-                "enrichment": None,
-            }
             return jsonify({
                 "status": "started", 
                 "session": current_session, 
@@ -786,10 +763,6 @@ def start_session():
             "distracted_time": 0,
         }
         current_session['prediction'] = None
-        current_session['gemini'] = {
-            "enabled": False,
-            "enrichment": None,
-        }
         return jsonify({
             "status": "started", 
             "session": current_session, 
@@ -822,8 +795,6 @@ def stop_session():
             
             current_session['active'] = False
             current_session['prediction'] = None
-            if 'gemini' in current_session:
-                current_session['gemini']['enrichment'] = None
             return jsonify({
                 "status": "stopped", 
                 "session": current_session, 
@@ -842,8 +813,6 @@ def stop_session():
     else:
         current_session['active'] = False
         current_session['prediction'] = None
-        if 'gemini' in current_session:
-            current_session['gemini']['enrichment'] = None
         return jsonify({
             "status": "stopped", 
             "session": current_session, 
@@ -858,6 +827,7 @@ def update_session():
     data = request.json
     current_session['stats'].update(data)
     return jsonify({"status": "updated", "session": current_session})
+
 
 
 @app.route('/api/activity/recent', methods=['GET'])

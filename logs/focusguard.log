@@ -25795,3 +25795,1514 @@ NameError: name 'Tuple' is not defined
 2025-11-27 11:14:07 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 11:14:07] "GET /api/stats/hourly HTTP/1.1" 200 -
 2025-11-27 11:14:07 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 11:14:07] "GET /api/predict/whatif?hour=11 HTTP/1.1" 200 -
 2025-11-27 11:14:07 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 11:14:07] "GET /api/insights HTTP/1.1" 200 -
+2025-11-27 12:50:32 - ml.models.anomaly - INFO - Anomaly detector loaded from C:\Users\jagat\Downloads\FocusGuard\models\anomaly_detector.joblib
+2025-11-27 12:50:33 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-27 12:50:33 - app_controller - INFO - Loaded ML artefacts from C:\Users\jagat\Downloads\FocusGuard\models (classifier=True)
+2025-11-27 12:50:33 - __main__ - INFO - Real-time monitoring system initialized
+2025-11-27 12:50:33 - __main__ - INFO - Starting FocusGuard Web Server on 127.0.0.1:8000
+2025-11-27 12:50:33 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8000
+2025-11-27 12:50:33 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-11-27 12:50:37 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:50:37] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 12:50:37 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:50:37] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-27 12:50:37 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:50:37] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 12:50:37 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:50:37] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-27 12:50:37 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:50:37] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 12:50:37 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:50:37] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 12:50:39 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:50:39] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 12:50:42 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:50:42] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-27 12:50:42 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:50:42] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 12:50:42 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:50:42] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-27 12:50:42 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:50:42] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 12:50:42 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:50:42] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 12:50:44 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:50:44] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 12:50:45 - __main__ - INFO - Starting real-time detection session...
+2025-11-27 12:50:45 - app_controller - INFO - Starting web-based detection session...
+2025-11-27 12:50:45 - activity_stream - INFO - Starting real-time activity monitoring...
+2025-11-27 12:50:45 - activity_stream - INFO - Activity monitoring started successfully
+2025-11-27 12:50:45 - app_controller - INFO - Real-time activity monitoring started
+2025-11-27 12:50:45 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:50:45] "POST /api/session/start HTTP/1.1" 200 -
+2025-11-27 12:50:45 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:50:45] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-27 12:50:45 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:50:45] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-27 12:50:45 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:50:45] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 12:50:45 - services.gemini_client - WARNING - Gemini rate limit reached; backing off for 45 seconds
+2025-11-27 12:50:45 - services.gemini_client - WARNING - Gemini request hit upstream rate limit (429)
+2025-11-27 12:50:45 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:50:45] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 12:50:45 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:50:45] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 12:50:45 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:50:45] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 12:50:47 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:50:47] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-27 12:50:48 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:50:48] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 12:50:51 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:50:51] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-27 12:50:51 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:50:51] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 12:50:51 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:50:51] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 12:50:51 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:50:51] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-27 12:50:51 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:50:51] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 12:50:53 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:50:53] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 12:50:56 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:50:56] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 12:50:56 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:50:56] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-27 12:50:56 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:50:56] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 12:50:56 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:50:56] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-27 12:50:56 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:50:56] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 12:50:58 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:50:58] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 12:51:01 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:51:01] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 12:51:01 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:51:01] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-27 12:51:01 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:51:01] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 12:51:01 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:51:01] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-27 12:51:01 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:51:01] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 12:51:06 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:51:06] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 12:51:11 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:51:11] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 12:51:16 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:51:16] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 12:51:21 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:51:21] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 12:51:26 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:51:26] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 12:51:31 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:51:31] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 12:51:36 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:51:36] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 12:51:41 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:51:41] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 12:51:46 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:51:46] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 12:51:51 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:51:51] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 12:51:56 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:51:56] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 12:52:01 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:52:01] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 12:52:28 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:52:28] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 12:52:31 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:52:31] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 12:52:31 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:52:31] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-27 12:52:31 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:52:31] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-27 12:52:31 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:52:31] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 12:52:33 - services.gemini_client - WARNING - Gemini rate limit reached; backing off for 90 seconds
+2025-11-27 12:52:33 - services.gemini_client - WARNING - Gemini request hit upstream rate limit (429)
+2025-11-27 12:52:33 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:52:33] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 12:52:36 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:52:36] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 12:52:36 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:52:36] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 12:52:38 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:52:38] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-27 12:52:38 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:52:38] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-27 12:52:38 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:52:38] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 12:52:39 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:52:39] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 12:52:40 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:52:40] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 12:52:42 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:52:42] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 12:52:43 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:52:43] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-27 12:52:43 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:52:43] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-27 12:52:43 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:52:43] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 12:52:45 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:52:45] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 12:52:46 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:52:46] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 12:52:46 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:52:46] "GET /api/predict/whatif?hour=12 HTTP/1.1" 200 -
+2025-11-27 12:52:46 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:52:46] "GET /api/insights HTTP/1.1" 200 -
+2025-11-27 12:52:46 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:52:46] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 12:52:48 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:52:48] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 12:52:51 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:52:51] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 12:52:51 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:52:51] "GET /api/predict/whatif?hour=12 HTTP/1.1" 200 -
+2025-11-27 12:52:51 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:52:51] "GET /api/insights HTTP/1.1" 200 -
+2025-11-27 12:52:51 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:52:51] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 12:52:54 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:52:54] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 12:52:56 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:52:56] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 12:52:56 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:52:56] "GET /api/predict/whatif?hour=12 HTTP/1.1" 200 -
+2025-11-27 12:52:56 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:52:56] "GET /api/insights HTTP/1.1" 200 -
+2025-11-27 12:52:58 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:52:58] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 12:52:58 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:52:58] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 12:52:58 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:52:58] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-27 12:52:58 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:52:58] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 12:52:58 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-27 12:52:58 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:52:58] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-27 12:53:01 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:53:01] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 12:53:03 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:53:03] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 12:53:03 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:53:03] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 12:53:03 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:53:03] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-27 12:53:05 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:53:05] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 12:53:05 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-27 12:53:05 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:53:05] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-27 12:53:08 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:53:08] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 12:53:08 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:53:08] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 12:53:08 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:53:08] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 12:53:17 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:53:17] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 12:53:17 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:53:17] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 12:53:17 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:53:17] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-27 12:53:19 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:53:19] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 12:53:19 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-27 12:53:19 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:53:19] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-27 12:53:22 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:53:22] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 12:53:25 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:53:25] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 12:53:25 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:53:25] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 12:53:25 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:53:25] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-27 12:53:25 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:53:25] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 12:53:25 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-27 12:53:25 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:53:25] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-27 12:53:28 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:53:28] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 12:53:28 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:53:28] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 12:53:28 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:53:28] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-27 12:53:28 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:53:28] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 12:53:28 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:53:28] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-27 12:53:28 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:53:28] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 12:53:30 - __main__ - INFO - Stopping real-time detection session...
+2025-11-27 12:53:30 - app_controller - INFO - Stopping web-based detection session...
+2025-11-27 12:53:30 - activity_stream - INFO - Stopping activity monitoring...
+2025-11-27 12:53:30 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:53:30] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 12:53:30 - activity_stream - INFO - Activity monitoring stopped
+2025-11-27 12:53:30 - app_controller - INFO - Session analytics saved
+2025-11-27 12:53:30 - app_controller - INFO - Session completed: 2.8 minutes, 77 events
+2025-11-27 12:53:30 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:53:30] "POST /api/session/stop HTTP/1.1" 200 -
+2025-11-27 12:53:30 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:53:30] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 12:53:31 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:53:31] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 12:53:31 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:53:31] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-27 12:53:31 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:53:31] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-27 12:53:31 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:53:31] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 12:53:31 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:53:31] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 12:53:33 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:53:33] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-27 12:53:33 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:53:33] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 12:53:36 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:53:36] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 12:53:41 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:53:41] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 12:53:46 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:53:46] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 12:53:51 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 12:53:51] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:00:59 - ml.models.anomaly - INFO - Anomaly detector loaded from C:\Users\jagat\Downloads\FocusGuard\models\anomaly_detector.joblib
+2025-11-27 23:01:00 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-27 23:01:00 - app_controller - INFO - Loaded ML artefacts from C:\Users\jagat\Downloads\FocusGuard\models (classifier=True)
+2025-11-27 23:01:00 - __main__ - INFO - Real-time monitoring system initialized
+2025-11-27 23:01:00 - __main__ - INFO - Starting FocusGuard Web Server on 127.0.0.1:8000
+2025-11-27 23:01:00 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8000
+2025-11-27 23:01:00 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-11-27 23:01:03 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:01:03] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:01:03 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:01:03] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-27 23:01:03 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:01:03] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:01:03 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:01:03] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:01:04 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:01:04] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:01:04 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:01:04] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-27 23:01:06 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:01:06] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:01:08 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:01:08] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-27 23:01:08 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:01:08] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-27 23:01:08 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:01:08] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:01:08 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:01:08] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:01:08 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:01:08] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:01:11 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:01:11] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-27 23:01:11 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:01:11] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:01:13 - __main__ - INFO - Starting real-time detection session...
+2025-11-27 23:01:13 - app_controller - INFO - Starting web-based detection session...
+2025-11-27 23:01:13 - activity_stream - INFO - Starting real-time activity monitoring...
+2025-11-27 23:01:13 - activity_stream - INFO - Activity monitoring started successfully
+2025-11-27 23:01:13 - app_controller - INFO - Real-time activity monitoring started
+2025-11-27 23:01:13 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:01:13] "POST /api/session/start HTTP/1.1" 200 -
+2025-11-27 23:01:13 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:01:13] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-27 23:01:13 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:01:13] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-27 23:01:13 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:01:13] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:01:13 - services.gemini_client - WARNING - Gemini request failed: HTTPSConnectionPool(host='generativelanguage.googleapis.com', port=443): Max retries exceeded with url: /v1beta/models/gemini-2.5-flash:generateContent?key=AIzaSyBLlAQ4e-eoBcg-RhfGzQz2k_YaQdNUGmc (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x0000016FBBD6F810>: Failed to resolve 'generativelanguage.googleapis.com' ([Errno 11001] getaddrinfo failed)"))
+2025-11-27 23:01:13 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:01:13] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:01:13 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:01:13] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:01:13 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:01:13] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:01:16 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:01:16] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:01:18 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:01:18] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-27 23:01:18 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:01:18] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-27 23:01:18 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:01:18] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:01:18 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:01:18] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:01:18 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:01:18] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:01:21 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:01:21] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:01:21 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:01:21] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:01:21 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:01:21] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:01:21 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:01:21] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-27 23:01:21 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-27 23:01:21 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:01:21] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-27 23:01:23 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:01:23] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:01:26 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:01:26] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:01:26 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:01:26] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:01:26 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:01:26] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-27 23:01:26 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:01:26] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:01:26 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-27 23:01:26 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:01:26] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-27 23:01:29 - services.gemini_client - WARNING - Gemini request failed: HTTPSConnectionPool(host='generativelanguage.googleapis.com', port=443): Max retries exceeded with url: /v1beta/models/gemini-2.5-flash:generateContent?key=AIzaSyBLlAQ4e-eoBcg-RhfGzQz2k_YaQdNUGmc (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x0000016FBE0248D0>: Failed to resolve 'generativelanguage.googleapis.com' ([Errno 11001] getaddrinfo failed)"))
+2025-11-27 23:01:29 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:01:29] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:01:31 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:01:31] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:01:31 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:01:31] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:01:31 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:01:31] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-27 23:01:31 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:01:31] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:01:33 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-27 23:01:33 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:01:33] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-27 23:01:35 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:01:35] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:01:35 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:01:35] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:01:35 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:01:35] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-27 23:01:35 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:01:35] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:01:39 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:01:39] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:01:39 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-27 23:01:39 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:01:39] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-27 23:02:30 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:02:30] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:02:30 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:02:30] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:02:30 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:02:30] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-27 23:02:31 - services.gemini_client - WARNING - Gemini request failed: HTTPSConnectionPool(host='generativelanguage.googleapis.com', port=443): Max retries exceeded with url: /v1beta/models/gemini-2.5-flash:generateContent?key=AIzaSyBLlAQ4e-eoBcg-RhfGzQz2k_YaQdNUGmc (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x0000016FBDE873D0>: Failed to resolve 'generativelanguage.googleapis.com' ([Errno 11001] getaddrinfo failed)"))
+2025-11-27 23:02:31 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:02:31] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:02:32 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-27 23:02:32 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:02:32] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-27 23:02:37 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:02:37] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:02:37 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:02:37] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:02:37 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:02:37] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-27 23:02:39 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:02:39] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:02:40 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:02:40] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:02:40 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:02:40] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:02:40 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-27 23:02:40 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:02:40] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-27 23:02:40 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:02:40] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-27 23:02:44 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:02:44] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:02:45 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:02:45] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:02:46 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:02:46] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:02:46 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:02:46] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-27 23:02:46 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-27 23:02:46 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:02:46] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-27 23:02:48 - services.gemini_client - WARNING - Gemini request failed: HTTPSConnectionPool(host='generativelanguage.googleapis.com', port=443): Max retries exceeded with url: /v1beta/models/gemini-2.5-flash:generateContent?key=AIzaSyBLlAQ4e-eoBcg-RhfGzQz2k_YaQdNUGmc (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x0000016FBE0903D0>: Failed to resolve 'generativelanguage.googleapis.com' ([Errno 11001] getaddrinfo failed)"))
+2025-11-27 23:02:48 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:02:48] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:02:50 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:02:50] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:02:51 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:02:51] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:02:51 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:02:51] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:02:52 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:02:52] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-27 23:02:52 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-27 23:02:52 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:02:52] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-27 23:02:54 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:02:54] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:02:55 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:02:55] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:02:56 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:02:56] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:02:57 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:02:57] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-27 23:02:58 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:02:58] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:02:59 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:02:59] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:02:59 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-27 23:02:59 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:02:59] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-27 23:03:01 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:03:01] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-27 23:03:01 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:03:01] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-27 23:03:04 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:03:04] "GET /api/predict/whatif?hour=23 HTTP/1.1" 200 -
+2025-11-27 23:03:04 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:03:04] "GET /api/insights HTTP/1.1" 200 -
+2025-11-27 23:03:04 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:03:04] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:03:05 - services.gemini_client - WARNING - Gemini request failed: HTTPSConnectionPool(host='generativelanguage.googleapis.com', port=443): Max retries exceeded with url: /v1beta/models/gemini-2.5-flash:generateContent?key=AIzaSyBLlAQ4e-eoBcg-RhfGzQz2k_YaQdNUGmc (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x0000016FBDEA5C50>: Failed to resolve 'generativelanguage.googleapis.com' ([Errno 11001] getaddrinfo failed)"))
+2025-11-27 23:03:05 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:03:05] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:03:09 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:03:09] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:03:09 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:03:09] "GET /api/predict/whatif?hour=23 HTTP/1.1" 200 -
+2025-11-27 23:03:09 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:03:09] "GET /api/insights HTTP/1.1" 200 -
+2025-11-27 23:03:09 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:03:09] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:03:12 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:03:12] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:03:14 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:03:14] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:03:14 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:03:14] "GET /api/predict/whatif?hour=23 HTTP/1.1" 200 -
+2025-11-27 23:03:14 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:03:14] "GET /api/insights HTTP/1.1" 200 -
+2025-11-27 23:03:15 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:03:15] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:03:18 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:03:18] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:03:19 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:03:19] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:03:19 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:03:19] "GET /api/predict/whatif?hour=23 HTTP/1.1" 200 -
+2025-11-27 23:03:19 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:03:19] "GET /api/insights HTTP/1.1" 200 -
+2025-11-27 23:03:23 - services.gemini_client - WARNING - Gemini request failed: HTTPSConnectionPool(host='generativelanguage.googleapis.com', port=443): Max retries exceeded with url: /v1beta/models/gemini-2.5-flash:generateContent?key=AIzaSyBLlAQ4e-eoBcg-RhfGzQz2k_YaQdNUGmc (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x0000016FBE02D850>: Failed to resolve 'generativelanguage.googleapis.com' ([Errno 11001] getaddrinfo failed)"))
+2025-11-27 23:03:23 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:03:23] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:03:24 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:03:24] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:03:24 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:03:24] "GET /api/predict/whatif?hour=23 HTTP/1.1" 200 -
+2025-11-27 23:03:24 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:03:24] "GET /api/insights HTTP/1.1" 200 -
+2025-11-27 23:03:26 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:03:26] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:03:29 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:03:29] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:03:29 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:03:29] "GET /api/predict/whatif?hour=23 HTTP/1.1" 200 -
+2025-11-27 23:03:29 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:03:29] "GET /api/insights HTTP/1.1" 200 -
+2025-11-27 23:03:29 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:03:29] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:03:32 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:03:32] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:03:34 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:03:34] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:03:34 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:03:34] "GET /api/predict/whatif?hour=23 HTTP/1.1" 200 -
+2025-11-27 23:03:34 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:03:34] "GET /api/insights HTTP/1.1" 200 -
+2025-11-27 23:03:36 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:03:36] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:03:39 - services.gemini_client - WARNING - Gemini request failed: HTTPSConnectionPool(host='generativelanguage.googleapis.com', port=443): Max retries exceeded with url: /v1beta/models/gemini-2.5-flash:generateContent?key=AIzaSyBLlAQ4e-eoBcg-RhfGzQz2k_YaQdNUGmc (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x0000016FBDE54750>: Failed to resolve 'generativelanguage.googleapis.com' ([Errno 11001] getaddrinfo failed)"))
+2025-11-27 23:03:39 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:03:39] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:03:39 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:03:39] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:03:39 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:03:39] "GET /api/predict/whatif?hour=23 HTTP/1.1" 200 -
+2025-11-27 23:03:41 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:03:41] "GET /api/insights HTTP/1.1" 200 -
+2025-11-27 23:05:22 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:05:22] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:05:22 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:05:22] "GET /api/predict/whatif?hour=23 HTTP/1.1" 200 -
+2025-11-27 23:05:22 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:05:22] "GET /api/insights HTTP/1.1" 200 -
+2025-11-27 23:05:23 - services.gemini_client - WARNING - Gemini rate limit reached; backing off for 45 seconds
+2025-11-27 23:05:23 - services.gemini_client - WARNING - Gemini request hit upstream rate limit (429)
+2025-11-27 23:05:23 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:05:23] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:05:25 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:05:25] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:05:25 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:05:25] "GET /api/predict/whatif?hour=23 HTTP/1.1" 200 -
+2025-11-27 23:05:25 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:05:25] "GET /api/insights HTTP/1.1" 200 -
+2025-11-27 23:05:28 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:05:28] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:05:30 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:05:30] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:05:30 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:05:30] "GET /api/predict/whatif?hour=23 HTTP/1.1" 200 -
+2025-11-27 23:05:30 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:05:30] "GET /api/insights HTTP/1.1" 200 -
+2025-11-27 23:05:31 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:05:31] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:05:34 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:05:34] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:05:35 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:05:35] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:05:35 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:05:35] "GET /api/predict/whatif?hour=23 HTTP/1.1" 200 -
+2025-11-27 23:05:36 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:05:36] "GET /api/insights HTTP/1.1" 200 -
+2025-11-27 23:05:37 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:05:37] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:05:40 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:05:40] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:05:40 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:05:40] "GET /api/predict/whatif?hour=23 HTTP/1.1" 200 -
+2025-11-27 23:05:40 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:05:40] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:05:41 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:05:41] "GET /api/insights HTTP/1.1" 200 -
+2025-11-27 23:05:43 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:05:43] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:05:44 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:05:44] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:05:44 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:05:44] "GET /api/predict/whatif?hour=23 HTTP/1.1" 200 -
+2025-11-27 23:05:44 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:05:44] "GET /api/insights HTTP/1.1" 200 -
+2025-11-27 23:05:46 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:05:46] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:05:46 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:05:46] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:05:46 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:05:46] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:05:47 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:05:47] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-27 23:05:48 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-27 23:05:48 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:05:48] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-27 23:05:49 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:05:49] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:05:52 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:05:52] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:05:52 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:05:52] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:05:52 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:05:52] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-27 23:05:53 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-27 23:05:53 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:05:53] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-27 23:05:53 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:05:53] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:05:56 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:05:56] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:05:57 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:05:57] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:05:57 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:05:57] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:05:57 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:05:57] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-27 23:05:59 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-27 23:05:59 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:05:59] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-27 23:06:01 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:06:01] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:06:02 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:06:02] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:06:02 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:06:02] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:06:03 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:06:03] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-27 23:06:05 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:06:05] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:06:05 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-27 23:06:05 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:06:05] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-27 23:06:08 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:06:08] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:06:08 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:06:08] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:06:08 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:06:08] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:06:08 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:06:08] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-27 23:06:12 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-27 23:06:12 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:06:12] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-27 23:06:14 - services.gemini_client - WARNING - Gemini rate limit reached; backing off for 90 seconds
+2025-11-27 23:06:14 - services.gemini_client - WARNING - Gemini request hit upstream rate limit (429)
+2025-11-27 23:06:14 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:06:14] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:06:19 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:06:19] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:06:19 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:06:19] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:06:19 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:06:19] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-27 23:06:22 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:06:22] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:06:23 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-27 23:06:23 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:06:23] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-27 23:06:25 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:06:25] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:06:25 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:06:25] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:06:25 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:06:25] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:06:25 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:06:25] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-27 23:07:07 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:07:07] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:07:07 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:07:07] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:07:07 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:07:07] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-27 23:07:08 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:07:08] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:07:09 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-27 23:07:09 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:07:09] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-27 23:09:43 - ml.models.anomaly - INFO - Anomaly detector loaded from C:\Users\jagat\Downloads\FocusGuard\models\anomaly_detector.joblib
+2025-11-27 23:09:44 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-27 23:09:44 - app_controller - INFO - Loaded ML artefacts from C:\Users\jagat\Downloads\FocusGuard\models (classifier=True)
+2025-11-27 23:09:44 - __main__ - INFO - Real-time monitoring system initialized
+2025-11-27 23:09:44 - __main__ - INFO - Starting FocusGuard Web Server on 127.0.0.1:8000
+2025-11-27 23:09:44 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8000
+2025-11-27 23:09:44 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-11-27 23:09:51 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:09:51] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:09:51 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:09:51] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:09:51 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:09:51] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:09:51 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:09:51] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-27 23:09:52 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-27 23:09:52 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:09:52] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-27 23:10:01 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:01] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:10:01 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:01] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:10:01 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:01] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:10:02 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:02] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-27 23:10:04 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-27 23:10:04 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:04] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-27 23:10:09 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:09] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:10:09 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:09] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:10:09 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:09] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:10:09 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:09] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-27 23:10:10 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-27 23:10:10 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:10] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-27 23:10:11 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:11] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:10:12 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:12] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-27 23:10:12 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:12] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-27 23:10:12 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:12] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:10:12 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:12] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:10:12 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:12] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:10:14 - __main__ - INFO - Starting real-time detection session...
+2025-11-27 23:10:14 - app_controller - INFO - Starting web-based detection session...
+2025-11-27 23:10:14 - activity_stream - INFO - Starting real-time activity monitoring...
+2025-11-27 23:10:14 - activity_stream - INFO - Activity monitoring started successfully
+2025-11-27 23:10:14 - app_controller - INFO - Real-time activity monitoring started
+2025-11-27 23:10:14 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:14] "POST /api/session/start HTTP/1.1" 200 -
+2025-11-27 23:10:14 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:14] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:10:14 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:14] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-27 23:10:14 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:14] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-27 23:10:16 - services.gemini_client - WARNING - Gemini rate limit reached; backing off for 45 seconds
+2025-11-27 23:10:16 - services.gemini_client - WARNING - Gemini request hit upstream rate limit (429)
+2025-11-27 23:10:16 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:16] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:10:16 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:16] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:10:16 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:16] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:10:17 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:17] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-27 23:10:18 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:18] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:10:21 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:21] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-27 23:10:21 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:21] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:10:21 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:21] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-27 23:10:21 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:21] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:10:21 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:21] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:10:23 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:23] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:10:23 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:23] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-27 23:10:23 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:23] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:10:23 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:23] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:10:24 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-27 23:10:24 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:24] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-27 23:10:26 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:26] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:10:26 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:26] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:10:26 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:26] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:10:26 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:26] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-27 23:10:26 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:26] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:10:26 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:26] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-27 23:10:32 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:32] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:10:34 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:34] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:10:34 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:34] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-27 23:10:35 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:35] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-27 23:10:35 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:35] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:10:36 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:36] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:10:36 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:36] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:10:36 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:36] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-27 23:10:37 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-27 23:10:37 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:37] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-27 23:10:39 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:39] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:10:42 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:42] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:10:42 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:42] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:10:42 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:42] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-27 23:10:43 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:43] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:10:43 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-27 23:10:43 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:43] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-27 23:10:49 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:49] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:10:49 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:49] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:10:49 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:49] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-27 23:10:49 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:49] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:10:50 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-27 23:10:50 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:50] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-27 23:10:53 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:53] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:10:53 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:53] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:10:53 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:53] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:10:53 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:53] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-27 23:10:57 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:57] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:10:58 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-27 23:10:58 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:58] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-27 23:10:58 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:58] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:10:58 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:58] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:10:58 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:10:58] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-27 23:11:00 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:11:00] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:11:03 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:11:03] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:11:04 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:11:04] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:11:04 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:11:04] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:11:04 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-27 23:11:04 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:11:04] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-27 23:11:04 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:11:04] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-27 23:11:07 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:11:07] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:11:08 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:11:08] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:11:08 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:11:08] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:11:09 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:11:09] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-27 23:11:09 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-27 23:11:09 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:11:09] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-27 23:11:11 - services.gemini_client - WARNING - Gemini rate limit reached; backing off for 90 seconds
+2025-11-27 23:11:11 - services.gemini_client - WARNING - Gemini request hit upstream rate limit (429)
+2025-11-27 23:11:11 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:11:11] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:12:12 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:12:12] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:12:12 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:12:12] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:12:12 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:12:12] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-27 23:12:13 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:12:13] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:12:13 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-27 23:12:13 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:12:13] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-27 23:12:15 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:12:15] "GET /api/predict/whatif?hour=23 HTTP/1.1" 200 -
+2025-11-27 23:12:15 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:12:15] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:12:16 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:12:16] "GET /api/insights HTTP/1.1" 200 -
+2025-11-27 23:12:16 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:12:16] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:14:34 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:14:34] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:14:34 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:14:34] "GET /api/predict/whatif?hour=23 HTTP/1.1" 200 -
+2025-11-27 23:14:34 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:14:34] "GET /api/insights HTTP/1.1" 200 -
+2025-11-27 23:14:36 - services.gemini_client - WARNING - Gemini rate limit reached; backing off for 180 seconds
+2025-11-27 23:14:36 - services.gemini_client - WARNING - Gemini request hit upstream rate limit (429)
+2025-11-27 23:14:36 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:14:36] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:14:39 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:14:39] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:14:39 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:14:39] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:14:39 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:14:39] "GET /api/predict/whatif?hour=23 HTTP/1.1" 200 -
+2025-11-27 23:14:39 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:14:39] "GET /api/insights HTTP/1.1" 200 -
+2025-11-27 23:14:40 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:14:40] "GET /api/predict/whatif?hour=20 HTTP/1.1" 200 -
+2025-11-27 23:14:42 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:14:42] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:14:44 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:14:44] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:14:44 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:14:44] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:14:44 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:14:44] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:14:44 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:14:44] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-27 23:14:44 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:14:44] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-27 23:14:47 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:14:47] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:14:49 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:14:49] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-27 23:14:49 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:14:49] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:14:49 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:14:49] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-27 23:14:49 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:14:49] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:14:50 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:14:50] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:14:53 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:14:53] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:14:54 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:14:54] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:14:54 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:14:54] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-27 23:14:54 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:14:54] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-27 23:14:54 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:14:54] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:14:57 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:14:57] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:14:59 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:14:59] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:14:59 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:14:59] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-27 23:14:59 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:14:59] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-27 23:14:59 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:14:59] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:15:00 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:15:00] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:15:03 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:15:03] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:15:04 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:15:04] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:15:04 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:15:04] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-27 23:15:04 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:15:04] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-27 23:15:04 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:15:04] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:15:07 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:15:07] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:15:09 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:15:09] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:15:09 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:15:09] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-27 23:15:09 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:15:09] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-27 23:15:10 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:15:10] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:15:11 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:15:11] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:15:14 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:15:14] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:15:14 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:15:14] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:15:15 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:15:15] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-27 23:15:15 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:15:15] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-27 23:15:15 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:15:15] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:15:18 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:15:18] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:15:19 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:15:19] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:15:19 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:15:19] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:15:19 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:15:19] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-27 23:15:20 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:15:20] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:15:20 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:15:20] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-27 23:15:20 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:15:20] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-27 23:15:20 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:15:20] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:15:23 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:15:23] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:15:23 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-27 23:15:23 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:15:23] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-27 23:15:25 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:15:25] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:15:30 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:15:30] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:15:35 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:15:35] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:15:40 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:15:40] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:15:45 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:15:45] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:15:50 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:15:50] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:15:55 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:15:55] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:16:00 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:16:00] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:16:00 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:16:00] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-27 23:16:00 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:16:00] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-27 23:16:00 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:16:00] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:16:03 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:16:02] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:16:05 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:16:05] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:16:05 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:16:05] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:16:05 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:16:05] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-27 23:16:05 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:16:05] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-27 23:16:06 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:16:06] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:16:06 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:16:06] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-27 23:16:06 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:16:06] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:16:08 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-27 23:16:08 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:16:08] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-27 23:16:10 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:16:10] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:16:10 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:16:10] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:16:10 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:16:10] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-27 23:16:10 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:16:10] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:16:10 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:16:10] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-27 23:16:13 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:16:13] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:16:43 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:16:43] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:16:43 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:16:43] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-27 23:16:44 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:16:44] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-27 23:16:46 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:16:46] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:16:48 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:16:48] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:16:50 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:16:50] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:16:50 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:16:50] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:16:53 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:16:53] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-27 23:16:53 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:16:53] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-27 23:16:53 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:16:53] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:16:54 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:16:54] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:16:55 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:16:55] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:16:57 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:16:57] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:16:58 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:16:58] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-27 23:16:58 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:16:58] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-27 23:16:58 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:16:58] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:17:00 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:17:00] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:17:06 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:17:06] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:17:06 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:17:06] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:17:06 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:17:06] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-27 23:17:06 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:17:06] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-27 23:17:06 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:17:06] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:17:09 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:17:09] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:17:10 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:17:10] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-27 23:17:10 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:17:10] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-27 23:17:10 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:17:10] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:17:10 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:17:10] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:17:10 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:17:10] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-27 23:17:12 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-27 23:17:12 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:17:12] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-27 23:17:13 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:17:13] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:17:15 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:17:15] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:17:15 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:17:15] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:17:15 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:17:15] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-27 23:17:17 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-27 23:17:17 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:17:17] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-27 23:17:17 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:17:17] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:17:18 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:17:18] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:17:18 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:17:18] "GET /api/predict/whatif?hour=23 HTTP/1.1" 200 -
+2025-11-27 23:17:18 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:17:18] "GET /api/insights HTTP/1.1" 200 -
+2025-11-27 23:17:21 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:17:21] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:18:01 - ml.models.anomaly - INFO - Anomaly detector loaded from C:\Users\jagat\Downloads\FocusGuard\models\anomaly_detector.joblib
+2025-11-27 23:18:01 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-27 23:18:01 - app_controller - INFO - Loaded ML artefacts from C:\Users\jagat\Downloads\FocusGuard\models (classifier=True)
+2025-11-27 23:18:01 - __main__ - INFO - Real-time monitoring system initialized
+2025-11-27 23:18:01 - __main__ - INFO - Starting FocusGuard Web Server on 127.0.0.1:8000
+2025-11-27 23:18:01 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8000
+2025-11-27 23:18:01 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-11-27 23:18:01 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:18:01] "GET /api/insights HTTP/1.1" 200 -
+2025-11-27 23:18:02 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:18:02] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:18:02 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:18:02] "GET /api/predict/whatif?hour=23 HTTP/1.1" 200 -
+2025-11-27 23:18:02 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:18:02] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:18:07 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:18:07] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:18:07 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:18:07] "GET /api/insights HTTP/1.1" 200 -
+2025-11-27 23:18:07 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:18:07] "GET /api/predict/whatif?hour=23 HTTP/1.1" 200 -
+2025-11-27 23:18:07 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:18:07] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:18:10 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:18:10] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:18:11 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:18:11] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-27 23:18:11 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:18:11] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:18:11 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:18:11] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:18:11 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:18:11] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-27 23:18:11 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:18:11] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:18:12 - __main__ - INFO - Starting real-time detection session...
+2025-11-27 23:18:12 - app_controller - INFO - Starting web-based detection session...
+2025-11-27 23:18:12 - activity_stream - INFO - Starting real-time activity monitoring...
+2025-11-27 23:18:12 - activity_stream - INFO - Activity monitoring started successfully
+2025-11-27 23:18:12 - app_controller - INFO - Real-time activity monitoring started
+2025-11-27 23:18:12 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:18:12] "POST /api/session/start HTTP/1.1" 200 -
+2025-11-27 23:18:12 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:18:12] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:18:12 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:18:12] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-27 23:18:12 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:18:12] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-27 23:18:13 - services.gemini_client - WARNING - Gemini rate limit reached; backing off for 45 seconds
+2025-11-27 23:18:13 - services.gemini_client - WARNING - Gemini request hit upstream rate limit (429)
+2025-11-27 23:18:13 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:18:13] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:18:13 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:18:13] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:18:13 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:18:13] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:18:15 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:18:15] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:18:16 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:18:16] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-27 23:18:18 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:18:18] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-27 23:18:18 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:18:18] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:18:18 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:18:18] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:18:18 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:18:18] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-27 23:18:24 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:18:24] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-27 23:18:24 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:18:24] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-27 23:18:24 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:18:24] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:18:24 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:18:24] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:18:25 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:18:25] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:18:28 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:18:28] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:18:28 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:18:28] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:18:29 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:18:29] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-27 23:18:29 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:18:29] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-27 23:18:29 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:18:29] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:18:31 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:18:31] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:18:32 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:18:32] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-27 23:18:32 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:18:32] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-27 23:18:34 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:18:34] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:18:34 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:18:34] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-27 23:18:34 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:18:34] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:18:35 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:18:35] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:18:36 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-27 23:18:36 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:18:36] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-27 23:18:39 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:18:39] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:18:39 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:18:39] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:18:39 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:18:39] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-27 23:18:40 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:18:40] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:18:40 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-27 23:18:40 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:18:40] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-27 23:19:12 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:19:12] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:19:12 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:19:12] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:19:12 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:19:12] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-27 23:19:13 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-27 23:19:13 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:19:13] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-27 23:19:14 - services.gemini_client - WARNING - Gemini rate limit reached; backing off for 90 seconds
+2025-11-27 23:19:14 - services.gemini_client - WARNING - Gemini request hit upstream rate limit (429)
+2025-11-27 23:19:14 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:19:14] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:19:17 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:19:17] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:19:17 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:19:17] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:19:17 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:19:17] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:19:17 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:19:17] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-27 23:19:19 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-27 23:19:19 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:19:19] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-27 23:19:20 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:19:20] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:19:22 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:19:22] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:19:22 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:19:22] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:19:22 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:19:22] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-27 23:19:23 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:19:23] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:19:25 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-27 23:19:25 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:19:25] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-27 23:19:26 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:19:26] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-27 23:19:29 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:19:29] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-27 23:19:29 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:19:29] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-27 23:19:29 - werkzeug - INFO - 127.0.0.1 - - [27/Nov/2025 23:19:29] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-28 12:18:02 - ml.models.anomaly - INFO - Anomaly detector loaded from C:\Users\jagat\Downloads\FocusGuard\models\anomaly_detector.joblib
+2025-11-28 12:18:02 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-28 12:18:02 - app_controller - INFO - Loaded ML artefacts from C:\Users\jagat\Downloads\FocusGuard\models (classifier=True)
+2025-11-28 12:18:02 - __main__ - INFO - Real-time monitoring system initialized
+2025-11-28 12:18:02 - __main__ - INFO - Starting FocusGuard Web Server on 127.0.0.1:8000
+2025-11-28 12:18:02 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8000
+2025-11-28 12:18:02 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-11-28 12:18:26 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:18:26] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:18:26 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:18:26] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-28 12:18:26 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:18:26] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:18:26 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:18:26] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-28 12:18:26 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:18:26] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:18:26 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:18:26] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:18:29 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:18:29] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:18:31 - __main__ - INFO - Starting real-time detection session...
+2025-11-28 12:18:31 - app_controller - INFO - Starting web-based detection session...
+2025-11-28 12:18:31 - activity_stream - INFO - Starting real-time activity monitoring...
+2025-11-28 12:18:31 - activity_stream - INFO - Activity monitoring started successfully
+2025-11-28 12:18:31 - app_controller - INFO - Real-time activity monitoring started
+2025-11-28 12:18:31 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:18:31] "POST /api/session/start HTTP/1.1" 200 -
+2025-11-28 12:18:31 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:18:31] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:18:31 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:18:31] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-28 12:18:31 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:18:31] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-28 12:18:31 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:18:31] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:18:31 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:18:31] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:18:31 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:18:31] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:18:34 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:18:34] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:18:36 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:18:36] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-28 12:18:36 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:18:36] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:18:36 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:18:36] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-28 12:18:36 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:18:36] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:18:36 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:18:36] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:18:39 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:18:39] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:18:41 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:18:41] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:18:41 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:18:41] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-28 12:18:41 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:18:41] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:18:41 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:18:41] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-28 12:18:42 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:18:42] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:18:44 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:18:44] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:18:46 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:18:46] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:18:46 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:18:46] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:18:46 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:18:46] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-28 12:18:47 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-28 12:18:47 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:18:47] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-28 12:18:49 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:18:49] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:18:51 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:18:51] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:18:51 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:18:51] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:18:52 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:18:52] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-28 12:18:52 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:18:52] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:18:52 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-28 12:18:52 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:18:52] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-28 12:18:54 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:18:54] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:18:54 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:18:54] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:18:54 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:18:54] "GET /api/predict/whatif?hour=12 HTTP/1.1" 200 -
+2025-11-28 12:18:55 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:18:55] "GET /api/insights HTTP/1.1" 200 -
+2025-11-28 12:18:57 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:18:57] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:18:59 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:18:59] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:18:59 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:18:59] "GET /api/predict/whatif?hour=12 HTTP/1.1" 200 -
+2025-11-28 12:18:59 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:18:59] "GET /api/insights HTTP/1.1" 200 -
+2025-11-28 12:19:00 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:19:00] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:19:03 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:19:03] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:19:05 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:19:05] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:19:05 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:19:05] "GET /api/predict/whatif?hour=12 HTTP/1.1" 200 -
+2025-11-28 12:19:05 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:19:05] "GET /api/insights HTTP/1.1" 200 -
+2025-11-28 12:19:06 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:19:06] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:19:06 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:19:06] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:19:06 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:19:06] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-28 12:19:07 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-28 12:19:07 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:19:07] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-28 12:19:09 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:19:09] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:19:11 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:19:11] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:19:11 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:19:11] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:19:11 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:19:11] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-28 12:19:12 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:19:12] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:19:12 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:19:12] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:19:12 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:19:12] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-28 12:19:12 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:19:12] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-28 12:19:13 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:19:13] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:19:14 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-28 12:19:14 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:19:14] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-28 12:19:17 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:19:17] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-28 12:19:17 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:19:17] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:19:17 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:19:17] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-28 12:19:17 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:19:17] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:19:18 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:19:18] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:19:21 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:19:21] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:19:22 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:19:22] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:19:22 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:19:22] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-28 12:19:22 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:19:22] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:19:22 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:19:22] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-28 12:19:24 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:19:24] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:19:27 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:19:27] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:19:27 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:19:27] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-28 12:19:27 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:19:27] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:19:27 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:19:27] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-28 12:19:27 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:19:27] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:19:30 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:19:30] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:19:30 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:19:30] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:19:30 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:19:30] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:19:31 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:19:31] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-28 12:19:31 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-28 12:19:31 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:19:31] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-28 12:19:33 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:19:33] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:19:35 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:19:35] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:19:35 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:19:35] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:19:35 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:19:35] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-28 12:19:36 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-28 12:19:36 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:19:36] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-28 12:19:36 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:19:36] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:19:40 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:19:40] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:19:40 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:19:40] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:19:41 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:19:41] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:19:41 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:19:41] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-28 12:19:44 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:19:44] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:19:45 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-28 12:19:45 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:19:45] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-28 12:19:46 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:19:46] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:19:46 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:19:46] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:19:46 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:19:46] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-28 12:19:48 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:19:48] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:19:51 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-28 12:19:51 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:19:51] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-28 12:19:51 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:19:51] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:19:51 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:19:51] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:19:51 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:19:51] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:19:52 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:19:52] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-28 12:19:54 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:19:54] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:19:56 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:19:56] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:19:56 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:19:56] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:19:56 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:19:56] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-28 12:19:56 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-28 12:19:56 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:19:56] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-28 12:19:57 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:19:57] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:20:05 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:20:05] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:20:05 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:20:05] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:20:05 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:20:05] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-28 12:20:07 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:20:07] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:20:07 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:20:07] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-28 12:20:07 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:20:07] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-28 12:20:07 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:20:07] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:20:08 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:20:08] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:20:09 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-28 12:20:09 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:20:09] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-28 12:20:12 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:20:12] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-28 12:20:12 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:20:12] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:20:12 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:20:12] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-28 12:20:13 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:20:13] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:20:14 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:20:14] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:20:17 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:20:17] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:20:17 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:20:17] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:20:18 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:20:18] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-28 12:20:18 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:20:18] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:20:18 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:20:18] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-28 12:20:20 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:20:20] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:20:22 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:20:22] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:20:23 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:20:23] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-28 12:20:23 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:20:23] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:20:23 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:20:23] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-28 12:20:23 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:20:23] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:20:27 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:20:27] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:20:27 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:20:27] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:20:28 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:20:28] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-28 12:20:28 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:20:28] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:20:28 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:20:28] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-28 12:20:30 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:20:30] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:20:32 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:20:32] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:20:32 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:20:32] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:20:32 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:20:32] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:20:32 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:20:32] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-28 12:20:33 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:20:33] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:20:34 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-28 12:20:34 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:20:34] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-28 12:20:37 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:20:37] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:20:37 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:20:37] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:20:37 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:20:37] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-28 12:20:39 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:20:39] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:20:40 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-28 12:20:40 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:20:40] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-28 12:20:42 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:20:42] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:20:43 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:20:43] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:20:43 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:20:43] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:20:43 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:20:43] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-28 12:20:45 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:20:45] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:20:45 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:20:45] "GET /api/predict/whatif?hour=12 HTTP/1.1" 200 -
+2025-11-28 12:20:46 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:20:46] "GET /api/insights HTTP/1.1" 200 -
+2025-11-28 12:20:46 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:20:46] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:20:47 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-28 12:20:47 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:20:47] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-28 12:20:50 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:20:50] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:20:50 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:20:50] "GET /api/predict/whatif?hour=12 HTTP/1.1" 200 -
+2025-11-28 12:20:50 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:20:50] "GET /api/insights HTTP/1.1" 200 -
+2025-11-28 12:20:51 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:20:51] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:20:54 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:20:54] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:20:54 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:20:54] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:20:54 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:20:54] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:20:54 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:20:54] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-28 12:20:55 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-28 12:20:55 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:20:55] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-28 12:20:55 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:20:55] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:20:55 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:20:55] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:20:55 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:20:55] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-28 12:20:55 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:20:55] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-28 12:20:58 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:20:58] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:21:00 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:21:00] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-28 12:21:00 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:21:00] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:21:00 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:21:00] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:21:00 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:21:00] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-28 12:21:01 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:21:01] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:21:04 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:21:04] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:21:05 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:21:05] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:21:05 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:21:05] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-28 12:21:05 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:21:05] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:21:05 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:21:05] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-28 12:21:07 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:21:07] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:21:11 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:21:11] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:21:16 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:21:16] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:21:21 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:21:21] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:21:26 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:21:26] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:21:31 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:21:31] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:21:36 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:21:36] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:21:41 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:21:41] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:21:46 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:21:46] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:21:51 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:21:51] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:21:56 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:21:56] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:22:01 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:22:01] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:22:04 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:22:04] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-28 12:22:04 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:22:04] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:22:04 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:22:04] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-28 12:22:05 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:22:05] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:22:05 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:22:05] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:22:07 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:22:07] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-28 12:22:07 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:22:07] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:22:07 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:22:07] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-28 12:22:08 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:22:08] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:22:10 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:22:10] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:22:12 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:22:12] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:22:12 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:22:12] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-28 12:22:12 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:22:12] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:22:12 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:22:12] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-28 12:22:13 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:22:13] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:22:13 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:22:13] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-28 12:22:14 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-28 12:22:14 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:22:14] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-28 12:22:15 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:22:15] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:22:17 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:22:17] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:22:17 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:22:17] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:22:18 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:22:18] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-28 12:22:18 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-28 12:22:18 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:22:18] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-28 12:22:33 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:22:33] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:22:33 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:22:33] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:22:33 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:22:33] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-28 12:22:35 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:22:35] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:22:35 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:22:35] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:22:35 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:22:35] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-28 12:22:35 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:22:35] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:22:35 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:22:35] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-28 12:22:36 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-28 12:22:36 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:22:36] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-28 12:22:36 - __main__ - INFO - Stopping real-time detection session...
+2025-11-28 12:22:36 - app_controller - INFO - Stopping web-based detection session...
+2025-11-28 12:22:36 - activity_stream - INFO - Stopping activity monitoring...
+2025-11-28 12:22:36 - activity_stream - INFO - Activity monitoring stopped
+2025-11-28 12:22:36 - app_controller - INFO - Session analytics saved
+2025-11-28 12:22:36 - app_controller - INFO - Session completed: 4.1 minutes, 224 events
+2025-11-28 12:22:36 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:22:36] "POST /api/session/stop HTTP/1.1" 200 -
+2025-11-28 12:22:36 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:22:36] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:22:36 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:22:36] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-28 12:22:36 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:22:36] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:22:36 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:22:36] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-28 12:22:36 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:22:36] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:22:36 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:22:36] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:22:38 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:22:38] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:22:39 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:22:39] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-28 12:22:39 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:22:39] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:22:39 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:22:39] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:22:40 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-28 12:22:40 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:22:40] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-28 12:22:41 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:22:41] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:22:43 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:22:43] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:22:43 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:22:43] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:22:43 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:22:43] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:22:44 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:22:44] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-28 12:22:44 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-28 12:22:45 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:22:45] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-28 12:22:46 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:22:46] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:22:51 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:22:51] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:22:52 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:22:52] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-28 12:22:52 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:22:52] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:22:52 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:22:52] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:22:53 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-28 12:22:53 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:22:53] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-28 12:22:54 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:22:54] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:22:54 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:22:54] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:22:54 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:22:54] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-28 12:22:54 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:22:54] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:22:56 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-28 12:22:56 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:22:56] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-28 12:24:15 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:24:15] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:24:15 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:24:15] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:24:15 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:24:15] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:24:16 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:24:16] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-28 12:24:17 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-28 12:24:17 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:24:17] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-28 12:24:39 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:24:39] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:24:39 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:24:39] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:24:40 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:24:40] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:24:40 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:24:40] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-28 12:24:42 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:24:42] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:24:42 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:24:42] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-28 12:24:43 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-28 12:24:43 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:24:43] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-28 12:24:43 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:24:43] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-28 12:24:43 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:24:43] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:24:44 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:24:44] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:24:44 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:24:44] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:24:44 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:24:44] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-28 12:24:44 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:24:44] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:24:48 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:24:48] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:24:48 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:24:48] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:24:48 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:24:48] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:24:48 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:24:48] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-28 12:24:49 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-28 12:24:49 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:24:49] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-28 12:24:51 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:24:51] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:24:53 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:24:53] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:24:53 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:24:53] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:24:53 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:24:53] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:24:53 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:24:53] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-28 12:24:55 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-28 12:24:55 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:24:55] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-28 12:24:56 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:24:56] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:24:58 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:24:58] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:24:58 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:24:58] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:24:58 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:24:58] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:24:58 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:24:58] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-28 12:25:01 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:25:01] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:25:01 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-28 12:25:01 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:25:01] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-28 12:25:03 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:25:03] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:25:03 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:25:03] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:25:03 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:25:03] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:25:03 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:25:03] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-28 12:26:29 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:26:29] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:26:29 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:26:29] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:26:29 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:26:29] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:26:29 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:26:29] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-28 12:26:30 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-28 12:26:30 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:26:30] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-28 12:26:31 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:26:31] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:26:34 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:26:34] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:26:35 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:26:35] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:26:35 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:26:35] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:26:35 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:26:35] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-28 12:26:36 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-28 12:26:36 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:26:36] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-28 12:26:36 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:26:36] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:26:51 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:26:51] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:26:51 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:26:51] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:26:51 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:26:51] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:26:51 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:26:51] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-28 12:26:52 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-28 12:26:52 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:26:52] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-28 12:27:10 - ml.models.anomaly - INFO - Anomaly detector loaded from C:\Users\jagat\Downloads\FocusGuard\models\anomaly_detector.joblib
+2025-11-28 12:27:11 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-28 12:27:11 - app_controller - INFO - Loaded ML artefacts from C:\Users\jagat\Downloads\FocusGuard\models (classifier=True)
+2025-11-28 12:27:11 - __main__ - INFO - Real-time monitoring system initialized
+2025-11-28 12:27:11 - __main__ - INFO - Starting FocusGuard Web Server on 127.0.0.1:8000
+2025-11-28 12:27:11 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8000
+2025-11-28 12:27:11 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-11-28 12:27:12 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:27:12] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:27:12 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:27:12] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:27:12 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:27:12] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:27:12 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:27:12] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-28 12:27:14 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-28 12:27:14 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:27:14] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-28 12:27:14 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:27:14] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:27:14 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:27:14] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:27:14 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:27:14] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:27:14 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:27:14] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-28 12:27:14 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:27:14] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:27:14 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:27:14] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:27:14 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:27:14] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-28 12:27:14 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:27:14] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-28 12:27:20 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:27:20] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:27:20 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:27:20] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-28 12:27:20 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:27:20] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-28 12:27:20 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:27:20] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:27:20 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:27:20] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:27:20 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:27:20] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:27:23 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:27:23] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:27:23 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:27:23] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:27:23 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:27:23] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:27:23 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:27:23] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-28 12:27:23 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-28 12:27:23 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:27:23] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-28 12:27:25 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:27:25] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:27:28 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:27:28] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:27:28 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:27:28] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:27:28 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:27:28] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:27:28 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:27:28] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:27:28 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:27:28] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:27:28 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:27:28] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-28 12:27:28 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:27:28] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-28 12:27:28 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:27:28] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-28 12:27:29 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-28 12:27:29 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:27:29] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-28 12:27:30 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:27:30] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:27:33 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:27:33] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-28 12:27:33 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:27:33] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:27:33 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:27:33] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-28 12:27:33 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:27:33] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:27:33 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:27:33] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:27:33 - __main__ - INFO - Starting real-time detection session...
+2025-11-28 12:27:33 - app_controller - INFO - Starting web-based detection session...
+2025-11-28 12:27:33 - activity_stream - INFO - Starting real-time activity monitoring...
+2025-11-28 12:27:33 - activity_stream - INFO - Activity monitoring started successfully
+2025-11-28 12:27:33 - app_controller - INFO - Real-time activity monitoring started
+2025-11-28 12:27:33 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:27:33] "POST /api/session/start HTTP/1.1" 200 -
+2025-11-28 12:27:33 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:27:33] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:27:33 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:27:33] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-28 12:27:33 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:27:33] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-28 12:27:33 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:27:33] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:27:33 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:27:33] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:27:33 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:27:33] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:27:35 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:27:35] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:27:35 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:27:35] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-28 12:27:36 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-28 12:27:36 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:27:36] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-28 12:27:37 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:27:37] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:27:40 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:27:40] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:27:40 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:27:40] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:27:40 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:27:40] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-28 12:27:40 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:27:40] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:27:41 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-28 12:27:41 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:27:41] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-28 12:27:43 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:27:43] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:27:43 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:27:43] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:27:43 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:27:43] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:27:43 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:27:43] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-28 12:29:04 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:04] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:29:04 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:04] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:29:04 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:04] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-28 12:29:05 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:05] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:29:05 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-28 12:29:05 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:05] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-28 12:29:06 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:06] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:29:06 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:06] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:29:06 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:06] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-28 12:29:06 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:06] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-28 12:29:07 - __main__ - INFO - Stopping real-time detection session...
+2025-11-28 12:29:07 - app_controller - INFO - Stopping web-based detection session...
+2025-11-28 12:29:07 - activity_stream - INFO - Stopping activity monitoring...
+2025-11-28 12:29:07 - activity_stream - INFO - Activity monitoring stopped
+2025-11-28 12:29:07 - app_controller - INFO - Session analytics saved
+2025-11-28 12:29:07 - app_controller - INFO - Session completed: 1.6 minutes, 316 events
+2025-11-28 12:29:07 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:07] "POST /api/session/stop HTTP/1.1" 200 -
+2025-11-28 12:29:07 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:07] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:29:08 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:08] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-28 12:29:08 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:08] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-28 12:29:08 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:08] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:29:08 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:08] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:29:08 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:08] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:29:10 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:10] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:29:10 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:10] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-28 12:29:11 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-28 12:29:11 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:11] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-28 12:29:12 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:12] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:29:15 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:15] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:29:15 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:15] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:29:15 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:15] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:29:15 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:15] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-28 12:29:15 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-28 12:29:15 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:15] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-28 12:29:16 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:16] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:29:16 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:16] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:29:16 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:16] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-28 12:29:16 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:16] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-28 12:29:17 - __main__ - INFO - Starting real-time detection session...
+2025-11-28 12:29:17 - app_controller - INFO - Starting web-based detection session...
+2025-11-28 12:29:17 - activity_stream - INFO - Starting real-time activity monitoring...
+2025-11-28 12:29:17 - activity_stream - INFO - Activity monitoring started successfully
+2025-11-28 12:29:17 - app_controller - INFO - Real-time activity monitoring started
+2025-11-28 12:29:17 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:17] "POST /api/session/start HTTP/1.1" 200 -
+2025-11-28 12:29:17 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:17] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:29:17 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:17] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-28 12:29:17 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:17] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-28 12:29:17 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:17] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:29:17 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:17] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:29:17 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:17] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:29:19 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:19] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:29:19 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:19] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-28 12:29:20 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-28 12:29:20 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:20] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-28 12:29:21 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:21] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:29:24 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:24] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:29:24 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:24] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:29:24 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:24] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-28 12:29:24 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:24] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:29:25 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-28 12:29:25 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:25] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-28 12:29:27 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:27] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:29:29 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:29] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:29:29 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:29] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:29:29 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:29] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-28 12:29:29 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:29] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:29:31 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-28 12:29:31 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:31] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-28 12:29:32 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:32] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:29:32 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:32] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:29:32 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:32] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:29:32 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:32] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-28 12:29:34 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:34] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:29:34 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:34] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:29:34 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:34] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-28 12:29:34 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:34] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-28 12:29:35 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:35] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:29:36 - __main__ - INFO - Stopping real-time detection session...
+2025-11-28 12:29:36 - app_controller - INFO - Stopping web-based detection session...
+2025-11-28 12:29:36 - activity_stream - INFO - Stopping activity monitoring...
+2025-11-28 12:29:36 - activity_stream - INFO - Activity monitoring stopped
+2025-11-28 12:29:36 - app_controller - INFO - Session analytics saved
+2025-11-28 12:29:36 - app_controller - INFO - Session completed: 0.3 minutes, 7 events
+2025-11-28 12:29:36 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:36] "POST /api/session/stop HTTP/1.1" 200 -
+2025-11-28 12:29:36 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:36] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:29:36 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:36] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:29:36 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:36] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-28 12:29:36 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:36] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-28 12:29:36 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:36] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:29:37 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:37] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:29:38 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:38] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:29:38 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:38] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-28 12:29:39 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-28 12:29:39 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:39] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-28 12:29:40 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:29:40] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:30:34 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:30:34] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:30:34 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:30:34] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:30:34 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:30:34] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:30:35 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:30:35] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-28 12:30:35 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-28 12:30:35 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:30:35] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-28 12:30:37 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:30:37] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:30:37 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:30:37] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:30:37 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:30:37] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-28 12:30:37 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:30:37] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:31:59 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:31:59] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:31:59 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:31:59] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:31:59 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:31:59] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:31:59 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:31:59] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-28 12:32:00 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-28 12:32:00 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:32:00] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-28 12:32:01 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:32:01] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:32:04 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:32:04] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:32:04 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:32:04] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:32:04 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:32:04] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:32:04 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:32:04] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-28 12:32:06 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-28 12:32:06 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:32:06] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-28 12:32:06 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:32:06] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:32:09 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:32:09] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:32:09 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:32:09] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:32:09 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:32:09] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:32:09 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:32:09] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-28 12:32:12 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:32:12] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:32:12 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-28 12:32:12 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:32:12] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-28 12:32:14 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:32:14] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:32:14 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:32:14] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:32:14 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:32:14] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:32:14 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:32:14] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-28 12:32:17 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:32:17] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:32:18 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-28 12:32:18 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:32:18] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-28 12:32:19 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:32:19] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:32:19 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:32:19] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:32:19 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:32:19] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:32:19 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:32:19] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-28 12:32:22 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:32:22] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:32:24 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-28 12:32:24 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:32:24] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-28 12:32:24 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:32:24] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:32:24 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:32:24] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:32:24 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:32:24] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:32:24 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:32:24] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-28 12:32:36 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:32:36] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:32:36 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:32:36] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:32:36 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:32:36] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:32:36 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:32:36] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-28 12:32:37 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-28 12:32:37 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:32:37] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-28 12:32:38 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:32:38] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:32:41 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:32:41] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:32:41 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:32:41] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:32:41 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:32:41] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:32:41 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:32:41] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-28 12:32:42 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-28 12:32:42 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:32:42] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-28 12:32:43 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:32:43] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:50:14 - ml.models.anomaly - INFO - Anomaly detector loaded from C:\Users\jagat\Downloads\FocusGuard\models\anomaly_detector.joblib
+2025-11-28 12:50:15 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-28 12:50:15 - app_controller - INFO - Loaded ML artefacts from C:\Users\jagat\Downloads\FocusGuard\models (classifier=True)
+2025-11-28 12:50:15 - __main__ - INFO - Real-time monitoring system initialized
+2025-11-28 12:50:15 - __main__ - INFO - Starting FocusGuard Web Server on 127.0.0.1:8000
+2025-11-28 12:50:15 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8000
+2025-11-28 12:50:15 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-11-28 12:50:15 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:50:15] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:50:15 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:50:15] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:50:15 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:50:15] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:50:15 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:50:15] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-28 12:50:16 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-28 12:50:16 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:50:16] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-28 12:50:19 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:50:19] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:50:19 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:50:19] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:50:19 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:50:19] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:50:19 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:50:19] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-28 12:50:19 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-28 12:50:19 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:50:19] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-28 12:50:21 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:50:21] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:50:24 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:50:24] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:50:24 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:50:24] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:50:24 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:50:24] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-28 12:50:24 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:50:24] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:50:25 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-28 12:50:25 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:50:25] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-28 12:50:26 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:50:26] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:50:28 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:50:28] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-28 12:50:28 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:50:28] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:50:28 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:50:28] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-28 12:50:28 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:50:28] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:50:28 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:50:28] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:50:31 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:50:31] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:50:33 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:50:33] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-28 12:50:33 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:50:33] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:50:33 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:50:33] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-28 12:50:33 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:50:33] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:50:33 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:50:33] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:50:35 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:50:35] "GET /api/predict/whatif?hour=12 HTTP/1.1" 200 -
+2025-11-28 12:50:35 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:50:35] "GET /api/insights HTTP/1.1" 200 -
+2025-11-28 12:50:37 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:50:37] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:50:38 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:50:38] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:50:38 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:50:38] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:50:38 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:50:38] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-28 12:50:38 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:50:38] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:50:38 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:50:38] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-28 12:50:44 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:50:44] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:50:48 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:50:48] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:50:48 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:50:48] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:50:48 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:50:48] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-28 12:50:48 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:50:48] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-28 12:50:48 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:50:48] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:50:50 - __main__ - INFO - Starting real-time detection session...
+2025-11-28 12:50:50 - app_controller - INFO - Starting web-based detection session...
+2025-11-28 12:50:50 - activity_stream - INFO - Starting real-time activity monitoring...
+2025-11-28 12:50:50 - activity_stream - INFO - Activity monitoring started successfully
+2025-11-28 12:50:50 - app_controller - INFO - Real-time activity monitoring started
+2025-11-28 12:50:50 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:50:50] "POST /api/session/start HTTP/1.1" 200 -
+2025-11-28 12:50:50 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:50:50] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:50:50 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:50:50] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:50:50 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:50:50] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-28 12:50:50 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:50:50] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-28 12:50:50 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:50:50] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:50:50 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:50:50] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:50:52 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:50:52] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:50:54 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:50:54] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-28 12:50:55 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:50:55] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:50:55 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:50:55] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:50:55 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:50:55] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-28 12:50:55 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:50:55] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:50:57 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:50:57] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:50:57 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:50:57] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-28 12:50:57 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:50:57] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:50:57 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:50:57] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:50:57 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-28 12:50:57 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:50:57] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-28 12:50:59 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:50:59] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:51:02 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:51:02] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:51:02 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:51:02] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:51:02 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:51:02] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-28 12:51:02 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:51:02] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:51:02 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-28 12:51:02 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:51:02] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-28 12:51:04 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:51:04] "GET /api/predict/whatif?hour=12 HTTP/1.1" 200 -
+2025-11-28 12:51:04 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:51:04] "GET /api/insights HTTP/1.1" 200 -
+2025-11-28 12:51:06 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:51:06] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:51:09 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:51:09] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:51:09 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:51:09] "GET /api/predict/whatif?hour=12 HTTP/1.1" 200 -
+2025-11-28 12:51:09 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:51:09] "GET /api/insights HTTP/1.1" 200 -
+2025-11-28 12:51:09 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:51:09] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:51:11 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:51:11] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:51:14 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:51:14] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:51:14 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:51:14] "GET /api/predict/whatif?hour=12 HTTP/1.1" 200 -
+2025-11-28 12:51:14 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:51:14] "GET /api/insights HTTP/1.1" 200 -
+2025-11-28 12:51:14 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:51:14] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:51:17 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:51:17] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:51:18 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:51:18] "GET /api/predict/whatif?hour=9 HTTP/1.1" 200 -
+2025-11-28 12:51:19 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:51:19] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:51:19 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:51:19] "GET /api/insights HTTP/1.1" 200 -
+2025-11-28 12:51:20 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:51:20] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:51:20 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:51:20] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:51:20 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:51:20] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:51:20 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:51:20] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-28 12:51:20 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:51:20] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-28 12:51:23 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:51:23] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:51:26 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:51:26] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:51:31 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:51:31] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:51:36 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:51:36] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:51:41 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:51:41] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:51:44 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:51:44] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-28 12:51:44 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:51:44] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-28 12:51:44 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:51:44] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:51:45 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:51:45] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:51:46 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:51:46] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:51:47 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:51:47] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-28 12:51:47 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:51:47] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:51:47 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:51:47] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-28 12:51:47 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:51:47] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:51:47 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:51:47] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-28 12:51:48 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-28 12:51:48 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:51:48] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-28 12:51:58 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:51:58] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:51:58 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:51:58] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:51:58 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:51:58] "GET /api/distractions/top HTTP/1.1" 200 -
+2025-11-28 12:51:58 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:51:58] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:51:58 - ml.models.classifier - INFO - Classifier loaded from C:\Users\jagat\Downloads\FocusGuard\models\classifier.joblib
+2025-11-28 12:51:58 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:51:58] "GET /api/features/importance HTTP/1.1" 200 -
+2025-11-28 12:52:00 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:52:00] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:52:00 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:52:00] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:52:00 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:52:00] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-28 12:52:00 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:52:00] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-28 12:52:02 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:52:02] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:52:05 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:52:05] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-28 12:52:05 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:52:05] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:52:05 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:52:05] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-28 12:52:05 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:52:05] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:52:05 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:52:05] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:52:08 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:52:08] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:52:10 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:52:10] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:52:10 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:52:10] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-28 12:52:10 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:52:10] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:52:10 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:52:10] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-28 12:52:11 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:52:11] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:52:13 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:52:13] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:52:15 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:52:15] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:52:15 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:52:15] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-28 12:52:15 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:52:15] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:52:15 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:52:15] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-28 12:52:16 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:52:16] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:52:19 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:52:19] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:52:20 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:52:20] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:52:20 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:52:20] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-28 12:52:20 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:52:20] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:52:20 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:52:20] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-28 12:52:22 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:52:22] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:52:24 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:52:24] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:52:25 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:52:25] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:52:25 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:52:25] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-28 12:52:25 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:52:25] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:52:25 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:52:25] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-28 12:52:27 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:52:27] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:52:30 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:52:30] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:52:30 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:52:30] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-28 12:52:30 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:52:30] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:52:30 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:52:30] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:52:30 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:52:30] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-28 12:52:33 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:52:33] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:52:33 - __main__ - INFO - Stopping real-time detection session...
+2025-11-28 12:52:33 - app_controller - INFO - Stopping web-based detection session...
+2025-11-28 12:52:33 - activity_stream - INFO - Stopping activity monitoring...
+2025-11-28 12:52:34 - activity_stream - INFO - Activity monitoring stopped
+2025-11-28 12:52:34 - app_controller - INFO - Session analytics saved
+2025-11-28 12:52:34 - app_controller - INFO - Session completed: 1.7 minutes, 30 events
+2025-11-28 12:52:34 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:52:34] "POST /api/session/stop HTTP/1.1" 200 -
+2025-11-28 12:52:34 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:52:34] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:52:34 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:52:34] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-28 12:52:34 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:52:34] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-28 12:52:34 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:52:34] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:52:34 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:52:34] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:52:34 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:52:34] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:52:36 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:52:36] "GET /api/session/status HTTP/1.1" 200 -
+2025-11-28 12:52:39 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:52:39] "GET /api/stats/weekly HTTP/1.1" 200 -
+2025-11-28 12:52:39 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:52:39] "GET /api/stats/hourly HTTP/1.1" 200 -
+2025-11-28 12:52:39 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:52:39] "GET /api/stats/today HTTP/1.1" 200 -
+2025-11-28 12:52:39 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:52:39] "GET /api/activity/recent HTTP/1.1" 200 -
+2025-11-28 12:52:39 - werkzeug - INFO - 127.0.0.1 - - [28/Nov/2025 12:52:39] "GET /api/session/status HTTP/1.1" 200 -

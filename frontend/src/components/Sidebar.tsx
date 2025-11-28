@@ -1,5 +1,5 @@
 import React from 'react'
-import { Home, BarChart3, Target, Lightbulb, Menu, X, Brain } from 'lucide-react'
+import { Home, BarChart3, Lightbulb, Menu, X, Brain } from 'lucide-react'
 import type { PageId } from '../App'
 
 interface Props {
@@ -13,7 +13,6 @@ export default function Sidebar({ currentPage, setCurrentPage, sidebarOpen, setS
   const navItems: { id: PageId; label: string; icon: any }[] = [
     { id: 'dashboard', label: 'Dashboard', icon: Home },
     { id: 'deepdive', label: 'Focus Deep Dive', icon: BarChart3 },
-    { id: 'goals', label: 'Goals & Streaks', icon: Target },
     { id: 'predictive', label: 'Predictive Insights', icon: Lightbulb },
   ]
 
@@ -42,7 +41,7 @@ export default function Sidebar({ currentPage, setCurrentPage, sidebarOpen, setS
         </div>
         <button
           aria-label={sidebarOpen ? 'Collapse sidebar' : 'Expand sidebar'}
-          aria-expanded={sidebarOpen}
+          aria-expanded={sidebarOpen ? 'true' : 'false'}
           className="p-2 rounded-md hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           onClick={() => setSidebarOpen(!sidebarOpen)}
         >

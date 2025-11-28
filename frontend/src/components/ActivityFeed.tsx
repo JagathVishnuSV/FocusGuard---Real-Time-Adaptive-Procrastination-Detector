@@ -15,7 +15,7 @@ import {
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { apiService, type ActivityEvent } from '@/lib/api'
-import type { PredictionSummary, CognitiveTwinSnapshot, GeminiEnrichment } from '@/lib/types'
+import type { PredictionSummary, CognitiveTwinSnapshot } from '@/lib/types'
 
 const normalizeFeatures = (input?: Record<string, unknown>) => {
   if (!input) {
@@ -51,7 +51,6 @@ interface PredictionMetadata {
   distractionScore?: number | null
   url?: string | null
   cognitiveTwin?: CognitiveTwinSnapshot | null
-  aiEnrichment?: GeminiEnrichment | null
 }
 
 interface ProcessedEvent extends ActivityEvent, PredictionMetadata {
@@ -92,9 +91,6 @@ export const ActivityFeed: React.FC = () => {
         const explicitLabel = predictionPayload?.prediction_label ?? predictionPayload?.predictionLabel
         const cognitiveTwin = (predictionPayload?.cognitive_twin ?? (rawEvent as any).cognitive_twin ?? null) as
           | CognitiveTwinSnapshot
-          | null
-        const aiEnrichment = (predictionPayload?.ai_enrichment ?? (rawEvent as any).ai_enrichment ?? null) as
-          | GeminiEnrichment
           | null
 
         let predictedLabel: 'focused' | 'distracted' | null = null
@@ -170,7 +166,6 @@ export const ActivityFeed: React.FC = () => {
           distractionScore: resolvedDistractionScore,
           url: (rawEvent as any).url ?? null,
           cognitiveTwin,
-          aiEnrichment,
         }
       }
       case 'app_switch':
@@ -214,7 +209,6 @@ export const ActivityFeed: React.FC = () => {
       contextCounts: rawEvent.context?.counts ?? null,
       url: rawEvent.url ?? null,
       cognitiveTwin: (rawEvent as any).cognitive_twin ?? null,
-      aiEnrichment: (rawEvent as any).ai_enrichment ?? null,
     }
   }
 
@@ -450,11 +444,6 @@ export const ActivityFeed: React.FC = () => {
                     {typeof event.distractionScore === 'number' && (
                       <p className="text-xs text-slate-400 mt-1 truncate">
                         Distraction index: {event.distractionScore.toFixed(1)}
-                      </p>
-                    )}
-                    {event.displayType === 'prediction' && event.aiEnrichment?.context_summary && (
-                      <p className="mt-2 text-xs leading-relaxed text-primary-50">
-                        {event.aiEnrichment.context_summary}
                       </p>
                     )}
                     {event.displayType === 'prediction' && event.requiresFeedback && (

@@ -197,16 +197,3 @@ ENABLE_GHOST_TWIN = True
 GHOST_TWIN_HISTORY = 128  # how many recent app events to retain for transitions
 GHOST_PREDICT_HORIZON_SECONDS = 60  # default horizon for ghost predictions
 
-# ===== AI ENRICHMENT (Gemini) =====
-# Optional Google Gemini integration for richer insights and explanations.
-ENABLE_GEMINI = str(os.environ.get("ENABLE_GEMINI", "false")).strip().lower() in {"1", "true", "yes", "on"}
-GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
-GEMINI_MODEL_NAME = os.environ.get("GEMINI_MODEL_NAME", "gemini-2.5-flash")
-GEMINI_TIMEOUT_SECONDS = float(os.environ.get("GEMINI_TIMEOUT_SECONDS", "8.0"))
-GEMINI_CACHE_TTL_SECONDS = int(os.environ.get("GEMINI_CACHE_TTL_SECONDS", "600"))
-GEMINI_API_BASE = os.environ.get("GEMINI_API_BASE", "https://generativelanguage.googleapis.com/v1beta/models")
-GEMINI_REFRESH_MIN_SECONDS = float(os.environ.get("GEMINI_REFRESH_MIN_SECONDS", "15"))
-GEMINI_MIN_REQUEST_INTERVAL_SECONDS = float(os.environ.get("GEMINI_MIN_REQUEST_INTERVAL_SECONDS", "3.0"))
-GEMINI_COOLDOWN_SECONDS = float(os.environ.get("GEMINI_COOLDOWN_SECONDS", "45.0"))
-GEMINI_MAX_REQUESTS_PER_MINUTE = int(os.environ.get("GEMINI_MAX_REQUESTS_PER_MINUTE", "6"))
-GEMINI_MAX_OUTPUT_TOKENS_PER_MINUTE = int(os.environ.get("GEMINI_MAX_OUTPUT_TOKENS_PER_MINUTE", "1800"))
