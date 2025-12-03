@@ -1,6 +1,7 @@
 {
   "apps": {
-    "focusguard ensemble": "distraction"
+    "focusguard ensemble": "distraction",
+    "focusguard": "distraction"
   },
   "domains": {}
 }

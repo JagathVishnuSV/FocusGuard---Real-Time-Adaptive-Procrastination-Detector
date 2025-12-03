@@ -32,6 +32,8 @@ const resolveTimestamp = (value?: number | string | null) => {
   return null
 }
 
+const MAX_TARGET_LENGTH = 48
+
 const prettyTarget = (token?: string | null) => {
   if (!token) {
     return 'Unknown'
@@ -40,15 +42,16 @@ const prettyTarget = (token?: string | null) => {
   if (!trimmed || trimmed === 'unknown') {
     return 'Unknown'
   }
+  const normalized = trimmed.length > MAX_TARGET_LENGTH ? `${trimmed.slice(0, MAX_TARGET_LENGTH - 1).trim()}…` : trimmed
   if (/^https?:\/\//i.test(trimmed)) {
     try {
       const url = new URL(trimmed)
       return url.host || trimmed.replace(/^https?:\/\//i, '')
     } catch {
-      return trimmed.replace(/^https?:\/\//i, '')
+      return normalized.replace(/^https?:\/\//i, '')
     }
   }
-  return trimmed
+  return normalized
 }
 
 const formatPercent = (value?: number | null) => {
@@ -114,10 +117,17 @@ export const CognitiveTwinPanel: React.FC<CognitiveTwinPanelProps> = ({ data, is
           <div className="space-y-4">
             <div>
               <p className="text-xs uppercase text-slate-400">Predicted Next Focus</p>
-              <p className="mt-1 text-lg font-semibold text-slate-50 flex items-center gap-2">
-                <Sparkles className="h-4 w-4 text-purple-300" />
-                {predictedNext}
-              </p>
+              <div className="mt-1 flex flex-col gap-1 text-slate-50">
+                <p className="text-lg font-semibold flex items-center gap-2">
+                  <Sparkles className="h-4 w-4 text-purple-300" />
+                  {predictedNext}
+                </p>
+                {data?.is_stale && (
+                  <span className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[11px] uppercase tracking-wide text-slate-400">
+                    Waiting for new signals
+                  </span>
+                )}
+              </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-slate-300">

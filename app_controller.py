@@ -7,12 +7,14 @@ import logging
 import time
 import json
 import hashlib
+import re
 import pandas as pd
 import numpy as np
 from pathlib import Path
 from datetime import datetime
 from typing import Any, List, Dict, Optional, Tuple
 from collections import deque, Counter, defaultdict
+from urllib.parse import urlparse
 
 from config import *
 from activity_stream import RealTimeActivityMonitor, ActivityEvent
@@ -32,6 +34,33 @@ logging.basicConfig(
     ]
 )
 logger = logging.getLogger(__name__)
+
+
+WINDOW_SUFFIX_RE = re.compile(
+    r"\s+[-–—]\s+(Google Chrome|Microsoft Edge|Mozilla Firefox|Brave|Opera|Safari)$",
+    flags=re.IGNORECASE,
+)
+
+PLATFORM_SUFFIX_RE = re.compile(
+    r"\s+[-–—]\s+(YouTube|Twitch|Netflix|Spotify|ChatGPT|Notion|Figma|Slack)$",
+    flags=re.IGNORECASE,
+)
+
+SITE_ALIAS_MAP = {
+    "youtube": "youtube.com",
+    "netflix": "netflix.com",
+    "twitch": "twitch.tv",
+    "spotify": "spotify.com",
+    "discord": "discord.com",
+    "chatgpt": "chatgpt.com",
+    "openai": "openai.com",
+    "gmail": "mail.google.com",
+    "calendar": "calendar.google.com",
+    "drive": "drive.google.com",
+    "notion": "notion.so",
+    "figma": "figma.com",
+    "jira": "atlassian.net",
+}
 
 
 class FocusGuardController:
@@ -125,6 +154,73 @@ class FocusGuardController:
         bounded = max(0.0, min(base, 1.0))
         return round(bounded * 100.0, 1)
 
+    @staticmethod
+    def _clean_window_title(title: Optional[str]) -> str:
+        if not title:
+            return ""
+        cleaned = WINDOW_SUFFIX_RE.sub("", title)
+        cleaned = PLATFORM_SUFFIX_RE.sub("", cleaned)
+        return cleaned.strip()
+
+    @staticmethod
+    def _extract_host_from_value(value: str) -> str:
+        if not value:
+            return ""
+        candidate = value.strip()
+        if not candidate:
+            return ""
+        if "://" not in candidate:
+            candidate = f"https://{candidate}"
+        try:
+            parsed = urlparse(candidate)
+            host = parsed.netloc or parsed.path
+        except Exception:
+            host = value
+        host = host.lower().strip()
+        if host.startswith("www."):
+            host = host[4:]
+        return host.rstrip("/")
+
+    @staticmethod
+    def _guess_host_from_title(title: str) -> str:
+        lower = title.lower()
+        for alias, host in SITE_ALIAS_MAP.items():
+            if alias in lower:
+                return host
+        return ""
+
+    def _activity_signature(self, event: ActivityEvent) -> Optional[Dict[str, Any]]:
+        if not isinstance(event, ActivityEvent):
+            return None
+
+        app_name = (getattr(event, "app_name", None) or "Unknown").strip() or "Unknown"
+        raw_title = getattr(event, "window_title", None) or ""
+        cleaned_title = self._clean_window_title(raw_title)
+        raw_url = getattr(event, "url", None) or ""
+        host = self._extract_host_from_value(raw_url) if raw_url else ""
+        if not host and cleaned_title:
+            host = self._guess_host_from_title(cleaned_title)
+
+        display_core = cleaned_title or host or app_name
+        normalized_core = display_core.strip() or app_name
+
+        display_label = normalized_core
+        if host and host not in normalized_core.lower():
+            display_label = f"{normalized_core} · {host}"
+
+        key_basis = host or app_name.lower()
+        key = f"{key_basis}::{normalized_core.lower()}"
+
+        return {
+            "key": key,
+            "label": display_label,
+            "app_name": app_name,
+            "host": host or None,
+            "window_title": raw_title or None,
+            "url": raw_url or None,
+            "sample_title": cleaned_title or None,
+        }
+
     def _produce_ghost_snapshot(self, feature_map: Optional[Dict[str, Any]] = None) -> Optional[Dict[str, Any]]:
         """Generate a cognitive twin snapshot using any newly collected events."""
         ghost = getattr(self, "ghost_twin", None)
@@ -215,7 +311,7 @@ class FocusGuardController:
         cutoff = time.time() - max(lookback_seconds, 60)
         summary: Dict[str, Dict[str, Any]] = {}
 
-        for app_name, history in self._distraction_score_history.items():
+        for identifier, history in self._distraction_score_history.items():
             filtered = [entry for entry in history if entry.get("timestamp", 0.0) >= cutoff]
             if not filtered:
                 continue
@@ -231,12 +327,21 @@ class FocusGuardController:
             )
             dominant_context = contexts.most_common(1)[0][0] if contexts else "unknown"
 
-            summary[app_name] = {
+            latest = filtered[-1]
+            display_label = latest.get("label") or latest.get("sample_title") or identifier
+
+            summary[identifier] = {
                 "hits": len(filtered),
                 "avg_score": round(sum(scores) / len(scores), 1),
                 "max_score": round(max(scores), 1),
                 "dominant_context": dominant_context,
                 "last_seen": datetime.fromtimestamp(filtered[-1]["timestamp"]).isoformat(),
+                "label": display_label,
+                "source_app": latest.get("app_name"),
+                "host": latest.get("host"),
+                "window_title": latest.get("window_title"),
+                "url": latest.get("url"),
+                "sample_title": latest.get("sample_title"),
             }
 
         return summary
@@ -1024,25 +1129,36 @@ class FocusGuardController:
                 except Exception as exc:
                     logger.debug("Failed to persist feature snapshot: %s", exc)
 
-                dominant_app = None
+                dominant_signature = None
                 if self.events_buffer:
-                    app_counts = Counter(
-                        event.app_name
-                        for event in self.events_buffer
-                        if getattr(event, "app_name", None)
-                    )
-                    if app_counts:
-                        dominant_app = app_counts.most_common(1)[0][0]
+                    signature_counts: Counter[str] = Counter()
+                    signature_meta: Dict[str, Dict[str, Any]] = {}
+                    for event in self.events_buffer:
+                        signature = self._activity_signature(event)
+                        if not signature:
+                            continue
+                        signature_counts[signature["key"]] += 1
+                        signature_meta[signature["key"]] = signature
 
-                if dominant_app:
+                    if signature_counts:
+                        top_key, _ = signature_counts.most_common(1)[0]
+                        dominant_signature = signature_meta.get(top_key)
+
+                if dominant_signature:
                     history_entry = {
                         "timestamp": current_time,
                         "score": dynamic_distraction_score,
                         "context": dominant_context,
                         "confidence": context_confidence,
                         "combined_score": combined_score if combined_score is not None else None,
+                        "label": dominant_signature.get("label"),
+                        "app_name": dominant_signature.get("app_name"),
+                        "host": dominant_signature.get("host"),
+                        "window_title": dominant_signature.get("window_title"),
+                        "url": dominant_signature.get("url"),
+                        "sample_title": dominant_signature.get("sample_title"),
                     }
-                    self._distraction_score_history[dominant_app].append(history_entry)
+                    self._distraction_score_history[dominant_signature["key"]].append(history_entry)
 
                 passive_label_emitted = False
                 time_since_passive = current_time - getattr(self, "_last_passive_label_time", 0.0)

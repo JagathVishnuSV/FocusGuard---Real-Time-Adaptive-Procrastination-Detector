@@ -256,7 +256,7 @@ class AnalyticsEngine:
 
         enriched = {}
         for app, hits in counts.items():
-            enriched[app] = {"hits": hits}
+            enriched[app] = {"hits": hits, "label": app}
 
         for app, snapshot in dynamic_scores.items():
             payload = enriched.setdefault(app, {})
@@ -335,13 +335,15 @@ class AnalyticsEngine:
         if top_distractions:
             top_app, top_meta = next(iter(top_distractions.items()))
             avg_score = None
+            display_name = top_app
             if isinstance(top_meta, dict):
                 avg_score = top_meta.get("avg_score")
+                display_name = top_meta.get("label") or top_app
             insights.append({
                 "type": "danger",
-                "title": f"🚫 Distraction Alert",
+                "title": "🚫 Distraction Alert",
                 "text": (
-                    f"{top_app} is your biggest distraction"
+                    f"{display_name} is your biggest distraction"
                     + (f" with an intensity score around {avg_score:.0f}." if isinstance(avg_score, (int, float)) else ".")
                     + " Consider blocking it during work hours."
                 ),

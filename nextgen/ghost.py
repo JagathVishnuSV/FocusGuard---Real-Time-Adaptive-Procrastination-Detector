@@ -18,6 +18,7 @@ Notes:
 
 from __future__ import annotations
 
+import re
 from collections import deque, defaultdict
 from typing import Deque, Dict, Iterable, Optional
 from urllib.parse import urlparse
@@ -27,6 +28,41 @@ try:
     from activity_stream import ActivityEvent
 except Exception:  # pragma: no cover - defensive
     ActivityEvent = object
+
+
+TITLE_SUFFIX_RE = re.compile(
+    r"\s+[-–—]\s+(Google Chrome|Mozilla Firefox|Microsoft Edge|Brave|Opera|Safari|Visual Studio Code)$",
+    flags=re.IGNORECASE,
+)
+
+PLATFORM_SUFFIX_RE = re.compile(
+    r"\s+[-–—]\s+(YouTube|Netflix|Twitch|Spotify|ChatGPT|Gmail|Notion|Figma)$",
+    flags=re.IGNORECASE,
+)
+
+SITE_ALIAS_MAP = {
+    "youtube": "youtube.com",
+    "netflix": "netflix.com",
+    "twitch": "twitch.tv",
+    "spotify": "spotify.com",
+    "chatgpt": "chatgpt.com",
+    "openai": "openai.com",
+    "gmail": "mail.google.com",
+    "drive": "drive.google.com",
+    "calendar": "calendar.google.com",
+    "notion": "notion.so",
+    "figma": "figma.com",
+}
+
+MEDIA_DOMAINS = {
+    "youtube.com",
+    "twitch.tv",
+    "netflix.com",
+    "spotify.com",
+    "discord.com",
+}
+
+MAX_DETAIL_LENGTH = 42
 
 
 class GhostTwin:
@@ -43,30 +79,110 @@ class GhostTwin:
         # transition_counts[prev_app][next_app] = count
         self.transition_counts: Dict[str, Dict[str, int]] = defaultdict(lambda: defaultdict(int))
         self._history_updates = 0
+        self._browser_tokens = ("chrome", "firefox", "msedge", "safari", "opera", "edge", "brave")
+        self._token_display: Dict[str, str] = {}
+        self._last_prediction_version = -1
 
-    def _normalize_app(self, app_name: Optional[str], window_title: Optional[str] = "") -> str:
-        if not app_name:
-            return "unknown"
-        name = str(app_name).lower()
-        # For browser windows, try to extract a domain from the window_title
-        if any(browser in name for browser in ["chrome", "firefox", "msedge", "safari", "opera"]):
-            text = (window_title or "").lower()
-            # crude parse of a domain-like token in the title
-            for token in text.split():
-                if "." in token and len(token) > 3:
-                    try:
-                        parsed = urlparse(token if token.startswith("http") else f"https://{token}")
-                        host = parsed.netloc or token
-                        return host.lower()
-                    except Exception:
-                        continue
-        return name
+    @staticmethod
+    def _clean_title(title: Optional[str]) -> str:
+        if not title:
+            return ""
+        cleaned = TITLE_SUFFIX_RE.sub("", title)
+        cleaned = PLATFORM_SUFFIX_RE.sub("", cleaned)
+        return cleaned.strip()
+
+    @staticmethod
+    def _extract_host(value: Optional[str]) -> str:
+        if not value:
+            return ""
+        candidate = value.strip()
+        if not candidate:
+            return ""
+        if "://" not in candidate:
+            candidate = f"https://{candidate}"
+        try:
+            parsed = urlparse(candidate)
+            host = parsed.netloc or parsed.path
+        except Exception:
+            host = value
+        host = host.lower().strip()
+        if host.startswith("www."):
+            host = host[4:]
+        return host.rstrip("/")
+
+    @staticmethod
+    def _guess_host_from_title(title: str) -> str:
+        lowered = title.lower()
+        for alias, host in SITE_ALIAS_MAP.items():
+            if alias in lowered:
+                return host
+        return ""
+
+    def _register_token_display(self, token: str, *, detail: str, host: str, fallback: str) -> None:
+        if not token:
+            return
+        host_display = host or fallback or "unknown"
+        trimmed_detail = (detail or "").strip()
+        if len(trimmed_detail) > MAX_DETAIL_LENGTH:
+            trimmed_detail = trimmed_detail[: MAX_DETAIL_LENGTH - 1].rstrip() + "…"
+
+        if host_display in MEDIA_DOMAINS:
+            label = host_display
+        elif trimmed_detail and trimmed_detail.lower() != host_display.lower():
+            label = f"{trimmed_detail} · {host_display}"
+        else:
+            label = host_display or trimmed_detail or fallback or "Unknown"
+
+        self._token_display[token] = label
+
+    def _prettify_token(self, token: Optional[str]) -> str:
+        if not token:
+            return "Unknown"
+        cached = self._token_display.get(token)
+        if cached:
+            return cached
+        if "::" in token:
+            host, detail = token.split("::", 1)
+            host = host.strip()
+            detail = detail.strip()
+            if host and detail:
+                return f"{detail} · {host}"
+            return detail or host or "Unknown"
+        return token or "Unknown"
+
+    def _normalize_app(self, app_name: Optional[str], window_title: Optional[str] = "", url: Optional[str] = None) -> str:
+        fallback = (app_name or "unknown").strip() or "unknown"
+        app_token = fallback.lower()
+        cleaned_title = self._clean_title(window_title)
+        host = self._extract_host(url) if url else ""
+
+        if not host and any(browser in app_token for browser in self._browser_tokens):
+            host = self._guess_host_from_title(cleaned_title) or app_token
+        elif not host and cleaned_title:
+            host = self._guess_host_from_title(cleaned_title)
+
+        detail = cleaned_title or fallback
+        normalized_host = (host.lower().strip() if host else app_token) or app_token
+        normalized_detail = detail.lower().strip()
+
+        if normalized_host in MEDIA_DOMAINS:
+            normalized_detail = ""
+        elif normalized_detail == normalized_host:
+            normalized_detail = ""
+
+        token = f"{normalized_host}::{normalized_detail}" if normalized_detail else normalized_host
+        self._register_token_display(token, detail=detail, host=host or normalized_host, fallback=fallback)
+        return token
 
     def update(self, events: Iterable[object]):
         """Update internal history and transitions using a sequence of ActivityEvent objects."""
         for e in events:
             try:
-                app = self._normalize_app(getattr(e, "app_name", None), getattr(e, "window_title", ""))
+                app = self._normalize_app(
+                    getattr(e, "app_name", None),
+                    getattr(e, "window_title", ""),
+                    getattr(e, "url", None),
+                )
             except Exception:
                 app = "unknown"
 
@@ -144,14 +260,18 @@ class GhostTwin:
         # clamp
         prob = max(0.0, min(1.0, prob))
 
+        snapshot_stale = self._history_updates == self._last_prediction_version
+        self._last_prediction_version = self._history_updates
+
         return {
-            "predicted_next": next_candidate,
+            "predicted_next": self._prettify_token(next_candidate),
             "prob_distracted": round(float(prob), 3),
             "support": int(support),
-            "last_app": last_app,
+            "last_app": self._prettify_token(last_app),
             "history_size": len(self.history),
             "transitions_observed": self._history_updates,
             "horizon_seconds": horizon_seconds or getattr(self.config, "GHOST_PREDICT_HORIZON_SECONDS", 60),
+            "is_stale": snapshot_stale,
         }
 
     # small utility to allow later ML-driven training

@@ -39,3 +39,9 @@
 {"timestamp": "2025-11-28T12:29:07.960456", "duration": 94.47109031677246, "focused_time": 90.6511218547821, "distracted_time": 0, "total_events": 316, "anomalies_detected": 0, "feedback_collected": 0}
 {"timestamp": "2025-11-28T12:29:36.804939", "duration": 19.081006050109863, "focused_time": 16.77022433280945, "distracted_time": 0, "total_events": 7, "anomalies_detected": 0, "feedback_collected": 0}
 {"timestamp": "2025-11-28T12:52:34.297847", "duration": 104.2390866279602, "focused_time": 102.8259425163269, "distracted_time": 0, "total_events": 30, "anomalies_detected": 0, "feedback_collected": 0}
+{"timestamp": "2025-12-03T14:23:37.077928", "duration": 436.3165326118469, "focused_time": 371.7731840610504, "distracted_time": 58.26697754859924, "total_events": 314, "anomalies_detected": 10, "feedback_collected": 0}
+{"timestamp": "2025-12-03T14:37:50.268065", "duration": 805.3945829868317, "focused_time": 802.1475651264191, "distracted_time": 0, "total_events": 1242, "anomalies_detected": 0, "feedback_collected": 0}
+{"timestamp": "2025-12-03T15:03:21.841135", "duration": 803.719158411026, "focused_time": 800.8860139846802, "distracted_time": 0, "total_events": 533, "anomalies_detected": 0, "feedback_collected": 0}
+{"timestamp": "2025-12-03T15:13:15.782053", "duration": 568.1256561279297, "focused_time": 532.5090892314911, "distracted_time": 35.25826859474182, "total_events": 264, "anomalies_detected": 7, "feedback_collected": 1}
+{"timestamp": "2025-12-03T15:24:11.758961", "duration": 648.1340501308441, "focused_time": 612.4652535915375, "distracted_time": 33.366172790527344, "total_events": 385, "anomalies_detected": 7, "feedback_collected": 0}
+{"timestamp": "2025-12-03T15:25:49.144522", "duration": 62.2900755405426, "focused_time": 60.79757833480835, "distracted_time": 0, "total_events": 30, "anomalies_detected": 0, "feedback_collected": 1}

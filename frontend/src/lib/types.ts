@@ -38,6 +38,7 @@ export interface CognitiveTwinSnapshot {
   horizon_seconds?: number;
   buffer_events?: number;
   new_events_considered?: number;
+  is_stale?: boolean;
 }
 
 export interface DistractionStat {
@@ -46,6 +47,12 @@ export interface DistractionStat {
   max_score?: number;
   dominant_context?: string | null;
   last_seen?: string | null;
+  label?: string | null;
+  source_app?: string | null;
+  host?: string | null;
+  window_title?: string | null;
+  url?: string | null;
+  sample_title?: string | null;
 }
 
 export interface SessionStatus {

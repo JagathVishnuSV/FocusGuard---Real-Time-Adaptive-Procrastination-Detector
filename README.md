@@ -17,6 +17,7 @@ FocusGuard is a Windows-first focus companion that senses desktop behaviour, for
 - **Feature engineering** – 16 behavioural metrics summarised every 30 seconds for anomaly and classification pipelines.
 - **Hybrid intelligence** – anomaly detector + supervised classifier + ensemble combiner determine focus vs distraction with confidence scores.
 - **Cognitive twin forecasting** – Ghost heuristic models transitions to predict the next context and probability of near-term distraction.
+- **Proactive idle nudges** – configurable sound + popup alerts fire when you stay idle beyond a threshold so you can reset before drifting.
 - **Visual command center** – Vite/React dashboard with gradients, micro-animations, and glanceable cards for today’s stats, activity feed, and AI insights.
 - **Feedback + retraining loop** – capture manual or passive labels, prep datasets, and trigger safe model refreshes without leaving the app.
 
@@ -61,11 +62,16 @@ Windows Hooks  →  Activity Stream  →  Feature Extractor  →  ML Ensemble
 ### Feature Catalogue
 `keystrokes_per_sec`, `clicks_per_sec`, `app_switches`, `app_entropy`, `idle_time_ratio`, `productive_app_ratio`, `distraction_app_ratio`, `keystroke_burst_score`, `click_burst_score`, `app_switch_frequency`, `keystroke_variance`, `click_variance`, `keystroke_click_ratio`, `idle_transitions`, `app_focus_duration`, `context_switch_cost`.
 
+The feature extractor now recognises localhost, 127.0.0.1, staging/dev subdomains, and modern dev tooling keywords (ChatGPT, OpenAI, CI/CD, etc.) so browser-based engineering work is accurately classified as productive instead of “unknown”.
+
 ### Ghost Twin Snapshot
 - **predicted_next** – likely upcoming app/domain token.
 - **prob_distracted** – heuristic probability of drifting off task (0–1).
 - **support/history** – transition counts and buffer depth.
 - **new_events_considered** – incremental events used since the last snapshot.
+- **is_stale** – true when no new transitions were observed since the last snapshot (the UI surfaces a “waiting for new signals” badge).
+
+Ghost predictions also sanitise verbose browser titles by collapsing them to canonical domains (e.g., `youtube.com` instead of the full video title) and trimming long labels so the dashboard stays readable.
 
 Snapshots appear in `/api/session/status` under `prediction.cognitive_twin` and power the dashboard’s Cognitive Twin panel.
 
@@ -123,6 +129,11 @@ python main.py detect     # run detection for a fixed window
 5. **Stop the session** from the UI or `POST /api/session/stop`; summaries persist to `data/session_log.jsonl`.
 
 FocusGuard keeps a rolling buffer of the latest 10 000 events. Ghost predictions update even before the ML ensemble has enough data, so the UI never goes silent while warming up.
+
+### Idle Alerts & Nudges
+- Tweak `ENABLE_IDLE_ALERTS`, `ENABLE_IDLE_POPUP`, `IDLE_ALERT_THRESHOLD_SECONDS`, and `IDLE_ALERT_COOLDOWN_SECONDS` in `config.py` to control whether FocusGuard plays a Windows chime and/or popup when you have been idle for too long.
+- Idle alert events are logged as `idle_alert` in the activity stream so analytics and downstream features know when a manual nudge occurred.
+- Defaults: alerts enabled, popup enabled, 5‑minute threshold, 3‑minute cooldown.
 
 ---
 

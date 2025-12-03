@@ -162,11 +162,21 @@ const buildDistractionList = (stats?: Record<string, DistractionStat> | null) =>
     return []
   }
   return Object.entries(stats)
-    .map(([label, value]) => ({
-      label,
-      hits: value.hits ?? value.avg_score ?? value.max_score ?? 0,
-      dominantContext: value.dominant_context ?? null,
-    }))
+    .map(([identifier, value]) => {
+      const sampleTitle = value.sample_title?.trim()
+      const rawLabel = value.label?.trim() || identifier
+      const displayLabel = sampleTitle && rawLabel && !rawLabel.toLowerCase().includes(sampleTitle.toLowerCase())
+        ? `${sampleTitle}${value.host ? ` · ${value.host}` : ''}`
+        : rawLabel
+      const detail = value.source_app || value.host || value.window_title || null
+      return {
+        id: identifier,
+        label: displayLabel,
+        hits: value.hits ?? value.avg_score ?? value.max_score ?? 0,
+        dominantContext: value.dominant_context ?? null,
+        detail,
+      }
+    })
     .sort((a, b) => Number(b.hits) - Number(a.hits))
 }
 
@@ -266,11 +276,14 @@ export default function FocusDeepDive() {
           {topDistractions.length ? (
             <ul className="space-y-3 text-sm">
               {topDistractions.map((item) => (
-                <li key={item.label} className="flex items-center justify-between gap-3">
+                <li key={item.id} className="flex items-center justify-between gap-3">
                   <div>
                     <div className="font-medium text-slate-100">{item.label}</div>
+                    {item.detail && (
+                      <p className="text-xs text-slate-400">{item.detail}</p>
+                    )}
                     {item.dominantContext && (
-                      <p className="text-xs text-slate-400">Context: {item.dominantContext}</p>
+                      <p className="text-xs text-slate-500">Context: {item.dominantContext}</p>
                     )}
                   </div>
                   <span className="text-xs font-semibold text-slate-200">{item.hits}</span>

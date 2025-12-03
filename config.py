@@ -50,6 +50,12 @@ DETECTION_WINDOW_SIZE = 30  # Use last 30 seconds of activity for feature extrac
 ANOMALY_CONFIDENCE_THRESHOLD = 0.6  # Confidence threshold for alerts (0-1)
 PASSIVE_LABEL_MIN_INTERVAL_SECONDS = 20  # Minimum spacing between auto labels to avoid flooding
 
+# Idle alert / nudge controls
+ENABLE_IDLE_ALERTS = True
+ENABLE_IDLE_POPUP = True
+IDLE_ALERT_THRESHOLD_SECONDS = 300  # seconds of inactivity before alerting
+IDLE_ALERT_COOLDOWN_SECONDS = 180  # minimum interval between alerts
+
 # ===== MODEL PARAMETERS =====
 ISOLATION_FOREST_PARAMS = {
     "n_estimators": 300,
@@ -135,6 +141,10 @@ WEBSITE_CATEGORIES: Dict[str, str] = {
     "npm.com": "development",
     "crates.io": "development",
     "maven.apache.org": "development",
+    "chatgpt.com": "development",
+    "openai.com": "development",
+    "localhost": "development",
+    "127.0.0.1": "development",
     
     # Learning & Documentation
     "udemy.com": "learning",
